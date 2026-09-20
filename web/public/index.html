@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>The Grid</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: #111;
+    font-family: system-ui, sans-serif;
+    color: #eee;
+  }
+  h1 { margin: 0; letter-spacing: 0.2em; font-size: 1.25rem; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    width: min(90vw, 360px);
+    aspect-ratio: 1;
+  }
+  button.cell {
+    border: none;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #111;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .col-visual { background: #1db954; }
+  .col-fx { background: #ffd200; }
+  .col-vote { background: #e11d1d; }
+  button.cell:disabled { opacity: 0.35; cursor: not-allowed; }
+  #status { font-size: 0.85rem; opacity: 0.6; }
+</style>
+</head>
+<body>
+  <h1>THE GRID</h1>
+  <div class="grid" id="grid"></div>
+  <div id="status">conectando…</div>
+
+<script>
+  const COLUMNS = ['visual', 'fx', 'vote'];
+  const state = { locks: { visual: false, fx: false, vote: false } };
+
+  const deviceId = localStorage.getItem('grid-device-id')
+    || (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()));
+  localStorage.setItem('grid-device-id', deviceId);
+
+  const gridEl = document.getElementById('grid');
+  const statusEl = document.getElementById('status');
+  const buttons = [];
+
+  for (let row = 1; row <= 3; row++) {
+    for (const column of COLUMNS) {
+      const btn = document.createElement('button');
+      btn.className = `cell col-${column}`;
+      btn.textContent = row;
+      btn.addEventListener('click', () => sendTouch(column, row));
+      gridEl.appendChild(btn);
+      buttons.push({ el: btn, column });
+    }
+  }
+
+  const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+  const ws = new WebSocket(`${proto}://${location.host}/ws`);
+
+  ws.addEventListener('open', () => { statusEl.textContent = 'conectado'; });
+  ws.addEventListener('close', () => { statusEl.textContent = 'desconectado'; });
+  ws.addEventListener('message', (event) => {
+    const msg = JSON.parse(event.data);
+    if (msg.type === 'state') {
+      Object.assign(state.locks, msg.state.locks);
+      updateLocks();
+    }
+  });
+
+  function updateLocks() {
+    for (const { el, column } of buttons) {
+      el.disabled = Boolean(state.locks[column]);
+    }
+  }
+
+  function sendTouch(column, cell) {
+    if (ws.readyState !== WebSocket.OPEN || state.locks[column]) return;
+    ws.send(JSON.stringify({ type: 'touch', column, cell, deviceId }));
+  }
+</script>
+</body>
+</html>
