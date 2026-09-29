@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import express from 'express';
 import { WebSocketServer } from 'ws';
 import { config } from './config.js';
-import { OSC, COLUMNS } from './oscContract.js';
+import { OSC, COLUMNS, CELLS } from './oscContract.js';
 import { sendOsc } from './osc.js';
 import { state, broadcast } from './state.js';
 
@@ -47,9 +47,10 @@ wss.on('connection', (ws) => {
     if (msg.type !== 'touch') return;
 
     const { column, cell, deviceId } = msg;
-    if (!COLUMNS.includes(column) || state.locks[column]) return;
+    if (!COLUMNS.includes(column) || !CELLS.includes(cell)) return;
+    if (state.locks[column]) return;
 
-    sendOsc(OSC[column](cell), deviceId ?? '');
+    sendOsc(OSC[column](cell), typeof deviceId === 'string' ? deviceId : '');
   });
 });
 

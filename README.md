@@ -22,6 +22,19 @@ docker compose up --build
 
 La página pública queda en `http://<host>:8080`.
 
+### Probar el loop sin Max/TouchDesigner
+
+En la máquina que debe recibir los toques (Mac mini o MacBook) levanta el
+monitor OSC; imprime cada mensaje que llega:
+
+```
+docker compose --profile monitor up --build osc-monitor
+```
+
+Apunta `OSC_TARGETS` del Grid Server a `<ip-de-esa-máquina>:9000`, abre la
+página en el celular y toca una celda: debe aparecer `/grid/visual/N` (etc.)
+en la consola del monitor.
+
 ## Estructura
 
 ```

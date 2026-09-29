@@ -36,6 +36,7 @@ server/          Grid Server (Node + ws + node-osc)
   src/index.js   HTTP + WebSocket + endpoint de operador
   src/osc.js     Envío OSC a los targets configurados
   src/state.js   Estado en memoria (locks) + broadcast
+  src/oscMonitor.js  Monitor OSC de prueba (perfil `monitor` del compose)
 web/public/      Página pública 3×3 (vanilla JS, sin build)
 Dockerfile       Imagen del Grid Server (contexto: raíz del repo)
 docker-compose.yml

@@ -8,3 +8,16 @@ services:
     env_file:
       - server/.env
     restart: unless-stopped
+
+  # Monitor OSC de prueba. Solo arranca con: docker compose --profile monitor up
+  osc-monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["node", "server/src/oscMonitor.js"]
+    environment:
+      - OSC_MONITOR_PORT=9000
+    ports:
+      - "9000:9000/udp"
+    profiles:
+      - monitor
