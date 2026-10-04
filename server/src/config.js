@@ -16,4 +16,5 @@ export const config = {
   port: Number(process.env.PORT || 8080),
   operatorKey: process.env.OPERATOR_KEY || 'changeme',
   oscTargets: parseTargets(process.env.OSC_TARGETS),
+  oscInPort: Number(process.env.OSC_IN_PORT || 9100),
 };

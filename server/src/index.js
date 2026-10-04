@@ -5,7 +5,7 @@ import express from 'express';
 import { WebSocketServer } from 'ws';
 import { config } from './config.js';
 import { OSC, COLUMNS, CELLS } from './oscContract.js';
-import { sendOsc } from './osc.js';
+import { sendOsc, listenOsc } from './osc.js';
 import { state, broadcast } from './state.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -46,12 +46,22 @@ wss.on('connection', (ws) => {
     }
     if (msg.type !== 'touch') return;
 
-    const { column, cell, deviceId } = msg;
+    const { column, cell } = msg;
     if (!COLUMNS.includes(column) || !CELLS.includes(cell)) return;
     if (state.locks[column]) return;
 
-    sendOsc(OSC[column](cell), typeof deviceId === 'string' ? deviceId : '');
+    sendOsc(OSC[column](cell), 1);
   });
+});
+
+// Max marca el compás. La cuantización (amarilla) y la ventana de voto
+// (roja) se van a apoyar en state.bar.
+listenOsc(config.oscInPort, (address, args) => {
+  if (address !== OSC.bar) return;
+  const bar = Number(args[0]);
+  if (!Number.isInteger(bar)) return;
+  if (state.bar === 0) console.log(`Primer compás recibido de Max: ${bar}`);
+  state.bar = bar;
 });
 
 server.listen(config.port, () => {
