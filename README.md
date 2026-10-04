@@ -51,6 +51,10 @@ celular (`http://<ip-linux-mint>:8080`):
   faltan. Al cerrar la ventana sale solo el ganador `/grid/vote/N [1]`.
   Log: `compás 17: voto cerrado, ganó N (a de b votos)`.
 
+**Operador.** Abre `http://<ip-linux-mint>:8080/operador` (Mac mini, iPad o
+laptop) y entra con la `OPERATOR_KEY` de `server/.env`. Desde ahí se bloquean
+columnas, se anula el voto en curso y se ve el conteo de votos y la bitácora.
+
 **2 — Con Max en la Mac mini.** Apaga el reloj falso
 (`docker compose stop bar-clock`), agrega la Mac mini a `OSC_TARGETS`
 (`osc-monitor:9000,<ip-mac-mini>:9000`) y recrea:

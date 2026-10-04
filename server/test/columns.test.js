@@ -158,3 +158,16 @@ test('roja: round cambia al cerrar ventana, bloquear o reiniciar', () => {
   c.onBar(5);
   assert.ok(c.view().vote.round > r2);
 });
+
+test('roja: tally cuenta el voto vigente de cada celular', () => {
+  const c = createColumns();
+  c.onBar(1);
+  assert.deepEqual(c.tally(), { 1: 0, 2: 0, 3: 0 });
+  c.touch('vote', 1, 'a');
+  c.touch('vote', 3, 'b');
+  c.touch('vote', 3, 'a'); // 'a' cambia a 3
+  assert.deepEqual(c.tally(), { 1: 0, 2: 0, 3: 2 });
+  assert.equal('tally' in c.view().vote, false); // el público no lo ve
+  c.clear('vote');
+  assert.deepEqual(c.tally(), { 1: 0, 2: 0, 3: 0 });
+});

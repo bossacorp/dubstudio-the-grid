@@ -41,14 +41,14 @@ Definido en `server/src/oscContract.js`:
 ## Estructura del repo
 ```
 server/          Grid Server (Node + ws + node-osc)
-  src/index.js   HTTP + WebSocket + endpoint de operador
-  src/osc.js     Envío OSC a los targets configurados
-  src/state.js   Estado en memoria (locks) + broadcast
+  src/index.js   Arranque: conecta OSC (entrada/salida) con app.js
+  src/app.js     HTTP + WebSocket + operador (locks, bitácora, conteo de votos)
+  src/osc.js     Envío/recepción OSC
   src/columns.js Lógica verde/amarilla/roja (pura, sin red)
   src/oscMonitor.js  Monitor OSC de prueba (perfil `monitor` del compose)
   src/barClock.js    "Max falso": manda /show/bar (perfil `clock`)
-  test/          Pruebas de columns.js (`npm test`, node:test)
-web/public/      Página pública 3×3 (vanilla JS, sin build)
+  test/          Pruebas (`npm test`, node:test): columns.js y servidor/operador
+web/public/      Página pública 3×3 y operador.html (vanilla JS, sin build)
 max/             Patch de Max de prueba (recibe toques, manda /show/bar)
 Dockerfile       Imagen del Grid Server (contexto: raíz del repo)
 docker-compose.yml
@@ -62,6 +62,17 @@ docker-compose.yml
   cambiable; empate al azar; sin votos no sale nada. El celular solo ve su voto.
 - Bloquear una columna descarta lo pendiente; si Max reinicia el transport
   (compás menor al anterior) se limpian ventanas y enfriamientos.
+
+## Operador (`/operador`)
+- Operador principal: la Mac mini (Max + OBS). También se monitorea desde el
+  iPad y una laptop; la página es adaptable.
+- Se entra con `OPERATOR_KEY` (se guarda en el navegador). Por WebSocket:
+  `{type:'hello', role:'operator', key}`; clave mala → error y cierre 4001.
+- Ve: compás (y aviso si Max deja de mandarlo), celulares conectados, toques
+  por columna, fx pendiente/enfriando, **conteo de votos en vivo** y bitácora.
+- Acciones: bloquear/desbloquear columna y anular el voto en curso. Nada más
+  por ahora.
+- `POST /operador/lock` (header `x-operator-key`) se queda para scripts.
 
 ## Principio: KICS
 Keep It Cuban/Chill/Simple. La nube y la infraestructura pesada solo entran

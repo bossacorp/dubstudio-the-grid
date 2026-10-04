@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>The Grid · Operador</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #111;
+    --panel: #1b1b1b;
+    --line: #2c2c2c;
+    --text: #eee;
+    --muted: #999;
+    --visual: #1db954;
+    --fx: #ffd200;
+    --vote: #e11d1d;
+    --warn: #ff9f1a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, sans-serif;
+    padding: 16px;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  h1 { margin: 0; letter-spacing: 0.2em; font-size: 1.1rem; }
+  .pill {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--muted);
+  }
+  .pill.ok { color: var(--visual); border-color: var(--visual); }
+  .pill.bad { color: var(--vote); border-color: var(--vote); }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .stat, .card, .log {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .stat .label, .card .label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .stat .value { font-size: 2rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat .note { font-size: 0.8rem; color: var(--warn); min-height: 1em; }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .card { border-top: 6px solid var(--c); display: flex; flex-direction: column; gap: 10px; }
+  .card h2 { margin: 0; font-size: 1rem; }
+  .card.locked { opacity: 0.85; border-color: var(--vote); border-top-color: var(--c); }
+  .row { display: flex; justify-content: space-between; gap: 8px; font-size: 0.9rem; }
+  .row .k { color: var(--muted); }
+  button {
+    font: inherit;
+    font-weight: 700;
+    border-radius: 8px;
+    border: 2px solid var(--c, #666);
+    padding: 12px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  button.lock { background: transparent; color: var(--text); }
+  .card.locked button.lock { background: var(--vote); border-color: var(--vote); color: #fff; }
+  button.secondary { background: transparent; color: var(--text); border-color: var(--line); font-weight: 500; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .tally { display: flex; flex-direction: column; gap: 6px; }
+  .bar { display: grid; grid-template-columns: 1.5em 1fr 2.5em; align-items: center; gap: 8px; font-size: 0.9rem; }
+  .bar .track { height: 14px; background: #2a2a2a; border-radius: 7px; overflow: hidden; }
+  .bar .fill { height: 100%; background: var(--vote); width: 0; transition: width 0.2s; }
+  .bar .n { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .log h2 { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); }
+  .log ol { list-style: none; margin: 0; padding: 0; max-height: 40vh; overflow-y: auto; font-size: 0.85rem; }
+  .log li { padding: 4px 0; border-bottom: 1px solid var(--line); display: flex; gap: 10px; }
+  .log time { color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  #login {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  #login.show { display: flex; }
+  #login form {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 20px;
+    width: min(100%, 340px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  #login input {
+    font: inherit;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #0c0c0c;
+    color: var(--text);
+  }
+  #login button { --c: var(--visual); background: var(--visual); color: #111; }
+  #loginError { color: var(--vote); font-size: 0.85rem; min-height: 1em; margin: 0; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>THE GRID · OPERADOR</h1>
+    <span class="pill" id="conn">conectando…</span>
+  </header>
+
+  <section class="stats">
+    <div class="stat">
+      <div class="label">Compás</div>
+      <div class="value" id="bar">–</div>
+      <div class="note" id="barNote"></div>
+    </div>
+    <div class="stat">
+      <div class="label">Celulares conectados</div>
+      <div class="value" id="phones">–</div>
+    </div>
+    <div class="stat">
+      <div class="label">Operadores</div>
+      <div class="value" id="operators">–</div>
+    </div>
+  </section>
+
+  <section class="cards">
+    <article class="card" id="card-visual" style="--c: var(--visual)">
+      <div class="label">Verde · visual</div>
+      <div class="row"><span class="k">Toques</span><span id="touches-visual">0</span></div>
+      <button class="lock" data-column="visual">Bloquear</button>
+    </article>
+
+    <article class="card" id="card-fx" style="--c: var(--fx)">
+      <div class="label">Amarilla · fx</div>
+      <div class="row"><span class="k">Toques</span><span id="touches-fx">0</span></div>
+      <div class="row"><span class="k">Pendiente (sale en el próximo compás)</span><span id="fx-pending">–</span></div>
+      <div class="row"><span class="k">Enfriando</span><span id="fx-cooling">–</span></div>
+      <button class="lock" data-column="fx">Bloquear</button>
+    </article>
+
+    <article class="card" id="card-vote" style="--c: var(--vote)">
+      <div class="label">Roja · voto</div>
+      <div class="row"><span class="k">Toques</span><span id="touches-vote">0</span></div>
+      <div class="row"><span class="k">Cierra en</span><span id="vote-left">–</span></div>
+      <div class="tally" id="tally"></div>
+      <button class="secondary" id="cancelVote">Anular voto en curso</button>
+      <button class="lock" data-column="vote">Bloquear</button>
+    </article>
+  </section>
+
+  <section class="log">
+    <h2>Bitácora</h2>
+    <ol id="events"></ol>
+  </section>
+
+  <div id="login">
+    <form id="loginForm">
+      <strong>Clave del operador</strong>
+      <input id="key" type="password" autocomplete="current-password" placeholder="OPERATOR_KEY" required />
+      <p id="loginError"></p>
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+
+<script>
+  const COLUMNS = ['visual', 'fx', 'vote'];
+  const KEY_STORAGE = 'grid-operator-key';
+  const STALE_MS = 5000;
+
+  const $ = (id) => document.getElementById(id);
+  const storage = {
+    get() { try { return localStorage.getItem(KEY_STORAGE); } catch { return null; } },
+    set(v) { try { localStorage.setItem(KEY_STORAGE, v); } catch {} },
+    clear() { try { localStorage.removeItem(KEY_STORAGE); } catch {} },
+  };
+
+  let ws = null;
+  let state = null;
+  let authed = false;
+  let lastBar = 0;
+  let lastBarAt = 0;
+
+  // Barras del conteo de votos (celdas 1-3).
+  for (const cell of [1, 2, 3]) {
+    const row = document.createElement('div');
+    row.className = 'bar';
+    row.innerHTML = `<span>${cell}</span><span class="track"><span class="fill" id="fill-${cell}"></span></span><span class="n" id="n-${cell}">0</span>`;
+    $('tally').appendChild(row);
+  }
+
+  function showLogin(message = '') {
+    $('loginError').textContent = message;
+    $('login').classList.add('show');
+    $('key').focus();
+  }
+
+  $('loginForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    storage.set($('key').value);
+    $('login').classList.remove('show');
+    connect();
+  });
+
+  function connect() {
+    const key = storage.get();
+    if (!key) return showLogin();
+    if (ws) ws.close();
+
+    const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+    ws = new WebSocket(`${proto}://${location.host}/ws`);
+    const socket = ws;
+
+    socket.addEventListener('open', () => {
+      socket.send(JSON.stringify({ type: 'hello', role: 'operator', key }));
+    });
+    socket.addEventListener('message', (event) => {
+      const msg = JSON.parse(event.data);
+      if (msg.type === 'error' && msg.error === 'unauthorized') {
+        authed = false;
+        storage.clear();
+        showLogin('Clave incorrecta');
+      }
+      if (msg.type === 'operator') {
+        authed = true;
+        state = msg.state;
+        if (state.bar !== lastBar) {
+          lastBar = state.bar;
+          lastBarAt = Date.now();
+        }
+        render();
+      }
+    });
+    socket.addEventListener('close', () => {
+      if (socket !== ws) return;
+      authed = false;
+      renderConn();
+      // Reintenta solo si la clave sigue guardada (no tras "clave incorrecta").
+      if (storage.get()) setTimeout(() => { if (socket === ws) connect(); }, 2000);
+    });
+  }
+
+  function renderConn() {
+    const el = $('conn');
+    if (authed) { el.textContent = 'conectado'; el.className = 'pill ok'; }
+    else { el.textContent = 'desconectado'; el.className = 'pill bad'; }
+    for (const btn of document.querySelectorAll('button.lock, #cancelVote')) btn.disabled = !authed;
+  }
+
+  function renderBar() {
+    if (!state) return;
+    $('bar').textContent = state.bar || '–';
+    let note = '';
+    if (!state.bar) note = 'esperando compás de Max';
+    else if (Date.now() - lastBarAt > STALE_MS) {
+      note = `sin compás de Max hace ${Math.round((Date.now() - lastBarAt) / 1000)} s`;
+    }
+    $('barNote').textContent = note;
+  }
+
+  function render() {
+    renderConn();
+    renderBar();
+    $('phones').textContent = state.phones;
+    $('operators').textContent = state.operators;
+
+    for (const column of COLUMNS) {
+      const locked = Boolean(state.locks[column]);
+      $(`card-${column}`).classList.toggle('locked', locked);
+      document.querySelector(`button.lock[data-column="${column}"]`).textContent =
+        locked ? 'BLOQUEADA · desbloquear' : 'Bloquear';
+      $(`touches-${column}`).textContent = state.touches[column];
+    }
+
+    $('fx-pending').textContent = state.fx.pending.length ? state.fx.pending.join(', ') : '–';
+    const cooling = Object.entries(state.fx.cooling);
+    $('fx-cooling').textContent = cooling.length
+      ? cooling.map(([cell, bars]) => `${cell} (${bars} comp.)`).join(', ')
+      : '–';
+
+    const left = state.vote.barsLeft;
+    $('vote-left').textContent = left == null ? '–' : left === 1 ? 'último compás' : `${left} compases`;
+    const tally = state.vote.tally;
+    const total = Object.values(tally).reduce((a, b) => a + b, 0);
+    for (const cell of [1, 2, 3]) {
+      const n = tally[cell] || 0;
+      $(`n-${cell}`).textContent = n;
+      $(`fill-${cell}`).style.width = total ? `${(n / total) * 100}%` : '0';
+    }
+
+    const list = $('events');
+    list.replaceChildren(...state.events.map((e) => {
+      const li = document.createElement('li');
+      const time = document.createElement('time');
+      time.textContent = new Date(e.time).toLocaleTimeString('es-MX', { hour12: false });
+      const text = document.createElement('span');
+      text.textContent = e.text;
+      li.append(time, text);
+      return li;
+    }));
+  }
+
+  for (const btn of document.querySelectorAll('button.lock')) {
+    btn.addEventListener('click', () => {
+      const column = btn.dataset.column;
+      ws.send(JSON.stringify({ type: 'lock', column, locked: !state.locks[column] }));
+    });
+  }
+
+  $('cancelVote').addEventListener('click', () => {
+    if (confirm('¿Anular el voto en curso? Se borran todos los votos de esta ventana.')) {
+      ws.send(JSON.stringify({ type: 'cancelVote' }));
+    }
+  });
+
+  setInterval(renderBar, 1000);
+  renderConn();
+  connect();
+</script>
+</body>
+</html>

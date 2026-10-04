@@ -126,5 +126,12 @@ export function createColumns({
     };
   }
 
-  return { touch, onBar, clear, view };
+  // Conteo de votos de la ventana en curso. Solo lo ve el operador.
+  function tally() {
+    const counts = { 1: 0, 2: 0, 3: 0 };
+    for (const cell of votes.values()) counts[cell] = (counts[cell] ?? 0) + 1;
+    return counts;
+  }
+
+  return { touch, onBar, clear, view, tally };
 }
