@@ -1,0 +1,25 @@
+# CI de The Grid: corre las pruebas unitarias en cada push, en un contenedor
+# limpio, sobre el runner de la Linux Mint (tag "self-hosted", executor docker).
+# Misma imagen base que el Dockerfile para que pruebas y servidor usen el
+# mismo Node.
+
+stages:
+  - test
+
+unit-tests:
+  stage: test
+  tags:
+    - self-hosted
+  image: node:20-alpine
+  variables:
+    npm_config_cache: "$CI_PROJECT_DIR/server/.npm"
+  cache:
+    key:
+      files:
+        - server/package-lock.json
+    paths:
+      - server/.npm/
+  script:
+    - cd server
+    - npm ci --prefer-offline --no-audit --no-fund
+    - npm test

@@ -52,6 +52,7 @@ web/public/      Página pública 3×3 (vanilla JS, sin build)
 max/             Patch de Max de prueba (recibe toques, manda /show/bar)
 Dockerfile       Imagen del Grid Server (contexto: raíz del repo)
 docker-compose.yml
+.gitlab-ci.yml   CI: `npm test` en cada push (runner tag `self-hosted`, Linux Mint)
 ```
 
 ## Reglas de columnas (valores por defecto acordados)

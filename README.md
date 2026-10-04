@@ -25,7 +25,9 @@ La página pública queda en `http://<host>:8080`.
 
 ### Probar
 
-**0 — Pruebas automáticas** (lógica de columnas, sin red):
+**0 — Pruebas automáticas** (lógica de columnas, sin red). En GitLab corren
+solas en cada push (`.gitlab-ci.yml`, runner `self-hosted` de la Linux Mint).
+A mano:
 
 ```
 docker compose run --rm grid-server npm --prefix server test
