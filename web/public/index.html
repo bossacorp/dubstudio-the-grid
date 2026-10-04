@@ -39,17 +39,31 @@
   .col-fx { background: #ffd200; }
   .col-vote { background: #e11d1d; }
   button.cell:disabled { opacity: 0.35; cursor: not-allowed; }
-  #status { font-size: 0.85rem; opacity: 0.6; }
+  /* Amarilla pendiente: espera al siguiente compás */
+  button.cell.pending { animation: pulse 0.5s ease-in-out infinite alternate; }
+  @keyframes pulse { to { filter: brightness(1.6); transform: scale(0.94); } }
+  /* Roja: tu voto en esta ventana */
+  button.cell.voted { outline: 4px solid #fff; outline-offset: -4px; }
+  #status, #vote { font-size: 0.85rem; opacity: 0.6; margin: 0; }
 </style>
 </head>
 <body>
   <h1>THE GRID</h1>
   <div class="grid" id="grid"></div>
+  <p id="vote"></p>
   <div id="status">conectando…</div>
 
 <script>
   const COLUMNS = ['visual', 'fx', 'vote'];
-  const state = { locks: { visual: false, fx: false, vote: false } };
+  let state = {
+    locks: { visual: false, fx: false, vote: false },
+    bar: 0,
+    fx: { pending: [], cooling: {} },
+    vote: { round: null, barsLeft: null },
+  };
+  let connected = false;
+  // Tu voto en la ronda actual: { round, cell }.
+  let myVote = null;
 
   const deviceId = localStorage.getItem('grid-device-id')
     || (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()));
@@ -57,6 +71,7 @@
 
   const gridEl = document.getElementById('grid');
   const statusEl = document.getElementById('status');
+  const voteEl = document.getElementById('vote');
   const buttons = [];
 
   for (let row = 1; row <= 3; row++) {
@@ -66,33 +81,55 @@
       btn.textContent = row;
       btn.addEventListener('click', () => sendTouch(column, row));
       gridEl.appendChild(btn);
-      buttons.push({ el: btn, column });
+      buttons.push({ el: btn, column, cell: row });
     }
   }
 
   const proto = location.protocol === 'https:' ? 'wss' : 'ws';
   const ws = new WebSocket(`${proto}://${location.host}/ws`);
 
-  ws.addEventListener('open', () => { statusEl.textContent = 'conectado'; });
-  ws.addEventListener('close', () => { statusEl.textContent = 'desconectado'; });
+  ws.addEventListener('open', () => { connected = true; render(); });
+  ws.addEventListener('close', () => { connected = false; render(); });
   ws.addEventListener('message', (event) => {
     const msg = JSON.parse(event.data);
     if (msg.type === 'state') {
-      Object.assign(state.locks, msg.state.locks);
-      updateLocks();
+      state = msg.state;
+      if (myVote && myVote.round !== state.vote.round) myVote = null;
+      render();
     }
   });
 
-  function updateLocks() {
-    for (const { el, column } of buttons) {
-      el.disabled = Boolean(state.locks[column]);
+  function render() {
+    for (const { el, column, cell } of buttons) {
+      const cooling = column === 'fx' && state.fx.cooling[cell];
+      el.disabled = Boolean(state.locks[column] || cooling);
+      el.classList.toggle('pending', column === 'fx' && state.fx.pending.includes(cell));
+      el.classList.toggle('voted', column === 'vote' && myVote?.cell === cell);
+    }
+
+    if (!connected) statusEl.textContent = 'desconectado';
+    else if (!state.bar) statusEl.textContent = 'conectado · esperando compás';
+    else statusEl.textContent = `conectado · compás ${state.bar}`;
+
+    if (state.locks.vote || !state.vote.barsLeft) voteEl.textContent = '';
+    else {
+      const left = state.vote.barsLeft;
+      const mine = myVote ? ` · tu voto: ${myVote.cell}` : '';
+      voteEl.textContent = `voto: ${left === 1 ? 'último compás' : `quedan ${left} compases`}${mine}`;
     }
   }
 
   function sendTouch(column, cell) {
     if (ws.readyState !== WebSocket.OPEN || state.locks[column]) return;
+    if (column === 'fx' && state.fx.cooling[cell]) return;
     ws.send(JSON.stringify({ type: 'touch', column, cell, deviceId }));
+    if (column === 'vote') {
+      myVote = { round: state.vote.round, cell };
+      render();
+    }
   }
+
+  render();
 </script>
 </body>
 </html>

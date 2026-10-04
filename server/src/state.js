@@ -1,10 +1,16 @@
 import { COLUMNS } from './oscContract.js';
+import { createColumns } from './columns.js';
 
 export const state = {
   locks: Object.fromEntries(COLUMNS.map((column) => [column, false])),
-  // Último compás recibido de Max por /show/bar (0 = aún no llega ninguno).
-  bar: 0,
 };
+
+export const columns = createColumns();
+
+// Lo que se manda a los celulares: locks + compás + estado de fx/voto.
+export function publicState() {
+  return { locks: state.locks, ...columns.view() };
+}
 
 export function broadcast(wss, payload) {
   const data = JSON.stringify(payload);

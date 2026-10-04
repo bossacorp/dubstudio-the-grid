@@ -34,7 +34,7 @@ Docker.
 Definido en `server/src/oscContract.js`:
 - `/grid/visual/1-3 1` — servidor → Max; el argumento es siempre el número `1`
 - `/grid/fx/1-3 1`
-- `/grid/vote/1-3 1`
+- `/grid/vote/1-3 1` — **ganador** de la ventana de voto (no cada toque)
 - `/grid/lock/<columna> 1|0`
 - `/show/bar <n>` — Max → servidor (puerto `OSC_IN_PORT`, 9100), compás entero
 
@@ -44,12 +44,23 @@ server/          Grid Server (Node + ws + node-osc)
   src/index.js   HTTP + WebSocket + endpoint de operador
   src/osc.js     Envío OSC a los targets configurados
   src/state.js   Estado en memoria (locks) + broadcast
+  src/columns.js Lógica verde/amarilla/roja (pura, sin red)
   src/oscMonitor.js  Monitor OSC de prueba (perfil `monitor` del compose)
+  src/barClock.js    "Max falso": manda /show/bar (perfil `clock`)
+  test/          Pruebas de columns.js (`npm test`, node:test)
 web/public/      Página pública 3×3 (vanilla JS, sin build)
 max/             Patch de Max de prueba (recibe toques, manda /show/bar)
 Dockerfile       Imagen del Grid Server (contexto: raíz del repo)
 docker-compose.yml
 ```
+
+## Reglas de columnas (valores por defecto acordados)
+- Amarilla: un efecto por compás, el más tocado (empate: el primero tocado);
+  la celda que disparó se enfría 4 compases.
+- Roja: ventanas fijas de 16 compases (1–16, 17–32…); un voto por celular,
+  cambiable; empate al azar; sin votos no sale nada. El celular solo ve su voto.
+- Bloquear una columna descarta lo pendiente; si Max reinicia el transport
+  (compás menor al anterior) se limpian ventanas y enfriamientos.
 
 ## Principio: KICS
 Keep It Cuban/Chill/Simple. La nube y la infraestructura pesada solo entran
