@@ -55,6 +55,9 @@ web/public/      Página pública 3×3, operador.html y pantalla.html (vanilla J
 max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
                  con send (grid.visual.1…grid.vote.3, grid.lock.<col>) y marca
                  el compás (/show/bar). Los patches de color usan [r grid.…]
+  bobGrid/       Patches de color (verde/amarillo/rojo, Vizzie) + videos. Bloque
+                 "THE GRID" agregado a la derecha de cada uno: celda 1 → efectos
+                 A, celda 2 → efectos B, celda 3 → crossfade A↔B, bloqueo → pausa
 Dockerfile       Imagen del Grid Server (contexto: raíz del repo)
 docker-compose.yml
 .gitlab-ci.yml   CI: `npm test` en cada push (runner tag `self-hosted`, Linux Mint)

@@ -79,6 +79,21 @@ Si el patch no abre bien, se arma a mano:
 `[toggle]→[metro 1n @quantize 1n]→[transport]→[prepend /show/bar]→[udpsend <ip-linux-mint> 9100]`
 (el toggle también va a `[transport]`; `[tempo $1]` fija el BPM).
 
+**Patches de color (`max/bobGrid/`).** Copia la carpeta completa a la Mac
+mini (los videos van junto a los patches) y abre `grid-router.maxpat` y los tres
+patches. Cada uno trae a la derecha un bloque **THE GRID**:
+
+| Mensaje | Qué hace en el tercio de su color |
+|---|---|
+| celda 1 | prende/apaga efectos A (`toggle[4]` → fractalizr/foggr) |
+| celda 2 | prende/apaga efectos B (`toggle[5]` → interpol8r/delayr) |
+| celda 3 | salta el crossfade del `mixfadr`: A (`0.`) ↔ B (`1.`) |
+| bloqueo 1/0 | pausa / reanuda el video |
+| al abrir | play del video al segundo |
+
+Cada mensaje se imprime en la Max Console como `GRID-VERDE`, `GRID-AMARILLO`
+o `GRID-ROJO`.
+
 **3 — Validación por color (patches de Max).** Con `grid-router.maxpat` y los
 tres patches de color abiertos en la Mac mini, manda el contrato completo
 directo a Max, un mensaje cada 2 s:
