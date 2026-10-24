@@ -86,6 +86,18 @@
   .card.locked button.lock { background: var(--vote); border-color: var(--vote); color: #fff; }
   button.secondary { background: transparent; color: var(--text); border-color: var(--line); font-weight: 500; }
   button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .inline { display: flex; gap: 8px; align-items: center; }
+  .inline input {
+    font: inherit;
+    width: 5em;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #0c0c0c;
+    color: var(--text);
+  }
+  .inline button { flex: 1; }
+  .card a { color: var(--text); font-size: 0.85rem; }
 
   .tally { display: flex; flex-direction: column; gap: 6px; }
   .bar { display: grid; grid-template-columns: 1.5em 1fr 2.5em; align-items: center; gap: 8px; font-size: 0.9rem; }
@@ -174,6 +186,19 @@
       <div class="tally" id="tally"></div>
       <button class="secondary" id="cancelVote">Anular voto en curso</button>
       <button class="lock" data-column="vote">Bloquear</button>
+    </article>
+
+    <article class="card" id="card-screen" style="--c: #eee">
+      <div class="label">Pantalla · OBS</div>
+      <div class="row"><span class="k">Pantallas conectadas</span><span id="screens">–</span></div>
+      <div class="row"><span class="k">Ganador en pantalla</span><span id="winner-now">–</span></div>
+      <button class="secondary" id="toggleQr">Ocultar QR</button>
+      <div class="row"><span class="k">Compases que se muestra el ganador</span></div>
+      <form class="inline" id="winnerForm">
+        <input id="winnerBars" type="number" min="1" max="64" step="1" required />
+        <button class="secondary" type="submit">Guardar</button>
+      </form>
+      <a href="/pantalla?preview" target="_blank" rel="noopener">Ver pantalla (vista previa)</a>
     </article>
   </section>
 
@@ -272,7 +297,7 @@
     const el = $('conn');
     if (authed) { el.textContent = 'conectado'; el.className = 'pill ok'; }
     else { el.textContent = 'desconectado'; el.className = 'pill bad'; }
-    for (const btn of document.querySelectorAll('button.lock, #cancelVote')) btn.disabled = !authed;
+    for (const btn of document.querySelectorAll('button.lock, #cancelVote, #card-screen button')) btn.disabled = !authed;
   }
 
   function renderBar() {
@@ -291,6 +316,13 @@
     renderBar();
     $('phones').textContent = state.phones;
     $('operators').textContent = state.operators;
+
+    $('screens').textContent = state.screens;
+    const w = state.display.winner;
+    $('winner-now').textContent = w ? `${w.cell} (quedan ${w.barsLeft} comp.)` : '–';
+    $('toggleQr').textContent = state.display.qr ? 'Ocultar QR' : 'Mostrar QR';
+    // No pisa lo que el operador está escribiendo.
+    if (document.activeElement !== $('winnerBars')) $('winnerBars').value = state.display.winnerBars;
 
     for (const column of COLUMNS) {
       const locked = Boolean(state.locks[column]);
@@ -334,6 +366,17 @@
       ws.send(JSON.stringify({ type: 'lock', column, locked: !state.locks[column] }));
     });
   }
+
+  $('toggleQr').addEventListener('click', () => {
+    ws.send(JSON.stringify({ type: 'display', qr: !state.display.qr }));
+  });
+
+  $('winnerForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const winnerBars = Number($('winnerBars').value);
+    ws.send(JSON.stringify({ type: 'display', winnerBars }));
+    $('winnerBars').blur();
+  });
 
   $('cancelVote').addEventListener('click', () => {
     if (confirm('¿Anular el voto en curso? Se borran todos los votos de esta ventana.')) {

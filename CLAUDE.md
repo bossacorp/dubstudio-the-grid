@@ -48,8 +48,9 @@ server/          Grid Server (Node + ws + node-osc)
   src/oscMonitor.js  Monitor OSC de prueba (perfil `monitor` del compose)
   src/barClock.js    "Max falso": manda /show/bar (perfil `clock`)
   test/          Pruebas (`npm test`, node:test): lógica de columnas, flujo
-                 celular→servidor→OSC, operador y contrato OSC por UDP real
-web/public/      Página pública 3×3 y operador.html (vanilla JS, sin build)
+                 celular→servidor→OSC, operador, pantalla y contrato OSC por UDP real
+web/public/      Página pública 3×3, operador.html y pantalla.html (vanilla JS, sin build)
+  vendor/qrcode.js  qrcode-generator 1.4.4 (MIT, Kazuhiko Arase), copiado tal cual
 max/             Patch de Max de prueba (recibe toques, manda /show/bar)
 Dockerfile       Imagen del Grid Server (contexto: raíz del repo)
 docker-compose.yml
@@ -71,9 +72,20 @@ docker-compose.yml
   `{type:'hello', role:'operator', key}`; clave mala → error y cierre 4001.
 - Ve: compás (y aviso si Max deja de mandarlo), celulares conectados, toques
   por columna, fx pendiente/enfriando, **conteo de votos en vivo** y bitácora.
-- Acciones: bloquear/desbloquear columna y anular el voto en curso. Nada más
-  por ahora.
+- Acciones: bloquear/desbloquear columna, anular el voto en curso, mostrar u
+  ocultar el QR de la pantalla y cambiar cuántos compases se muestra el ganador.
 - `POST /operador/lock` (header `x-operator-key`) se queda para scripts.
+
+## Pantalla (`/pantalla`, Browser Source de OBS)
+- Escenario fijo de 1920×1080 con fondo **transparente**, encima de Vizzie.
+  `/pantalla?preview` agrega un fondo de cuadros para verla en un navegador.
+- Se conecta con `{type:'hello', role:'screen'}` (sin clave, solo lectura) y no
+  cuenta como celular. Recibe `{type:'fire', column, cell}` por cada mensaje
+  OSC de celda para destellar, y se reconecta sola.
+- QR visible por defecto (codifica `PUBLIC_URL` o la URL con que OBS la abre);
+  el operador lo oculta/muestra.
+- Ganador del voto: se muestra `WINNER_BARS` compases (16 por defecto),
+  configurable en vivo por el operador (1–64).
 
 ## Principio: KICS
 Keep It Cuban/Chill/Simple. La nube y la infraestructura pesada solo entran

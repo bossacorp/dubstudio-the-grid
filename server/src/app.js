@@ -13,6 +13,8 @@ const publicDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..
 const COLUMN_LABELS = { visual: 'verde', fx: 'amarilla', vote: 'roja' };
 const MAX_EVENTS = 30;
 const OPERATOR_THROTTLE_MS = 200;
+const WINNER_BARS_MAX = 64;
+const FIRE_ADDRESS = /^\/grid\/(visual|fx|vote)\/([1-3])$/;
 
 // Compara la clave sin filtrar por tiempo de respuesta cuántos caracteres acertó.
 export function keyMatches(given, expected) {
@@ -26,39 +28,63 @@ export function createGridServer({
   send,
   columns = createColumns(),
   log = console.log,
+  publicUrl = '',
+  winnerBars = 16,
 }) {
   const locks = Object.fromEntries(COLUMNS.map((column) => [column, false]));
   const touches = Object.fromEntries(COLUMNS.map((column) => [column, 0]));
   const events = []; // bitácora del operador, la más reciente primero
+  // Lo que muestra /pantalla (OBS). winner: { cell, fromBar, untilBar }.
+  const display = { qr: true, winnerBars, winner: null };
 
   const app = express();
   app.use(express.json());
   app.get('/operador', (req, res) => res.sendFile(path.join(publicDir, 'operador.html')));
+  app.get('/pantalla', (req, res) => res.sendFile(path.join(publicDir, 'pantalla.html')));
   app.use(express.static(publicDir));
 
   const server = http.createServer(app);
   const wss = new WebSocketServer({ server, path: '/ws' });
 
   const isOperator = (ws) => ws.role === 'operator';
+  const isScreen = (ws) => ws.role === 'screen';
+
+  // Ganador vigente: se muestra desde el compás en que cerró el voto durante
+  // display.winnerBars compases (si Max reinicia el transport, se apaga).
+  function currentWinner() {
+    const { bar } = columns.view();
+    const w = display.winner;
+    if (!w || bar < w.fromBar || bar >= w.untilBar) return null;
+    return { cell: w.cell, barsLeft: w.untilBar - bar };
+  }
 
   function publicState() {
-    return { locks, ...columns.view() };
+    return {
+      locks,
+      ...columns.view(),
+      display: { qr: display.qr, publicUrl, winner: currentWinner() },
+    };
   }
 
   function operatorState() {
     const view = columns.view();
     let phones = 0;
     let operators = 0;
+    let screens = 0;
     for (const client of wss.clients) {
       if (isOperator(client)) operators += 1;
+      else if (isScreen(client)) screens += 1;
       else phones += 1;
     }
+    const pub = publicState();
     return {
-      ...publicState(),
+      ...pub,
       vote: { ...view.vote, tally: columns.tally() },
+      display: { ...pub.display, winnerBars: display.winnerBars },
       touches,
       phones,
       operators,
+      screens,
       events,
     };
   }
@@ -69,9 +95,21 @@ export function createGridServer({
     log(text);
   }
 
+  // Cada mensaje OSC de una celda también hace destellar esa celda en /pantalla.
   function run({ send: out, log: lines }) {
-    for (const [address, arg] of out) send(address, arg);
+    for (const [address, arg] of out) {
+      send(address, arg);
+      const fire = FIRE_ADDRESS.exec(address);
+      if (fire) sendToScreens({ type: 'fire', column: fire[1], cell: Number(fire[2]) });
+    }
     for (const line of lines) addEvent(line);
+  }
+
+  function sendToScreens(payload) {
+    const data = JSON.stringify(payload);
+    for (const client of wss.clients) {
+      if (isScreen(client) && client.readyState === client.OPEN) client.send(data);
+    }
   }
 
   function sendTo(ws, payload) {
@@ -108,6 +146,21 @@ export function createGridServer({
     broadcastAll();
   }
 
+  function setDisplay({ qr, winnerBars: bars }, by) {
+    if (typeof qr === 'boolean' && qr !== display.qr) {
+      display.qr = qr;
+      addEvent(`QR ${qr ? 'visible' : 'oculto'} en pantalla (${by})`);
+    }
+    if (bars !== undefined) {
+      if (!Number.isInteger(bars) || bars < 1 || bars > WINNER_BARS_MAX) return;
+      display.winnerBars = bars;
+      // También ajusta al ganador que se está mostrando.
+      if (display.winner) display.winner.untilBar = display.winner.fromBar + bars;
+      addEvent(`ganador en pantalla: ${bars} compases (${by})`);
+    }
+    broadcastAll();
+  }
+
   function cancelVote(by) {
     columns.clear('vote');
     addEvent(`voto en curso anulado (${by})`);
@@ -124,6 +177,11 @@ export function createGridServer({
   }
 
   function hello(ws, { role, key }) {
+    if (role === 'screen') {
+      ws.role = 'screen';
+      notifyOperators();
+      return;
+    }
     if (role !== 'operator') return;
     if (!keyMatches(key, operatorKey)) {
       sendTo(ws, { type: 'error', error: 'unauthorized' });
@@ -171,6 +229,7 @@ export function createGridServer({
         setLock(msg.column, msg.locked, 'operador');
       }
       if (msg.type === 'cancelVote') cancelVote('operador');
+      if (msg.type === 'display') setDisplay(msg, 'operador');
     });
   });
 
@@ -179,7 +238,11 @@ export function createGridServer({
   function onBar(bar) {
     if (!Number.isInteger(bar)) return;
     if (columns.view().bar === 0) log(`Primer compás recibido de Max: ${bar}`);
-    run(columns.onBar(bar));
+    const result = columns.onBar(bar);
+    if (result.winner) {
+      display.winner = { cell: result.winner, fromBar: bar, untilBar: bar + display.winnerBars };
+    }
+    run(result);
     broadcastAll();
   }
 

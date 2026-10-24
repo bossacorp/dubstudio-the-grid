@@ -55,6 +55,12 @@ celular (`http://<ip-linux-mint>:8080`):
 laptop) y entra con la `OPERATOR_KEY` de `server/.env`. Desde ahí se bloquean
 columnas, se anula el voto en curso y se ve el conteo de votos y la bitácora.
 
+**Pantalla en OBS (Mac mini).** Agrega una fuente *Browser Source* con URL
+`http://<ip-linux-mint>:8080/pantalla`, ancho 1920 y alto 1080, encima de la
+salida de Vizzie. El fondo es transparente. Para verla en un navegador normal:
+`/pantalla?preview`. El QR y la duración del ganador se controlan desde
+`/operador` (tarjeta "Pantalla · OBS").
+
 **2 — Con Max en la Mac mini.** Apaga el reloj falso
 (`docker compose stop bar-clock`), agrega la Mac mini a `OSC_TARGETS`
 (`osc-monitor:9000,<ip-mac-mini>:9000`) y recrea:
