@@ -1,7 +1,7 @@
 import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
-import WebSocket from 'ws';
-import { createGridServer, keyMatches } from '../src/app.js';
+import { keyMatches } from '../src/app.js';
+import { startServer, connect as connectTo } from './helpers.js';
 
 const KEY = 'clave-de-prueba';
 let grid;
@@ -9,51 +9,12 @@ let sent;
 let base;
 
 beforeEach(async () => {
-  sent = [];
-  grid = createGridServer({
-    operatorKey: KEY,
-    send: (address, arg) => sent.push([address, arg]),
-    log: () => {},
-  });
-  await new Promise((resolve) => grid.server.listen(0, '127.0.0.1', resolve));
-  base = `127.0.0.1:${grid.server.address().port}`;
+  ({ grid, sent, base } = await startServer({ operatorKey: KEY }));
 });
 
 afterEach(() => grid.close());
 
-// Abre un WebSocket y guarda todos los mensajes; `next(pred)` espera al
-// primero (ya llegado o por llegar) que cumpla el predicado y descarta los
-// anteriores, para no confundir un estado viejo con uno nuevo.
-async function connect() {
-  const ws = new WebSocket(`ws://${base}/ws`);
-  const inbox = [];
-  const waiters = [];
-  ws.on('message', (raw) => {
-    const msg = JSON.parse(raw.toString());
-    const w = waiters.find((x) => x.pred(msg));
-    if (w) {
-      waiters.splice(waiters.indexOf(w), 1);
-      w.resolve(msg);
-    } else {
-      inbox.push(msg);
-    }
-  });
-  await new Promise((resolve, reject) => {
-    ws.once('open', resolve);
-    ws.once('error', reject);
-  });
-  const next = (pred, timeout = 1000) => {
-    const i = inbox.findIndex(pred);
-    if (i >= 0) return Promise.resolve(inbox.splice(0, i + 1).at(-1));
-    inbox.length = 0;
-    return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => reject(new Error('timeout esperando mensaje')), timeout);
-      waiters.push({ pred, resolve: (msg) => { clearTimeout(timer); resolve(msg); } });
-    });
-  };
-  const sendJson = (obj) => ws.send(JSON.stringify(obj));
-  return { ws, next, send: sendJson, inbox };
-}
+const connect = () => connectTo(base);
 
 async function operator() {
   const op = await connect();

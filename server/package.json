@@ -8,7 +8,7 @@
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
     "monitor": "node src/oscMonitor.js",
-    "test": "node --test",
+    "test": "node --test test/*.test.js",
     "clock": "node src/barClock.js"
   },
   "dependencies": {

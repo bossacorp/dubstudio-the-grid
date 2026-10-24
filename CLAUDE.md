@@ -47,7 +47,8 @@ server/          Grid Server (Node + ws + node-osc)
   src/columns.js Lógica verde/amarilla/roja (pura, sin red)
   src/oscMonitor.js  Monitor OSC de prueba (perfil `monitor` del compose)
   src/barClock.js    "Max falso": manda /show/bar (perfil `clock`)
-  test/          Pruebas (`npm test`, node:test): columns.js y servidor/operador
+  test/          Pruebas (`npm test`, node:test): lógica de columnas, flujo
+                 celular→servidor→OSC, operador y contrato OSC por UDP real
 web/public/      Página pública 3×3 y operador.html (vanilla JS, sin build)
 max/             Patch de Max de prueba (recibe toques, manda /show/bar)
 Dockerfile       Imagen del Grid Server (contexto: raíz del repo)

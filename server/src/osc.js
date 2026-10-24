@@ -9,6 +9,11 @@ export function sendOsc(address, ...args) {
   }
 }
 
+// Cierra los sockets de salida (para que las pruebas terminen limpias).
+export function closeOsc() {
+  for (const client of clients) client.close();
+}
+
 // Escucha OSC entrante (p. ej. /show/bar desde Max) y entrega cada mensaje
 // como (address, args) al handler.
 export function listenOsc(port, handler) {
