@@ -47,11 +47,14 @@ server/          Grid Server (Node + ws + node-osc)
   src/columns.js Lógica verde/amarilla/roja (pura, sin red)
   src/oscMonitor.js  Monitor OSC de prueba (perfil `monitor` del compose)
   src/barClock.js    "Max falso": manda /show/bar (perfil `clock`)
+  src/contractTester.js  Manda el contrato completo a Max (perfil `contract`)
   test/          Pruebas (`npm test`, node:test): lógica de columnas, flujo
                  celular→servidor→OSC, operador, pantalla y contrato OSC por UDP real
 web/public/      Página pública 3×3, operador.html y pantalla.html (vanilla JS, sin build)
   vendor/qrcode.js  qrcode-generator 1.4.4 (MIT, Kazuhiko Arase), copiado tal cual
-max/             Patch de Max de prueba (recibe toques, manda /show/bar)
+max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
+                 con send (grid.visual.1…grid.vote.3, grid.lock.<col>) y marca
+                 el compás (/show/bar). Los patches de color usan [r grid.…]
 Dockerfile       Imagen del Grid Server (contexto: raíz del repo)
 docker-compose.yml
 .gitlab-ci.yml   CI: `npm test` en cada push (runner tag `self-hosted`, Linux Mint)

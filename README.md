@@ -65,23 +65,43 @@ salida de Vizzie. El fondo es transparente. Para verla en un navegador normal:
 (`docker compose stop bar-clock`), agrega la Mac mini a `OSC_TARGETS`
 (`osc-monitor:9000,<ip-mac-mini>:9000`) y recrea:
 `docker compose --profile monitor up -d --force-recreate`. Abre
-`max/grid-monitor.maxpat`:
+`max/grid-router.maxpat` (uno solo por Max: es el único `udpreceive 9000`):
 
-1. Arriba (`udpreceive 9000` → `print GRID`) ves los mensajes en la Max Console.
+1. Arriba recibe el contrato, lo imprime en la Max Console (`print GRID`) y lo
+   reparte con `send`: `grid.visual.1` … `grid.vote.3` (reciben `1`) y
+   `grid.lock.visual|fx|vote` (reciben `1` o `0`). En cada patch de color se
+   escucha con `[r grid.visual.1]`, etc.
 2. Abajo está el reloj: edita el mensaje `host …` con la IP de la Linux Mint,
    dale clic, ajusta el BPM y activa el toggle.
 
 Si el patch no abre bien, se arma a mano:
-`[udpreceive 9000]→[print GRID]` y
+`[udpreceive 9000]→[route /grid/visual/1 … /grid/lock/vote]→[s grid.visual.1]…` y
 `[toggle]→[metro 1n @quantize 1n]→[transport]→[prepend /show/bar]→[udpsend <ip-linux-mint> 9100]`
 (el toggle también va a `[transport]`; `[tempo $1]` fija el BPM).
+
+**3 — Validación por color (patches de Max).** Con `grid-router.maxpat` y los
+tres patches de color abiertos en la Mac mini, manda el contrato completo
+directo a Max, un mensaje cada 2 s:
+
+```
+CONTRACT_TARGET=<ip-mac-mini>:9000 docker compose run --rm contract-tester
+CONTRACT_TARGET=<ip-mac-mini>:9000 ONLY=fx STEP_MS=4000 docker compose run --rm contract-tester
+```
+
+`ONLY` = `visual` | `fx` | `vote` | `lock`. Para cada línea que imprime, revisa:
+
+- [ ] Verde 1, 2, 3: cada celda hace su cambio en el tercio verde.
+- [ ] Amarilla 1, 2, 3: cada celda hace su cambio en el tercio amarillo.
+- [ ] Roja 1, 2, 3 (ganador): cada celda hace su cambio en el tercio rojo.
+- [ ] Bloquear/desbloquear cada color: el tercio responde como se acordó.
+- [ ] Nada aparece en `print GRID-DESCONOCIDO`.
 
 ## Estructura
 
 ```
 server/          Grid Server (Node + WebSocket + OSC)
 web/public/      Página pública 3×3
-max/             Patch de Max de prueba
+max/             grid-router.maxpat (entrada OSC + reloj de compás)
 Dockerfile
 docker-compose.yml
 ```
