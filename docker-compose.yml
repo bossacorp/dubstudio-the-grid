@@ -1,0 +1,40 @@
+services:
+  grid-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "9100:9100/udp"   # OSC entrante: /show/bar desde Max
+    env_file:
+      - server/.env
+    restart: unless-stopped
+
+  # Monitor OSC de prueba. Solo arranca con: docker compose --profile monitor up
+  osc-monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["node", "server/src/oscMonitor.js"]
+    environment:
+      - OSC_MONITOR_PORT=9000
+    ports:
+      - "9000:9000/udp"
+    profiles:
+      - monitor
+
+  # "Max falso": manda /show/bar al servidor. Solo arranca con:
+  #   docker compose --profile clock up
+  # No usarlo junto con el reloj del patch de Max (serían dos relojes).
+  bar-clock:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["node", "server/src/barClock.js"]
+    environment:
+      - BAR_CLOCK_TARGET=grid-server:9100
+      - BPM=120
+    depends_on:
+      - grid-server
+    profiles:
+      - clock

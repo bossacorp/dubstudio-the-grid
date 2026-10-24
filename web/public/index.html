@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>The Grid</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: #111;
+    font-family: system-ui, sans-serif;
+    color: #eee;
+  }
+  h1 { margin: 0; letter-spacing: 0.2em; font-size: 1.25rem; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    width: min(90vw, 360px);
+    aspect-ratio: 1;
+  }
+  button.cell {
+    border: none;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #111;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .col-visual { background: #1db954; }
+  .col-fx { background: #ffd200; }
+  .col-vote { background: #e11d1d; }
+  button.cell:disabled { opacity: 0.35; cursor: not-allowed; }
+  /* Amarilla pendiente: espera al siguiente compás */
+  button.cell.pending { animation: pulse 0.5s ease-in-out infinite alternate; }
+  @keyframes pulse { to { filter: brightness(1.6); transform: scale(0.94); } }
+  /* Roja: tu voto en esta ventana */
+  button.cell.voted { outline: 4px solid #fff; outline-offset: -4px; }
+  #status, #vote { font-size: 0.85rem; opacity: 0.6; margin: 0; }
+</style>
+</head>
+<body>
+  <h1>THE GRID</h1>
+  <div class="grid" id="grid"></div>
+  <p id="vote"></p>
+  <div id="status">conectando…</div>
+
+<script>
+  const COLUMNS = ['visual', 'fx', 'vote'];
+  let state = {
+    locks: { visual: false, fx: false, vote: false },
+    bar: 0,
+    fx: { pending: [], cooling: {} },
+    vote: { round: null, barsLeft: null },
+  };
+  let connected = false;
+  // Tu voto en la ronda actual: { round, cell }.
+  let myVote = null;
+
+  const deviceId = localStorage.getItem('grid-device-id')
+    || (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()));
+  localStorage.setItem('grid-device-id', deviceId);
+
+  const gridEl = document.getElementById('grid');
+  const statusEl = document.getElementById('status');
+  const voteEl = document.getElementById('vote');
+  const buttons = [];
+
+  for (let row = 1; row <= 3; row++) {
+    for (const column of COLUMNS) {
+      const btn = document.createElement('button');
+      btn.className = `cell col-${column}`;
+      btn.textContent = row;
+      btn.addEventListener('click', () => sendTouch(column, row));
+      gridEl.appendChild(btn);
+      buttons.push({ el: btn, column, cell: row });
+    }
+  }
+
+  const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+  const ws = new WebSocket(`${proto}://${location.host}/ws`);
+
+  ws.addEventListener('open', () => { connected = true; render(); });
+  ws.addEventListener('close', () => { connected = false; render(); });
+  ws.addEventListener('message', (event) => {
+    const msg = JSON.parse(event.data);
+    if (msg.type === 'state') {
+      state = msg.state;
+      if (myVote && myVote.round !== state.vote.round) myVote = null;
+      render();
+    }
+  });
+
+  function render() {
+    for (const { el, column, cell } of buttons) {
+      const cooling = column === 'fx' && state.fx.cooling[cell];
+      el.disabled = Boolean(state.locks[column] || cooling);
+      el.classList.toggle('pending', column === 'fx' && state.fx.pending.includes(cell));
+      el.classList.toggle('voted', column === 'vote' && myVote?.cell === cell);
+    }
+
+    if (!connected) statusEl.textContent = 'desconectado';
+    else if (!state.bar) statusEl.textContent = 'conectado · esperando compás';
+    else statusEl.textContent = `conectado · compás ${state.bar}`;
+
+    if (state.locks.vote || !state.vote.barsLeft) voteEl.textContent = '';
+    else {
+      const left = state.vote.barsLeft;
+      const mine = myVote ? ` · tu voto: ${myVote.cell}` : '';
+      voteEl.textContent = `voto: ${left === 1 ? 'último compás' : `quedan ${left} compases`}${mine}`;
+    }
+  }
+
+  function sendTouch(column, cell) {
+    if (ws.readyState !== WebSocket.OPEN || state.locks[column]) return;
+    if (column === 'fx' && state.fx.cooling[cell]) return;
+    ws.send(JSON.stringify({ type: 'touch', column, cell, deviceId }));
+    if (column === 'vote') {
+      myVote = { round: state.vote.round, cell };
+      render();
+    }
+  }
+
+  render();
+</script>
+</body>
+</html>

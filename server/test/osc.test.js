@@ -1,0 +1,62 @@
+// Contrato OSC con UDP real: lo que sale hacia Max y lo que Max manda de
+// vuelta. Si alguna de estas pruebas cambia, hay que avisar y actualizar los
+// patches de Max (ver CLAUDE.md, "Contrato OSC").
+import { test, after } from 'node:test';
+import assert from 'node:assert/strict';
+import { Client, Server } from 'node-osc';
+import { OSC, COLUMNS, CELLS } from '../src/oscContract.js';
+
+const MAX_PORT = 19000; // hace de Max recibiendo toques
+const IN_PORT = 19100; // hace de OSC_IN_PORT del servidor
+
+// osc.js lee OSC_TARGETS al cargarse, así que se fija antes de importarlo.
+process.env.OSC_TARGETS = `127.0.0.1:${MAX_PORT}`;
+const { sendOsc, listenOsc, closeOsc } = await import('../src/osc.js');
+
+const closers = [];
+after(() => {
+  closeOsc();
+  for (const close of closers) close();
+});
+
+function fakeMax(port) {
+  return new Promise((resolve) => {
+    const server = new Server(port, '127.0.0.1', () => resolve(server));
+    closers.push(() => server.close());
+  });
+}
+
+const nextMessage = (server) => new Promise((resolve) => server.once('message', resolve));
+
+test('direcciones del contrato', () => {
+  assert.deepEqual(COLUMNS, ['visual', 'fx', 'vote']);
+  assert.deepEqual(CELLS, [1, 2, 3]);
+  assert.equal(OSC.visual(1), '/grid/visual/1');
+  assert.equal(OSC.fx(2), '/grid/fx/2');
+  assert.equal(OSC.vote(3), '/grid/vote/3');
+  assert.equal(OSC.lock('fx'), '/grid/lock/fx');
+  assert.equal(OSC.bar, '/show/bar');
+});
+
+test('sendOsc llega a Max como dirección + entero', async () => {
+  const max = await fakeMax(MAX_PORT);
+  const got = nextMessage(max);
+  sendOsc(OSC.visual(2), 1);
+  assert.deepEqual(await got, ['/grid/visual/2', 1]);
+
+  const lock = nextMessage(max);
+  sendOsc(OSC.lock('vote'), 0);
+  assert.deepEqual(await lock, ['/grid/lock/vote', 0]);
+});
+
+test('listenOsc recibe /show/bar como lo manda Max', async () => {
+  const received = new Promise((resolve) => {
+    const server = listenOsc(IN_PORT, (address, args) => resolve([address, args]));
+    closers.push(() => server.close());
+  });
+  await new Promise((r) => setTimeout(r, 50));
+  const max = new Client('127.0.0.1', IN_PORT);
+  closers.push(() => max.close());
+  max.send('/show/bar', 17);
+  assert.deepEqual(await received, ['/show/bar', [17]]);
+});
