@@ -8,6 +8,7 @@ const grid = createGridServer({
   send: sendOsc,
   publicUrl: config.publicUrl,
   winnerBars: config.winnerBars,
+  theme: config.theme,
 });
 
 listenOsc(config.oscInPort, (address, args) => {

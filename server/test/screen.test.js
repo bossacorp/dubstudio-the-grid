@@ -42,7 +42,12 @@ test('por defecto el QR se muestra; PUBLIC_URL viaja en el estado', async () => 
   const { base } = await setup({ publicUrl: 'http://192.168.1.45:8080' });
   const s = await connect(base);
   const { state } = await s.next((m) => m.type === 'state');
-  assert.deepEqual(state.display, { qr: true, publicUrl: 'http://192.168.1.45:8080', winner: null });
+  assert.deepEqual(state.display, {
+    qr: true,
+    publicUrl: 'http://192.168.1.45:8080',
+    winner: null,
+    theme: 'clasico',
+  });
   s.ws.close();
 });
 
@@ -160,4 +165,58 @@ test('si Max reinicia el transport, el ganador deja de mostrarse', async () => {
   assert.equal(msg.state.display.winner, null);
   s.ws.close();
   phone.ws.close();
+});
+
+test('estilo de las celdas: el operador lo cambia en vivo; valores raros se ignoran', async () => {
+  const { base } = await setup();
+  const phone = await connect(base);
+  await phone.next((m) => m.type === 'state');
+  const op = await operator(base);
+
+  phone.send({ type: 'display', theme: 'psicodelico' }); // el público no puede
+  op.send({ type: 'display', theme: 'no-existe' });
+  op.send({ type: 'display', theme: 'naturaleza' });
+  const msg = await phone.next((m) => m.type === 'state' && m.state.display.theme !== 'clasico');
+  assert.equal(msg.state.display.theme, 'naturaleza');
+  const opMsg = await op.next((m) => m.type === 'operator' && m.state.display.theme === 'naturaleza');
+  assert.equal(opMsg.state.events[0].text, 'estilo de las celdas: naturaleza (operador)');
+  op.ws.close();
+  phone.ws.close();
+});
+
+test('estilo inicial configurable; si no existe queda clasico', async () => {
+  let started = await setup({ theme: 'elegante' });
+  let s = await connect(started.base);
+  assert.equal((await s.next((m) => m.type === 'state')).state.display.theme, 'elegante');
+  s.ws.close();
+  await grid.close();
+  started = await setup({ theme: 'otro' });
+  s = await connect(started.base);
+  assert.equal((await s.next((m) => m.type === 'state')).state.display.theme, 'clasico');
+  s.ws.close();
+});
+
+test('una winnerBars inválida no impide aplicar el resto del mensaje', async () => {
+  const { base } = await setup();
+  const op = await operator(base);
+  op.send({ type: 'display', qr: false, winnerBars: 0 });
+  const msg = await op.next((m) => m.type === 'operator' && m.state.display.qr === false);
+  assert.equal(msg.state.display.winnerBars, 16);
+  op.ws.close();
+});
+
+test('la vista previa (monitor) no cuenta como pantalla de OBS', async () => {
+  const { base } = await setup();
+  const op = await operator(base);
+  const obs = await screen(base);
+  const mini = await connect(base);
+  mini.send({ type: 'hello', role: 'screen', monitor: true });
+  const phone = await connect(base);
+  const msg = await op.next((m) => m.type === 'operator' && m.state.phones === 1);
+  assert.equal(msg.state.screens, 1);
+
+  // la vista previa sí recibe destellos
+  phone.send({ type: 'touch', column: 'visual', cell: 1, deviceId: 'a' });
+  assert.deepEqual(await mini.next((m) => m.type === 'fire'), { type: 'fire', column: 'visual', cell: 1 });
+  for (const c of [op, obs, mini, phone]) c.ws.close();
 });

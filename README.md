@@ -55,6 +55,11 @@ celular (`http://<ip-linux-mint>:8080`):
 laptop) y entra con la `OPERATOR_KEY` de `server/.env`. Desde ahí se bloquean
 columnas, se anula el voto en curso y se ve el conteo de votos y la bitácora.
 
+**Estilos de las celdas.** Desde `/operador` (tarjeta "Pantalla · OBS") se
+elige el estilo: Clásico, Psicodélico, Atmosférico, Naturaleza o Elegante, y
+cambia en vivo en todos los celulares y en la pantalla. Para comparar estilos
+en un solo celular: `http://<ip-linux-mint>:8080/?tema=naturaleza`.
+
 **Pantalla en OBS (Mac mini).** Agrega una fuente *Browser Source* con URL
 `http://<ip-linux-mint>:8080/pantalla`, ancho 1920 y alto 1080, encima de la
 salida de Vizzie. El fondo es transparente. Para verla en un navegador normal:

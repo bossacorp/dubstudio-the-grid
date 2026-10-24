@@ -14,6 +14,8 @@ const COLUMN_LABELS = { visual: 'verde', fx: 'amarilla', vote: 'roja' };
 const MAX_EVENTS = 30;
 const OPERATOR_THROTTLE_MS = 200;
 const WINNER_BARS_MAX = 64;
+// Estilos de arte de las celdas (celular y /pantalla); el operador cambia en vivo.
+export const THEMES = ['clasico', 'psicodelico', 'atmosferico', 'naturaleza', 'elegante'];
 const FIRE_ADDRESS = /^\/grid\/(visual|fx|vote)\/([1-3])$/;
 
 // Compara la clave sin filtrar por tiempo de respuesta cuántos caracteres acertó.
@@ -30,12 +32,18 @@ export function createGridServer({
   log = console.log,
   publicUrl = '',
   winnerBars = 16,
+  theme = 'clasico',
 }) {
   const locks = Object.fromEntries(COLUMNS.map((column) => [column, false]));
   const touches = Object.fromEntries(COLUMNS.map((column) => [column, 0]));
   const events = []; // bitácora del operador, la más reciente primero
   // Lo que muestra /pantalla (OBS). winner: { cell, fromBar, untilBar }.
-  const display = { qr: true, winnerBars, winner: null };
+  const display = {
+    qr: true,
+    winnerBars,
+    winner: null,
+    theme: THEMES.includes(theme) ? theme : 'clasico',
+  };
 
   const app = express();
   app.use(express.json());
@@ -62,7 +70,7 @@ export function createGridServer({
     return {
       locks,
       ...columns.view(),
-      display: { qr: display.qr, publicUrl, winner: currentWinner() },
+      display: { qr: display.qr, publicUrl, winner: currentWinner(), theme: display.theme },
     };
   }
 
@@ -73,7 +81,7 @@ export function createGridServer({
     let screens = 0;
     for (const client of wss.clients) {
       if (isOperator(client)) operators += 1;
-      else if (isScreen(client)) screens += 1;
+      else if (isScreen(client)) screens += client.monitor ? 0 : 1;
       else phones += 1;
     }
     const pub = publicState();
@@ -146,13 +154,16 @@ export function createGridServer({
     broadcastAll();
   }
 
-  function setDisplay({ qr, winnerBars: bars }, by) {
+  function setDisplay({ qr, winnerBars: bars, theme: newTheme }, by) {
     if (typeof qr === 'boolean' && qr !== display.qr) {
       display.qr = qr;
       addEvent(`QR ${qr ? 'visible' : 'oculto'} en pantalla (${by})`);
     }
-    if (bars !== undefined) {
-      if (!Number.isInteger(bars) || bars < 1 || bars > WINNER_BARS_MAX) return;
+    if (THEMES.includes(newTheme) && newTheme !== display.theme) {
+      display.theme = newTheme;
+      addEvent(`estilo de las celdas: ${newTheme} (${by})`);
+    }
+    if (Number.isInteger(bars) && bars >= 1 && bars <= WINNER_BARS_MAX) {
       display.winnerBars = bars;
       // También ajusta al ganador que se está mostrando.
       if (display.winner) display.winner.untilBar = display.winner.fromBar + bars;
@@ -176,9 +187,12 @@ export function createGridServer({
     else notifyOperators();
   }
 
-  function hello(ws, { role, key }) {
+  function hello(ws, { role, key, monitor }) {
     if (role === 'screen') {
       ws.role = 'screen';
+      // Vista previa (p. ej. la miniatura del operador): recibe todo pero no
+      // cuenta como pantalla de OBS.
+      ws.monitor = monitor === true;
       notifyOperators();
       return;
     }

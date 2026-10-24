@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>The Grid · Pantalla</title>
 <style>
-  /* Fondo transparente: en OBS (Browser Source 1920×1080) queda encima de
-     Vizzie. Para previsualizar en un navegador normal: /pantalla?preview */
+  /* Fondo transparente solo dentro de OBS (Browser Source 1920×1080), encima
+     de Vizzie. En cualquier otro navegador sale con fondo oscuro para que se
+     lea. ?transparente fuerza transparente; ?preview fuerza el fondo. */
   html, body { margin: 0; height: 100%; overflow: hidden; background: transparent; }
   body.preview {
     background:
@@ -74,6 +75,19 @@
     from { box-shadow: 0 0 20px 4px rgba(var(--c), 0.6); }
     to { box-shadow: 0 0 60px 16px rgba(var(--c), 0.95); }
   }
+  /* Con arte: el dibujo ocupa la celda y el número pasa a una esquina. */
+  .cell .ga { opacity: 0.8; border-radius: 14px; }
+  .cell .num { position: relative; z-index: 1; }
+  #stage.art .cell { background: rgba(0, 0, 0, 0.25); }
+  #stage.art .cell .num { position: absolute; top: 12px; left: 18px; font-size: 40px; }
+  #stage.art .cell.flash { animation: flash-art 0.7s ease-out; }
+  #stage.art .cell.flash .ga { opacity: 1; }
+  #stage.art .cell.pending { animation: pulse-art 0.5s ease-in-out infinite alternate; }
+  @keyframes flash-art {
+    0% { filter: brightness(2.2); transform: scale(1.06); }
+    100% { filter: none; transform: scale(1); }
+  }
+  @keyframes pulse-art { to { filter: brightness(1.7); } }
   .cell .tag {
     position: absolute;
     bottom: 14px;
@@ -154,10 +168,20 @@
 </div>
 
 <script src="vendor/qrcode.js"></script>
+<script src="art.js"></script>
 <script>
   const COLUMNS = ['visual', 'fx', 'vote'];
   const params = new URLSearchParams(location.search);
-  if (params.has('preview')) document.body.classList.add('preview');
+  // OBS expone window.obsstudio en sus Browser Sources.
+  const inObs = typeof window.obsstudio !== 'undefined';
+  if (params.has('preview') || (!inObs && !params.has('transparente'))) {
+    document.body.classList.add('preview');
+  }
+  // ?monitor: vista previa del operador (no cuenta como pantalla de OBS).
+  const isMonitor = params.has('monitor');
+  // ?tema=naturaleza fuerza un estilo en esta pantalla.
+  const forcedTheme = params.get('tema');
+  let shownTheme = null;
 
   // Escala el escenario 1920×1080 a la ventana (en OBS a 1920×1080 queda en 1).
   const stage = document.getElementById('stage');
@@ -174,12 +198,16 @@
     for (const column of COLUMNS) {
       const el = document.createElement('div');
       el.className = `cell col-${column}`;
-      el.textContent = row;
+      const art = document.createElement('div');
+      art.className = 'ga';
+      const num = document.createElement('span');
+      num.className = 'num';
+      num.textContent = row;
       const tag = document.createElement('span');
       tag.className = 'tag';
-      el.appendChild(tag);
+      el.append(art, num, tag);
       gridEl.appendChild(el);
-      cells[`${column}-${row}`] = { el, tag };
+      cells[`${column}-${row}`] = { el, tag, art, column, cell: row };
     }
   }
 
@@ -194,7 +222,19 @@
     document.getElementById('qrUrl').textContent = url.replace(/^https?:\/\//, '');
   }
 
+  function renderTheme(state) {
+    const theme = forcedTheme || state.display.theme || 'clasico';
+    if (theme === shownTheme) return;
+    shownTheme = theme;
+    const hasArt = theme !== 'clasico' && window.GridArt?.THEMES.includes(theme);
+    stage.classList.toggle('art', Boolean(hasArt));
+    for (const { art, column, cell } of Object.values(cells)) {
+      art.innerHTML = hasArt ? GridArt.svg(theme, column, cell) : '';
+    }
+  }
+
   function render(state) {
+    renderTheme(state);
     for (const column of COLUMNS) {
       for (let cell = 1; cell <= 3; cell++) {
         const { el, tag } = cells[`${column}-${cell}`];
@@ -244,7 +284,7 @@
     const proto = location.protocol === 'https:' ? 'wss' : 'ws';
     const ws = new WebSocket(`${proto}://${location.host}/ws`);
     ws.addEventListener('open', () => {
-      ws.send(JSON.stringify({ type: 'hello', role: 'screen' }));
+      ws.send(JSON.stringify({ type: 'hello', role: 'screen', monitor: isMonitor }));
     });
     ws.addEventListener('message', (event) => {
       const msg = JSON.parse(event.data);

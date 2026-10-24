@@ -51,6 +51,9 @@ server/          Grid Server (Node + ws + node-osc)
   test/          Pruebas (`npm test`, node:test): lógica de columnas, flujo
                  celular→servidor→OSC, operador, pantalla y contrato OSC por UDP real
 web/public/      Página pública 3×3, operador.html y pantalla.html (vanilla JS, sin build)
+  art.js         Arte de las celdas: SVG animado generado por código, 5 estilos
+                 (clasico, psicodelico, atmosferico, naturaleza, elegante). Fila 1
+                 = efectos A, fila 2 = efectos B, fila 3 = crossfade; color por columna
   vendor/qrcode.js  qrcode-generator 1.4.4 (MIT, Kazuhiko Arase), copiado tal cual
 max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
                  con send (grid.visual.1…grid.vote.3, grid.lock.<col>) y marca
@@ -79,12 +82,16 @@ docker-compose.yml
 - Ve: compás (y aviso si Max deja de mandarlo), celulares conectados, toques
   por columna, fx pendiente/enfriando, **conteo de votos en vivo** y bitácora.
 - Acciones: bloquear/desbloquear columna, anular el voto en curso, mostrar u
-  ocultar el QR de la pantalla y cambiar cuántos compases se muestra el ganador.
+  ocultar el QR de la pantalla, cambiar cuántos compases se muestra el ganador
+  y el estilo del arte de las celdas (celulares y pantalla cambian en vivo).
+- Muestra también la pantalla en vivo (iframe `/pantalla?preview&monitor`, no
+  cuenta como pantalla de OBS) y el QR en grande.
 - `POST /operador/lock` (header `x-operator-key`) se queda para scripts.
 
 ## Pantalla (`/pantalla`, Browser Source de OBS)
-- Escenario fijo de 1920×1080 con fondo **transparente**, encima de Vizzie.
-  `/pantalla?preview` agrega un fondo de cuadros para verla en un navegador.
+- Escenario fijo de 1920×1080 con fondo **transparente solo dentro de OBS**
+  (detecta `window.obsstudio`), encima de Vizzie. En otro navegador sale con
+  fondo para que se lea; `?transparente` lo fuerza transparente.
 - Se conecta con `{type:'hello', role:'screen'}` (sin clave, solo lectura) y no
   cuenta como celular. Recibe `{type:'fire', column, cell}` por cada mensaje
   OSC de celda para destellar, y se reconecta sola.
@@ -92,6 +99,12 @@ docker-compose.yml
   el operador lo oculta/muestra.
 - Ganador del voto: se muestra `WINNER_BARS` compases (16 por defecto),
   configurable en vivo por el operador (1–64).
+
+## Estilos de celdas
+- `display.theme` en el estado público; el operador lo cambia (`{type:'display',
+  theme}`), `THEME` en `.env` fija el inicial. `?tema=<estilo>` en la URL lo
+  fuerza en un solo celular o pantalla (para comparar).
+- Arte propio del artista: reemplazará a `art.js` más adelante.
 
 ## Principio: KICS
 Keep It Cuban/Chill/Simple. La nube y la infraestructura pesada solo entran

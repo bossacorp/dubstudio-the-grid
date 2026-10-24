@@ -27,4 +27,6 @@ export const config = {
   publicUrl: process.env.PUBLIC_URL || '',
   // Compases que la pantalla muestra al ganador del voto (el operador lo cambia en vivo).
   winnerBars: intInRange(process.env.WINNER_BARS, 1, 64, 16),
+  // Estilo inicial de las celdas (clasico, psicodelico, atmosferico, naturaleza, elegante).
+  theme: process.env.THEME || 'clasico',
 };
