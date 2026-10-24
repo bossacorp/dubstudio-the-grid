@@ -99,6 +99,27 @@ patches. Cada uno trae a la derecha un bloque **THE GRID**:
 Cada mensaje se imprime en la Max Console como `GRID-VERDE`, `GRID-AMARILLO`
 o `GRID-ROJO`.
 
+**Ableton (MacBook) → visuales y compás.** Ableton manda el tempo.
+
+1. *Crear el dispositivo (una vez):* en Live arrastra un **Max MIDI Effect** a
+   una pista MIDI → **Edit**. En Max abre `max/ableton/GridOSC.maxpat`,
+   selecciona todo (Cmd+A), copia, pégalo en el dispositivo (borra antes el
+   `midiin → midiout` que trae), edita las IPs de los dos `udpsend` (Mac mini
+   :9200 y Linux Mint :9100) y guárdalo como `GridOSC.amxd`.
+2. *Usarlo:* ponlo en las pistas que deben mover visuales (el MIDI sigue
+   pasando al instrumento). Modo **golpes**: cada nota sale como
+   `/live/hit` (tarolas 38/40 → destello). Modo **escenas**: en una pista de
+   control, un clip por escena con una nota (C1 = escena 1, D1 = 2…). Las 4
+   perillas se automatizan o se mapean a tu microKORG/MC-101. Deja **Compás**
+   encendido en un solo dispositivo y apaga el reloj del `grid-router`.
+3. *En la Mac mini:* abre `max/ableton-bridge.maxpat` junto al router y los
+   patches de color.
+4. *Probar sin Ableton:*
+   `CONTRACT_TARGET=<ip-mac-mini>:9200 ONLY=live docker compose run --rm contract-tester`
+
+Si mandas una versión nueva de un patch de color, los bloques se reaplican con
+`python3 max/tools/agregar_bloques.py nuevo.maxpat max/bobGrid/<color>-bob-rebel-music.maxpat verde|amarillo|rojo`.
+
 **3 — Validación por color (patches de Max).** Con `grid-router.maxpat` y los
 tres patches de color abiertos en la Mac mini, manda el contrato completo
 directo a Max, un mensaje cada 2 s:

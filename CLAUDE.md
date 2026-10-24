@@ -13,15 +13,19 @@ El operador (ROR) puede bloquear cualquier columna desde `/operador`.
 ## Arquitectura (Fase 0)
 ```
 Celular (web) → Grid Server (Docker, Linux Mint) ──OSC :9000──→ Mac mini (Max 8 / Vizzie)
-                                                 ←─OSC :9100── /show/bar (Max marca el compás)
+                     ↑ /show/bar :9100                            ↑ OSC :9200 (/live/...)
+MacBook: Ableton 12 Suite + dispositivo M4L GridOSC ──────────────┘
+         (manda el compás al servidor y golpes/CC/perillas/escenas a la Mac mini)
 ```
 
 Roles de las máquinas:
 - **Linux Mint** — corre el Grid Server en Docker. Es la única con Docker.
-- **Mac mini** — OBS (broadcasting) + Max 8 (visuales con Vizzie, controladores
-  MIDI). No se le instala nada más (ni Docker ni OSCulator). En Fase 0 Max
-  recibe los toques y **marca el compás** (`/show/bar`).
-- **MacBook (Ableton + M4L)** — fuera de la Fase 0.
+- **Mac mini** — OBS (broadcasting) + Max 8.6.5 (visuales con Vizzie,
+  controladores MIDI). No se le instala nada más (ni Docker ni OSCulator).
+  Recibe los toques (grid-router) y lo de Ableton (ableton-bridge).
+- **MacBook** — Ableton 12.4.7 Suite (Max for Live 9). **Ableton manda el
+  tempo**: el dispositivo GridOSC manda `/show/bar` al servidor; el reloj del
+  grid-router queda apagado (solo de respaldo si no hay Ableton).
 - **TouchOSC** — fuera por ahora; solo entra si se vuelve indispensable.
 
 Todo lo que corre como servicio (el Grid Server, y lo que se sume después)
@@ -38,6 +42,16 @@ Definido en `server/src/oscContract.js`:
 - `/grid/lock/<columna> 1|0`
 - `/show/bar <n>` — Max → servidor (puerto `OSC_IN_PORT`, 9100), compás entero
 
+## Contrato Ableton → Max (puerto 9200, separado del de The Grid)
+Lo manda `max/ableton/GridOSC.maxpat` (dispositivo M4L) y lo recibe
+`max/ableton-bridge.maxpat`, que lo reparte con `send`:
+- `/live/hit <nota> <vel>` → `live.hit`; las notas de tarola (38/40, editable
+  en el puente) además disparan `live.flash` (destello)
+- `/live/scene <n>` → `live.scene` (en modo "escenas": nota C1 = 1, D1 = 2…)
+- `/live/cc <num> <val>` → `live.cc`; CC 21-24 (editable) → `live.knob.1..4`
+- `/live/knob/1..4 <0..1>` → `live.knob.1..4` (perillas automatizables en Live)
+El puente también escucha MIDI directo (`notein`/`ctlin`, apagado por defecto).
+
 ## Estructura del repo
 ```
 server/          Grid Server (Node + ws + node-osc)
@@ -47,7 +61,8 @@ server/          Grid Server (Node + ws + node-osc)
   src/columns.js Lógica verde/amarilla/roja (pura, sin red)
   src/oscMonitor.js  Monitor OSC de prueba (perfil `monitor` del compose)
   src/barClock.js    "Max falso": manda /show/bar (perfil `clock`)
-  src/contractTester.js  Manda el contrato completo a Max (perfil `contract`)
+  src/contractTester.js  Manda el contrato completo a Max (perfil `contract`);
+                 ONLY=live simula a Ableton contra el puente (:9200)
   test/          Pruebas (`npm test`, node:test): lógica de columnas, flujo
                  celular→servidor→OSC, operador, pantalla y contrato OSC por UDP real
 web/public/      Página pública 3×3, operador.html y pantalla.html (vanilla JS, sin build)
@@ -58,9 +73,17 @@ web/public/      Página pública 3×3, operador.html y pantalla.html (vanilla J
 max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
                  con send (grid.visual.1…grid.vote.3, grid.lock.<col>) y marca
                  el compás (/show/bar). Los patches de color usan [r grid.…]
-  bobGrid/       Patches de color (verde/amarillo/rojo, Vizzie) + videos. Bloque
-                 "THE GRID" agregado a la derecha de cada uno: celda 1 → efectos
-                 A, celda 2 → efectos B, celda 3 → crossfade A↔B, bloqueo → pausa
+  bobGrid/       Patches de color (verde/amarillo/rojo, Vizzie) + videos, con
+                 dos bloques agregados a la derecha:
+                 THE GRID: celda 1 → efectos A, celda 2 → efectos B,
+                   celda 3 → crossfade A↔B, bloqueo → pausa, play al abrir
+                 ABLETON: live.flash → pulso del crossfade, live.knob.1 →
+                   crossfade, live.knob.2-4 → números libres para conectar,
+                   live.scene 1-4 → setups (A / B / A+B / limpio)
+  ableton-bridge.maxpat  Mac mini: udpreceive 9200 + MIDI directo → send live.*
+  ableton/GridOSC.maxpat Contenido del dispositivo Max MIDI Effect para Live
+  tools/agregar_bloques.py  Agrega/actualiza esos bloques en una versión
+                 nueva de un patch de color (no toca lo existente)
 Dockerfile       Imagen del Grid Server (contexto: raíz del repo)
 docker-compose.yml
 .gitlab-ci.yml   CI: `npm test` en cada push (runner tag `self-hosted`, Linux Mint)

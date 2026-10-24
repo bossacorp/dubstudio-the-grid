@@ -76,3 +76,21 @@ test('probador de contrato: recorre las 9 celdas y los 3 bloqueos', async () => 
   assert.equal(contractSequence({ only: 'lock' }).length, 6);
   assert.equal(contractSequence({ only: 'nope' }).length, 0);
 });
+
+test('probador en modo live: lo que manda Ableton (GridOSC)', async () => {
+  const { contractSequence } = await import('../src/contractTester.js');
+  const steps = contractSequence({ only: 'live' });
+  const addresses = new Set(steps.map(([address]) => address));
+  assert.deepEqual([...addresses].sort(), ['/live/cc', '/live/hit', '/live/knob/1', '/live/scene']);
+  // no se mezcla con el contrato de The Grid
+  assert.equal(contractSequence().some(([address]) => address.startsWith('/live/')), false);
+});
+
+test('probador: un mensaje con varios argumentos llega completo por UDP', async () => {
+  const max = await fakeMax(19200);
+  const got = nextMessage(max);
+  const client = new Client('127.0.0.1', 19200);
+  closers.push(() => client.close());
+  client.send('/live/hit', ...[].concat([38, 110]));
+  assert.deepEqual(await got, ['/live/hit', 38, 110]);
+});
