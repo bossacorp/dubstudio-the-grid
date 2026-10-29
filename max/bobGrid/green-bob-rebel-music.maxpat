@@ -16,7 +16,7 @@
 			779.0
 		],
 		"bglocked": 0,
-		"openinpresentation": 0,
+		"openinpresentation": 1,
 		"default_fontsize": 12.0,
 		"default_fontface": 0,
 		"default_fontname": "Arial",
@@ -48,6 +48,166 @@
 		"boxes": [
 			{
 				"box": {
+					"annotation": "## Zoom/pan/rotate/offset a video ##",
+					"bgmode": 1,
+					"border": 0,
+					"clickthrough": 0,
+					"enablehscroll": 0,
+					"enablevscroll": 0,
+					"id": "obj-6",
+					"lockeddragscroll": 0,
+					"lockedsize": 0,
+					"maxclass": "bpatcher",
+					"name": "vz.trans4mr.maxpat",
+					"numinlets": 7,
+					"numoutlets": 1,
+					"offset": [
+						0.0,
+						0.0
+					],
+					"outlettype": [
+						"jit_gl_texture"
+					],
+					"patching_rect": [
+						584.0,
+						905.0,
+						270.0,
+						130.0
+					],
+					"prototypename": "pixl",
+					"varname": "trans4mr",
+					"viewvisibility": 1,
+					"presentation": 1,
+					"presentation_rect": [
+						410.0,
+						484.0,
+						270.0,
+						130.0
+					]
+				}
+			},
+			{
+				"box": {
+					"annotation": "## Change a video's hue/saturation/lightness ##",
+					"bgmode": 1,
+					"border": 0,
+					"clickthrough": 0,
+					"enablehscroll": 0,
+					"enablevscroll": 0,
+					"id": "obj-35",
+					"lockeddragscroll": 0,
+					"lockedsize": 0,
+					"maxclass": "bpatcher",
+					"name": "vz.husalir.maxpat",
+					"numinlets": 4,
+					"numoutlets": 1,
+					"offset": [
+						0.0,
+						0.0
+					],
+					"outlettype": [
+						"jit_gl_texture"
+					],
+					"patching_rect": [
+						683.0,
+						1062.0,
+						188.0,
+						130.0
+					],
+					"prototypename": "pixl",
+					"varname": "husalir",
+					"viewvisibility": 1,
+					"presentation": 1,
+					"presentation_rect": [
+						210.0,
+						484.0,
+						188.0,
+						130.0
+					]
+				}
+			},
+			{
+				"box": {
+					"annotation": "## Procedurally colorize a video image ##",
+					"bgmode": 1,
+					"border": 0,
+					"clickthrough": 0,
+					"enablehscroll": 0,
+					"enablevscroll": 0,
+					"id": "obj-4",
+					"lockeddragscroll": 0,
+					"lockedsize": 0,
+					"maxclass": "bpatcher",
+					"name": "vz.colorizr.maxpat",
+					"numinlets": 4,
+					"numoutlets": 1,
+					"offset": [
+						0.0,
+						0.0
+					],
+					"outlettype": [
+						"jit_gl_texture"
+					],
+					"patching_rect": [
+						521.0,
+						1068.0,
+						138.0,
+						130.0
+					],
+					"prototypename": "pixl",
+					"varname": "freezr",
+					"viewvisibility": 1,
+					"presentation": 1,
+					"presentation_rect": [
+						692.0,
+						484.0,
+						138.0,
+						130.0
+					]
+				}
+			},
+			{
+				"box": {
+					"annotation": "## Kaleidoscope-like video image folding ##",
+					"bgmode": 1,
+					"border": 0,
+					"clickthrough": 0,
+					"enablehscroll": 0,
+					"enablevscroll": 0,
+					"id": "obj-17",
+					"lockeddragscroll": 0,
+					"lockedsize": 0,
+					"maxclass": "bpatcher",
+					"name": "vz.kaleidr.maxpat",
+					"numinlets": 5,
+					"numoutlets": 1,
+					"offset": [
+						0.0,
+						0.0
+					],
+					"outlettype": [
+						"jit_gl_texture"
+					],
+					"patching_rect": [
+						262.0,
+						1074.0,
+						188.0,
+						130.0
+					],
+					"prototypename": "pixl",
+					"varname": "kaleidr",
+					"viewvisibility": 1,
+					"presentation": 1,
+					"presentation_rect": [
+						10,
+						484.0,
+						188.0,
+						130.0
+					]
+				}
+			},
+			{
+				"box": {
 					"annotation": "## A video delay line ##",
 					"bgmode": 1,
 					"border": 0,
@@ -76,7 +236,14 @@
 					],
 					"prototypename": "pixl",
 					"varname": "delayr",
-					"viewvisibility": 1
+					"viewvisibility": 1,
+					"presentation": 1,
+					"presentation_rect": [
+						744.0,
+						120.0,
+						188.0,
+						130.0
+					]
 				}
 			},
 			{
@@ -101,13 +268,6 @@
 						24.0,
 						24.0
 					],
-					"presentation": 1,
-					"presentation_rect": [
-						605.0,
-						458.5,
-						24.0,
-						24.0
-					],
 					"saved_attribute_attributes": {
 						"valueof": {
 							"parameter_enum": [
@@ -121,7 +281,14 @@
 							"parameter_type": 2
 						}
 					},
-					"varname": "toggle[5]"
+					"varname": "toggle[5]",
+					"presentation": 1,
+					"presentation_rect": [
+						944.0,
+						156.0,
+						24.0,
+						24.0
+					]
 				}
 			},
 			{
@@ -146,13 +313,6 @@
 						24.0,
 						24.0
 					],
-					"presentation": 1,
-					"presentation_rect": [
-						358.0,
-						455.5,
-						24.0,
-						24.0
-					],
 					"saved_attribute_attributes": {
 						"valueof": {
 							"parameter_enum": [
@@ -166,7 +326,14 @@
 							"parameter_type": 2
 						}
 					},
-					"varname": "toggle[4]"
+					"varname": "toggle[4]",
+					"presentation": 1,
+					"presentation_rect": [
+						944.0,
+						120.0,
+						24.0,
+						24.0
+					]
 				}
 			},
 			{
@@ -191,13 +358,6 @@
 						24.0,
 						24.0
 					],
-					"presentation": 1,
-					"presentation_rect": [
-						71.0,
-						455.0,
-						24.0,
-						24.0
-					],
 					"saved_attribute_attributes": {
 						"valueof": {
 							"parameter_enum": [
@@ -211,73 +371,14 @@
 							"parameter_type": 2
 						}
 					},
-					"varname": "toggle[3]"
-				}
-			},
-			{
-				"box": {
-					"format": 6,
-					"id": "obj-29",
-					"maxclass": "flonum",
-					"maximum": 1.0,
-					"minimum": 0.0,
-					"numinlets": 1,
-					"numoutlets": 2,
-					"outlettype": [
-						"",
-						"bang"
-					],
-					"parameter_enable": 0,
-					"patching_rect": [
-						701.0,
-						810.0,
-						50.0,
-						22.0
-					]
-				}
-			},
-			{
-				"box": {
-					"bgcolor": [
-						0.607843137254902,
-						0.031372549019608,
-						0.031372549019608,
-						1.0
-					],
-					"floatoutput": 1,
-					"id": "obj-30",
-					"maxclass": "dial",
-					"mult": 0.01,
-					"numinlets": 1,
-					"numoutlets": 1,
-					"outlettype": [
-						"float"
-					],
-					"parameter_enable": 1,
-					"patching_rect": [
-						683.0,
-						736.0,
-						40.0,
-						40.0
-					],
+					"varname": "toggle[3]",
 					"presentation": 1,
 					"presentation_rect": [
-						597.0,
-						379.5,
-						40.0,
-						40.0
-					],
-					"saved_attribute_attributes": {
-						"valueof": {
-							"parameter_longname": "dial[2]",
-							"parameter_mmax": 100.0,
-							"parameter_modmode": 3,
-							"parameter_shortname": "dial",
-							"parameter_type": 0
-						}
-					},
-					"size": 100.0,
-					"varname": "dial[2]"
+						944.0,
+						192.0,
+						24.0,
+						24.0
+					]
 				}
 			},
 			{
@@ -326,13 +427,6 @@
 						40.0,
 						40.0
 					],
-					"presentation": 1,
-					"presentation_rect": [
-						63.0,
-						394.0,
-						40.0,
-						40.0
-					],
 					"saved_attribute_attributes": {
 						"valueof": {
 							"parameter_longname": "dial[1]",
@@ -343,73 +437,14 @@
 						}
 					},
 					"size": 100.0,
-					"varname": "dial[1]"
-				}
-			},
-			{
-				"box": {
-					"format": 6,
-					"id": "obj-26",
-					"maxclass": "flonum",
-					"maximum": 1.0,
-					"minimum": 0.0,
-					"numinlets": 1,
-					"numoutlets": 2,
-					"outlettype": [
-						"",
-						"bang"
-					],
-					"parameter_enable": 0,
-					"patching_rect": [
-						422.0,
-						796.0,
-						50.0,
-						22.0
-					]
-				}
-			},
-			{
-				"box": {
-					"bgcolor": [
-						0.529411764705882,
-						0.545098039215686,
-						0.156862745098039,
-						1.0
-					],
-					"floatoutput": 1,
-					"id": "obj-18",
-					"maxclass": "dial",
-					"mult": 0.01,
-					"numinlets": 1,
-					"numoutlets": 1,
-					"outlettype": [
-						"float"
-					],
-					"parameter_enable": 1,
-					"patching_rect": [
-						422.0,
-						731.0,
-						40.0,
-						40.0
-					],
+					"varname": "dial[1]",
 					"presentation": 1,
 					"presentation_rect": [
-						350.0,
-						386.5,
+						190.0,
+						302.0,
 						40.0,
 						40.0
-					],
-					"saved_attribute_attributes": {
-						"valueof": {
-							"parameter_longname": "dial",
-							"parameter_mmax": 100.0,
-							"parameter_modmode": 3,
-							"parameter_shortname": "dial",
-							"parameter_type": 0
-						}
-					},
-					"size": 100.0,
-					"varname": "dial"
+					]
 				}
 			},
 			{
@@ -434,13 +469,6 @@
 						24.0,
 						24.0
 					],
-					"presentation": 1,
-					"presentation_rect": [
-						23.0,
-						162.0,
-						24.0,
-						24.0
-					],
 					"saved_attribute_attributes": {
 						"valueof": {
 							"parameter_enum": [
@@ -454,7 +482,14 @@
 							"parameter_type": 2
 						}
 					},
-					"varname": "toggle"
+					"varname": "toggle",
+					"presentation": 1,
+					"presentation_rect": [
+						10,
+						58,
+						24.0,
+						24.0
+					]
 				}
 			},
 			{
@@ -491,16 +526,16 @@
 						252.0,
 						130.0
 					],
-					"presentation": 1,
-					"presentation_rect": [
-						647.0,
-						209.5,
-						252.0,
-						130.0
-					],
 					"prototypename": "pixl",
 					"varname": "interpol8r",
-					"viewvisibility": 1
+					"viewvisibility": 1,
+					"presentation": 1,
+					"presentation_rect": [
+						480.0,
+						120.0,
+						252.0,
+						130.0
+					]
 				}
 			},
 			{
@@ -537,16 +572,16 @@
 						188.0,
 						130.0
 					],
-					"presentation": 1,
-					"presentation_rect": [
-						395.0,
-						211.5,
-						188.0,
-						130.0
-					],
 					"prototypename": "pixl",
 					"varname": "foggr",
-					"viewvisibility": 1
+					"viewvisibility": 1,
+					"presentation": 1,
+					"presentation_rect": [
+						280.0,
+						120.0,
+						188.0,
+						130.0
+					]
 				}
 			},
 			{
@@ -583,16 +618,16 @@
 						258.0,
 						130.0
 					],
-					"presentation": 1,
-					"presentation_rect": [
-						63.0,
-						211.0,
-						258.0,
-						130.0
-					],
 					"prototypename": "pixl",
 					"varname": "fractalizr",
-					"viewvisibility": 1
+					"viewvisibility": 1,
+					"presentation": 1,
+					"presentation_rect": [
+						10,
+						120.0,
+						258.0,
+						130.0
+					]
 				}
 			},
 			{
@@ -629,15 +664,15 @@
 						168.0,
 						130.0
 					],
+					"varname": "mixfadr",
+					"viewvisibility": 1,
 					"presentation": 1,
 					"presentation_rect": [
-						108.0,
-						378.0,
+						10,
+						292.0,
 						168.0,
 						130.0
-					],
-					"varname": "mixfadr",
-					"viewvisibility": 1
+					]
 				}
 			},
 			{
@@ -681,8 +716,8 @@
 					],
 					"presentation": 1,
 					"presentation_rect": [
-						63.0,
-						159.0,
+						50,
+						56,
 						258.0,
 						30.0
 					]
@@ -718,7 +753,14 @@
 					],
 					"prototypename": "pixl",
 					"varname": "greenProjectr",
-					"viewvisibility": 1
+					"viewvisibility": 1,
+					"presentation": 1,
+					"presentation_rect": [
+						10,
+						656.0,
+						168.0,
+						108.0
+					]
 				}
 			},
 			{
@@ -728,9 +770,9 @@
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
-						1290.6666901111603,
-						340,
-						130,
+						1371.0,
+						40,
+						140,
 						22
 					],
 					"varname": "thegrid_3001",
@@ -744,47 +786,50 @@
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
-						890.6666901111603,
+						951.0,
 						40,
-						560,
+						400,
 						20
 					],
 					"varname": "thegrid_3002",
-					"text": "THE GRID · VERDE — entradas desde grid-router.maxpat (abrirlo también)"
+					"text": "THE GRID · VERDE — abre también grid-router.maxpat"
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3003",
-					"maxclass": "comment",
+					"maxclass": "newobj",
 					"numinlets": 1,
-					"numoutlets": 0,
+					"numoutlets": 1,
 					"patching_rect": [
-						890.6666901111603,
-						60,
-						560,
-						20
+						951.0,
+						70,
+						130,
+						22
 					],
 					"varname": "thegrid_3003",
-					"text": "Celda 1: efectos A · Celda 2: efectos B · Celda 3: crossfade A↔B · Bloqueo: pausa"
+					"text": "r grid.lock.visual",
+					"outlettype": [
+						""
+					]
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3004",
 					"maxclass": "newobj",
-					"numinlets": 1,
+					"numinlets": 2,
 					"numoutlets": 1,
 					"patching_rect": [
-						890.6666901111603,
+						951.0,
 						100,
-						110,
+						40,
 						22
 					],
 					"varname": "thegrid_3004",
-					"text": "r grid.visual.1",
+					"text": "== 0",
 					"outlettype": [
-						""
+						"int"
 					]
 				}
 			},
@@ -795,13 +840,48 @@
 					"numinlets": 1,
 					"numoutlets": 1,
 					"patching_rect": [
-						890.6666901111603,
-						130,
-						40,
+						1091.0,
+						70,
+						120,
 						22
 					],
 					"varname": "thegrid_3005",
-					"text": "t b",
+					"text": "prepend bloqueo",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3006",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						1221.0,
+						70,
+						300,
+						20
+					],
+					"varname": "thegrid_3006",
+					"text": "bloqueo 1 → pausa el video · 0 → lo reanuda"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3007",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"patching_rect": [
+						951.0,
+						140,
+						60,
+						22
+					],
+					"varname": "thegrid_3007",
+					"text": "loadbang",
 					"outlettype": [
 						"bang"
 					]
@@ -809,55 +889,20 @@
 			},
 			{
 				"box": {
-					"id": "obj-3006",
-					"maxclass": "newobj",
-					"numinlets": 1,
-					"numoutlets": 1,
-					"patching_rect": [
-						1020.6666901111603,
-						100,
-						110,
-						22
-					],
-					"varname": "thegrid_3006",
-					"text": "prepend celda1",
-					"outlettype": [
-						""
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3007",
-					"maxclass": "comment",
-					"numinlets": 1,
-					"numoutlets": 0,
-					"patching_rect": [
-						1140.6666901111603,
-						100,
-						300,
-						20
-					],
-					"varname": "thegrid_3007",
-					"text": "prende/apaga efectos A (fractalizr → foggr)"
-				}
-			},
-			{
-				"box": {
 					"id": "obj-3008",
 					"maxclass": "newobj",
-					"numinlets": 1,
+					"numinlets": 2,
 					"numoutlets": 1,
 					"patching_rect": [
-						890.6666901111603,
-						160,
-						110,
+						951.0,
+						170,
+						80,
 						22
 					],
 					"varname": "thegrid_3008",
-					"text": "r grid.visual.2",
+					"text": "delay 1000",
 					"outlettype": [
-						""
+						"bang"
 					]
 				}
 			},
@@ -866,16 +911,17 @@
 					"id": "obj-3009",
 					"maxclass": "newobj",
 					"numinlets": 1,
-					"numoutlets": 1,
+					"numoutlets": 2,
 					"patching_rect": [
-						890.6666901111603,
-						190,
-						40,
+						951.0,
+						200,
+						60,
 						22
 					],
 					"varname": "thegrid_3009",
-					"text": "t b",
+					"text": "t b b",
 					"outlettype": [
+						"bang",
 						"bang"
 					]
 				}
@@ -883,17 +929,17 @@
 			{
 				"box": {
 					"id": "obj-3010",
-					"maxclass": "newobj",
-					"numinlets": 1,
+					"maxclass": "message",
+					"numinlets": 2,
 					"numoutlets": 1,
 					"patching_rect": [
-						1020.6666901111603,
-						160,
-						110,
+						951.0,
+						230,
+						30,
 						22
 					],
 					"varname": "thegrid_3010",
-					"text": "prepend celda2",
+					"text": "1",
 					"outlettype": [
 						""
 					]
@@ -906,51 +952,45 @@
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
-						1140.6666901111603,
-						160,
-						300,
+						1041.0,
+						170,
+						400,
 						20
 					],
 					"varname": "thegrid_3011",
-					"text": "prende/apaga efectos B (interpol8r → delayr)"
+					"text": "al abrir: play del video (1 s después)"
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3012",
-					"maxclass": "newobj",
+					"maxclass": "comment",
 					"numinlets": 1,
-					"numoutlets": 1,
+					"numoutlets": 0,
 					"patching_rect": [
-						890.6666901111603,
-						220,
-						110,
-						22
+						951.0,
+						300,
+						640,
+						20
 					],
 					"varname": "thegrid_3012",
-					"text": "r grid.visual.3",
-					"outlettype": [
-						""
-					]
+					"text": "TEMPLATES · VERDE — \"entra y sale\" (grid.hold / grid.strobe → on/off del módulo) y \"golpe y regreso\" (grid.env → crossfade / tono)"
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3013",
-					"maxclass": "newobj",
+					"maxclass": "comment",
 					"numinlets": 1,
-					"numoutlets": 1,
+					"numoutlets": 0,
 					"patching_rect": [
-						890.6666901111603,
-						250,
-						40,
-						22
+						951.0,
+						318,
+						640,
+						20
 					],
 					"varname": "thegrid_3013",
-					"text": "t b",
-					"outlettype": [
-						"bang"
-					]
+					"text": "Ajusta compases o pico editando el texto del objeto. La intensidad de cada efecto se define en el panel de su módulo (en reposo está apagado)."
 				}
 			},
 			{
@@ -960,13 +1000,13 @@
 					"numinlets": 1,
 					"numoutlets": 1,
 					"patching_rect": [
-						1020.6666901111603,
-						220,
+						951.0,
+						350,
 						110,
 						22
 					],
 					"varname": "thegrid_3014",
-					"text": "prepend celda3",
+					"text": "r grid.visual.1",
 					"outlettype": [
 						""
 					]
@@ -975,36 +1015,39 @@
 			{
 				"box": {
 					"id": "obj-3015",
-					"maxclass": "comment",
+					"maxclass": "newobj",
 					"numinlets": 1,
-					"numoutlets": 0,
+					"numoutlets": 1,
 					"patching_rect": [
-						1140.6666901111603,
-						220,
-						300,
-						20
+						1421.0,
+						350,
+						120,
+						22
 					],
 					"varname": "thegrid_3015",
-					"text": "salta el crossfade: A (0.) ↔ B (1.)"
+					"text": "prepend celda1",
+					"outlettype": [
+						""
+					]
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3016",
-					"maxclass": "toggle",
+					"maxclass": "newobj",
 					"numinlets": 1,
 					"numoutlets": 1,
 					"patching_rect": [
-						950.6666901111603,
-						250,
-						24,
-						24
+						1071.0,
+						376,
+						130,
+						22
 					],
 					"varname": "thegrid_3016",
+					"text": "grid.hold 1",
 					"outlettype": [
-						"int"
-					],
-					"parameter_enable": 0
+						""
+					]
 				}
 			},
 			{
@@ -1014,32 +1057,30 @@
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
-						980.6666901111603,
-						252,
-						60,
+						1211.0,
+						376,
+						560,
 						20
 					],
 					"varname": "thegrid_3017",
-					"text": "A / B"
+					"text": "celda 1 · Caleidoscopio: KALEIDR entra 1 compás  →  KALEIDR entrada 5 = on/off"
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3018",
 					"maxclass": "newobj",
-					"numinlets": 3,
-					"numoutlets": 3,
+					"numinlets": 1,
+					"numoutlets": 1,
 					"patching_rect": [
-						890.6666901111603,
-						285,
-						70,
+						951.0,
+						405,
+						110,
 						22
 					],
 					"varname": "thegrid_3018",
-					"text": "sel 0 1",
+					"text": "r grid.visual.2",
 					"outlettype": [
-						"bang",
-						"bang",
 						""
 					]
 				}
@@ -1047,17 +1088,17 @@
 			{
 				"box": {
 					"id": "obj-3019",
-					"maxclass": "message",
-					"numinlets": 2,
+					"maxclass": "newobj",
+					"numinlets": 1,
 					"numoutlets": 1,
 					"patching_rect": [
-						890.6666901111603,
-						315,
-						30,
+						1421.0,
+						405,
+						120,
 						22
 					],
 					"varname": "thegrid_3019",
-					"text": "0.",
+					"text": "prepend celda2",
 					"outlettype": [
 						""
 					]
@@ -1066,17 +1107,17 @@
 			{
 				"box": {
 					"id": "obj-3020",
-					"maxclass": "message",
-					"numinlets": 2,
+					"maxclass": "newobj",
+					"numinlets": 1,
 					"numoutlets": 1,
 					"patching_rect": [
-						930.6666901111603,
-						315,
-						30,
+						1071.0,
+						431,
+						130,
 						22
 					],
 					"varname": "thegrid_3020",
-					"text": "1.",
+					"text": "grid.env 1. 0. 2",
 					"outlettype": [
 						""
 					]
@@ -1085,38 +1126,35 @@
 			{
 				"box": {
 					"id": "obj-3021",
-					"maxclass": "newobj",
+					"maxclass": "comment",
 					"numinlets": 1,
-					"numoutlets": 1,
+					"numoutlets": 0,
 					"patching_rect": [
-						890.6666901111603,
-						370,
-						130,
-						22
+						1211.0,
+						431,
+						560,
+						20
 					],
 					"varname": "thegrid_3021",
-					"text": "r grid.lock.visual",
-					"outlettype": [
-						""
-					]
+					"text": "celda 2 · Giro de color: el tono (HUSALIR) da la vuelta y regresa en 2 compases  →  HUSALIR entrada 2 = tono"
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3022",
 					"maxclass": "newobj",
-					"numinlets": 2,
+					"numinlets": 1,
 					"numoutlets": 1,
 					"patching_rect": [
-						890.6666901111603,
-						400,
-						40,
+						951.0,
+						460,
+						110,
 						22
 					],
 					"varname": "thegrid_3022",
-					"text": "== 0",
+					"text": "r grid.visual.3",
 					"outlettype": [
-						"int"
+						""
 					]
 				}
 			},
@@ -1127,13 +1165,13 @@
 					"numinlets": 1,
 					"numoutlets": 1,
 					"patching_rect": [
-						1030.6666901111603,
-						370,
-						110,
+						1421.0,
+						460,
+						120,
 						22
 					],
 					"varname": "thegrid_3023",
-					"text": "prepend bloqueo",
+					"text": "prepend celda3",
 					"outlettype": [
 						""
 					]
@@ -1142,71 +1180,71 @@
 			{
 				"box": {
 					"id": "obj-3024",
-					"maxclass": "comment",
+					"maxclass": "newobj",
 					"numinlets": 1,
-					"numoutlets": 0,
+					"numoutlets": 1,
 					"patching_rect": [
-						1150.6666901111603,
-						370,
-						300,
-						20
+						1071.0,
+						486,
+						130,
+						22
 					],
 					"varname": "thegrid_3024",
-					"text": "bloqueo 1 → pausa el video · 0 → lo reanuda"
+					"text": "grid.hold 1",
+					"outlettype": [
+						""
+					]
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3025",
-					"maxclass": "newobj",
+					"maxclass": "comment",
 					"numinlets": 1,
-					"numoutlets": 1,
+					"numoutlets": 0,
 					"patching_rect": [
-						890.6666901111603,
-						450,
-						60,
-						22
+						1211.0,
+						486,
+						560,
+						20
 					],
 					"varname": "thegrid_3025",
-					"text": "loadbang",
-					"outlettype": [
-						"bang"
-					]
+					"text": "celda 3 · Espejo + zoom: TRANS4MR entra 1 compás  →  TRANS4MR entrada 7 = on/off"
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3026",
 					"maxclass": "newobj",
-					"numinlets": 2,
+					"numinlets": 1,
 					"numoutlets": 1,
 					"patching_rect": [
-						890.6666901111603,
-						480,
-						80,
+						951.0,
+						515,
+						110,
 						22
 					],
 					"varname": "thegrid_3026",
-					"text": "delay 1000",
+					"text": "r live.flash",
 					"outlettype": [
-						"bang"
+						""
 					]
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3027",
-					"maxclass": "message",
-					"numinlets": 2,
+					"maxclass": "newobj",
+					"numinlets": 1,
 					"numoutlets": 1,
 					"patching_rect": [
-						890.6666901111603,
-						510,
-						30,
+						1421.0,
+						515,
+						120,
 						22
 					],
 					"varname": "thegrid_3027",
-					"text": "1",
+					"text": "prepend destello",
 					"outlettype": [
 						""
 					]
@@ -1215,17 +1253,20 @@
 			{
 				"box": {
 					"id": "obj-3028",
-					"maxclass": "comment",
+					"maxclass": "newobj",
 					"numinlets": 1,
-					"numoutlets": 0,
+					"numoutlets": 1,
 					"patching_rect": [
-						980.6666901111603,
-						480,
-						300,
-						20
+						1071.0,
+						541,
+						130,
+						22
 					],
 					"varname": "thegrid_3028",
-					"text": "al abrir el patch: play del video (1 s después)"
+					"text": "grid.hold 0.25",
+					"outlettype": [
+						""
+					]
 				}
 			},
 			{
@@ -1235,32 +1276,29 @@
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
-						890.6666901111603,
-						560,
+						1211.0,
+						541,
 						560,
 						20
 					],
 					"varname": "thegrid_3029",
-					"text": "ABLETON · VERDE — entradas desde ableton-bridge.maxpat (abrirlo también)"
+					"text": "tarola · Flash: COLORIZR entra ¼ de compás  →  COLORIZR entrada 4 = on/off"
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3030",
-					"maxclass": "newobj",
+					"maxclass": "comment",
 					"numinlets": 1,
-					"numoutlets": 1,
+					"numoutlets": 0,
 					"patching_rect": [
-						890.6666901111603,
+						951.0,
 						590,
-						90,
-						22
+						640,
+						20
 					],
 					"varname": "thegrid_3030",
-					"text": "r live.flash",
-					"outlettype": [
-						""
-					]
+					"text": "ABLETON · VERDE — abre también ableton-bridge.maxpat (el flash de tarola está en TEMPLATES)"
 				}
 			},
 			{
@@ -1270,32 +1308,13 @@
 					"numinlets": 1,
 					"numoutlets": 1,
 					"patching_rect": [
-						890.6666901111603,
+						951.0,
 						620,
-						40,
+						100,
 						22
 					],
 					"varname": "thegrid_3031",
-					"text": "t b",
-					"outlettype": [
-						"bang"
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3032",
-					"maxclass": "message",
-					"numinlets": 2,
-					"numoutlets": 1,
-					"patching_rect": [
-						890.6666901111603,
-						650,
-						80,
-						22
-					],
-					"varname": "thegrid_3032",
-					"text": "1., 0. 250",
+					"text": "r live.knob.1",
 					"outlettype": [
 						""
 					]
@@ -1303,38 +1322,57 @@
 			},
 			{
 				"box": {
+					"id": "obj-3032",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						1061.0,
+						620,
+						400,
+						20
+					],
+					"varname": "thegrid_3032",
+					"text": "perilla 1 (0..1) → crossfade A↔B"
+				}
+			},
+			{
+				"box": {
 					"id": "obj-3033",
 					"maxclass": "newobj",
-					"numinlets": 3,
-					"numoutlets": 2,
+					"numinlets": 1,
+					"numoutlets": 1,
 					"patching_rect": [
-						890.6666901111603,
-						680,
-						80,
+						951.0,
+						652,
+						100,
 						22
 					],
 					"varname": "thegrid_3033",
-					"text": "line 0. 20",
+					"text": "r live.knob.2",
 					"outlettype": [
-						"",
-						"bang"
+						""
 					]
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3034",
-					"maxclass": "comment",
+					"maxclass": "flonum",
 					"numinlets": 1,
-					"numoutlets": 0,
+					"numoutlets": 2,
 					"patching_rect": [
-						990.6666901111603,
-						590,
-						450,
-						20
+						951.0,
+						680,
+						60,
+						22
 					],
 					"varname": "thegrid_3034",
-					"text": "tarola → destello: el crossfade salta a B y regresa en 250 ms"
+					"outlettype": [
+						"",
+						"bang"
+					],
+					"parameter_enable": 0
 				}
 			},
 			{
@@ -1344,13 +1382,13 @@
 					"numinlets": 1,
 					"numoutlets": 1,
 					"patching_rect": [
-						1020.6666901111603,
-						620,
-						110,
+						1071.0,
+						652,
+						100,
 						22
 					],
 					"varname": "thegrid_3035",
-					"text": "prepend destello",
+					"text": "r live.knob.3",
 					"outlettype": [
 						""
 					]
@@ -1359,75 +1397,76 @@
 			{
 				"box": {
 					"id": "obj-3036",
-					"maxclass": "newobj",
-					"numinlets": 1,
-					"numoutlets": 1,
-					"patching_rect": [
-						890.6666901111603,
-						730,
-						100,
-						22
-					],
-					"varname": "thegrid_3036",
-					"text": "r live.knob.1",
-					"outlettype": [
-						""
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3037",
-					"maxclass": "comment",
-					"numinlets": 1,
-					"numoutlets": 0,
-					"patching_rect": [
-						1000.6666901111603,
-						730,
-						440,
-						20
-					],
-					"varname": "thegrid_3037",
-					"text": "perilla 1 (0..1) → crossfade A↔B"
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3038",
-					"maxclass": "newobj",
-					"numinlets": 1,
-					"numoutlets": 1,
-					"patching_rect": [
-						890.6666901111603,
-						765,
-						100,
-						22
-					],
-					"varname": "thegrid_3038",
-					"text": "r live.knob.2",
-					"outlettype": [
-						""
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3039",
 					"maxclass": "flonum",
 					"numinlets": 1,
 					"numoutlets": 2,
 					"patching_rect": [
-						890.6666901111603,
-						795,
+						1071.0,
+						680,
 						60,
 						22
 					],
-					"varname": "thegrid_3039",
+					"varname": "thegrid_3036",
 					"outlettype": [
 						"",
 						"bang"
 					],
 					"parameter_enable": 0
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3037",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"patching_rect": [
+						1191.0,
+						652,
+						100,
+						22
+					],
+					"varname": "thegrid_3037",
+					"text": "r live.knob.4",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3038",
+					"maxclass": "flonum",
+					"numinlets": 1,
+					"numoutlets": 2,
+					"patching_rect": [
+						1191.0,
+						680,
+						60,
+						22
+					],
+					"varname": "thegrid_3038",
+					"outlettype": [
+						"",
+						"bang"
+					],
+					"parameter_enable": 0
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3039",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						951.0,
+						706,
+						640,
+						20
+					],
+					"varname": "thegrid_3039",
+					"text": "perillas 2-4 (0..1): conecta cada número al parámetro de Vizzie que quieras (pasa el mouse por la entrada para ver su nombre)"
 				}
 			},
 			{
@@ -1437,106 +1476,12 @@
 					"numinlets": 1,
 					"numoutlets": 1,
 					"patching_rect": [
-						1010.6666901111603,
-						765,
-						100,
-						22
-					],
-					"varname": "thegrid_3040",
-					"text": "r live.knob.3",
-					"outlettype": [
-						""
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3041",
-					"maxclass": "flonum",
-					"numinlets": 1,
-					"numoutlets": 2,
-					"patching_rect": [
-						1010.6666901111603,
-						795,
-						60,
-						22
-					],
-					"varname": "thegrid_3041",
-					"outlettype": [
-						"",
-						"bang"
-					],
-					"parameter_enable": 0
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3042",
-					"maxclass": "newobj",
-					"numinlets": 1,
-					"numoutlets": 1,
-					"patching_rect": [
-						1130.6666901111603,
-						765,
-						100,
-						22
-					],
-					"varname": "thegrid_3042",
-					"text": "r live.knob.4",
-					"outlettype": [
-						""
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3043",
-					"maxclass": "flonum",
-					"numinlets": 1,
-					"numoutlets": 2,
-					"patching_rect": [
-						1130.6666901111603,
-						795,
-						60,
-						22
-					],
-					"varname": "thegrid_3043",
-					"outlettype": [
-						"",
-						"bang"
-					],
-					"parameter_enable": 0
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3044",
-					"maxclass": "comment",
-					"numinlets": 1,
-					"numoutlets": 0,
-					"patching_rect": [
-						890.6666901111603,
-						822,
-						560,
-						20
-					],
-					"varname": "thegrid_3044",
-					"text": "perillas 2-4 (0..1): conecta cada número al parámetro de Vizzie que quieras"
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3045",
-					"maxclass": "newobj",
-					"numinlets": 1,
-					"numoutlets": 1,
-					"patching_rect": [
-						890.6666901111603,
-						860,
+						951.0,
+						740,
 						90,
 						22
 					],
-					"varname": "thegrid_3045",
+					"varname": "thegrid_3040",
 					"text": "r live.scene",
 					"outlettype": [
 						""
@@ -1545,17 +1490,17 @@
 			},
 			{
 				"box": {
-					"id": "obj-3046",
+					"id": "obj-3041",
 					"maxclass": "newobj",
 					"numinlets": 5,
 					"numoutlets": 5,
 					"patching_rect": [
-						890.6666901111603,
-						890,
+						951.0,
+						770,
 						90,
 						22
 					],
-					"varname": "thegrid_3046",
+					"varname": "thegrid_3041",
 					"text": "sel 1 2 3 4",
 					"outlettype": [
 						"bang",
@@ -1568,17 +1513,17 @@
 			},
 			{
 				"box": {
-					"id": "obj-3047",
+					"id": "obj-3042",
 					"maxclass": "newobj",
 					"numinlets": 1,
 					"numoutlets": 3,
 					"patching_rect": [
-						890.6666901111603,
-						960,
+						951.0,
+						830,
 						110,
 						22
 					],
-					"varname": "thegrid_3047",
+					"varname": "thegrid_3042",
 					"text": "unpack 0 0 0.",
 					"outlettype": [
 						"int",
@@ -1589,17 +1534,36 @@
 			},
 			{
 				"box": {
-					"id": "obj-3048",
+					"id": "obj-3043",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"patching_rect": [
+						1421.0,
+						740,
+						120,
+						22
+					],
+					"varname": "thegrid_3043",
+					"text": "prepend escena",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3044",
 					"maxclass": "message",
 					"numinlets": 2,
 					"numoutlets": 1,
 					"patching_rect": [
-						890.6666901111603,
-						920,
+						951.0,
+						800,
 						60,
 						22
 					],
-					"varname": "thegrid_3048",
+					"varname": "thegrid_3044",
 					"text": "1 0 0.",
 					"outlettype": [
 						""
@@ -1608,21 +1572,88 @@
 			},
 			{
 				"box": {
-					"id": "obj-3049",
+					"id": "obj-3045",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						1251.0,
+						770,
+						340,
+						20
+					],
+					"varname": "thegrid_3045",
+					"text": "escena 1: solo A (fractal + niebla)"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3046",
 					"maxclass": "message",
 					"numinlets": 2,
 					"numoutlets": 1,
 					"patching_rect": [
-						960.6666901111603,
-						920,
+						1021.0,
+						800,
 						60,
 						22
 					],
-					"varname": "thegrid_3049",
+					"varname": "thegrid_3046",
 					"text": "0 1 1.",
 					"outlettype": [
 						""
 					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3047",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						1251.0,
+						788,
+						340,
+						20
+					],
+					"varname": "thegrid_3047",
+					"text": "escena 2: solo B (interpol8r + delay)"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3048",
+					"maxclass": "message",
+					"numinlets": 2,
+					"numoutlets": 1,
+					"patching_rect": [
+						1091.0,
+						800,
+						60,
+						22
+					],
+					"varname": "thegrid_3048",
+					"text": "1 1 0.5",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3049",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						1251.0,
+						806,
+						340,
+						20
+					],
+					"varname": "thegrid_3049",
+					"text": "escena 3: A + B mezclados"
 				}
 			},
 			{
@@ -1632,13 +1663,13 @@
 					"numinlets": 2,
 					"numoutlets": 1,
 					"patching_rect": [
-						1030.6666901111603,
-						920,
+						1161.0,
+						800,
 						60,
 						22
 					],
 					"varname": "thegrid_3050",
-					"text": "1 1 0.5",
+					"text": "0 0 0.",
 					"outlettype": [
 						""
 					]
@@ -1647,20 +1678,17 @@
 			{
 				"box": {
 					"id": "obj-3051",
-					"maxclass": "message",
-					"numinlets": 2,
-					"numoutlets": 1,
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
 					"patching_rect": [
-						1100.6666901111603,
-						920,
-						60,
-						22
+						1251.0,
+						824,
+						340,
+						20
 					],
 					"varname": "thegrid_3051",
-					"text": "0 0 0.",
-					"outlettype": [
-						""
-					]
+					"text": "escena 4: limpio"
 				}
 			},
 			{
@@ -1670,13 +1698,21 @@
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
-						1190.6666901111603,
-						860,
-						260,
+						951.0,
+						1520,
+						500,
 						20
 					],
 					"varname": "thegrid_3052",
-					"text": "escena → [efectos A, efectos B, crossfade]"
+					"text": "VERDE · bob rebel music — The Grid (visual)",
+					"presentation": 1,
+					"presentation_rect": [
+						10,
+						10,
+						500,
+						20
+					],
+					"fontface": 1
 				}
 			},
 			{
@@ -1686,13 +1722,20 @@
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
-						1190.6666901111603,
-						880,
-						260,
+						951.0,
+						1540,
+						60,
 						20
 					],
 					"varname": "thegrid_3053",
-					"text": "escena 1: solo A"
+					"text": "play",
+					"presentation": 1,
+					"presentation_rect": [
+						10,
+						38,
+						60,
+						20
+					]
 				}
 			},
 			{
@@ -1702,13 +1745,21 @@
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
-						1190.6666901111603,
-						898,
-						260,
+						951.0,
+						1560,
+						500,
 						20
 					],
 					"varname": "thegrid_3054",
-					"text": "escena 2: solo B"
+					"text": "BASE — cadena A y cadena B (entran al MIXFADR)",
+					"presentation": 1,
+					"presentation_rect": [
+						10,
+						98.0,
+						500,
+						20
+					],
+					"fontface": 1
 				}
 			},
 			{
@@ -1718,13 +1769,20 @@
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
-						1190.6666901111603,
-						916,
-						260,
+						951.0,
+						1580,
+						170,
 						20
 					],
 					"varname": "thegrid_3055",
-					"text": "escena 3: A+B mezclados"
+					"text": "efectos A on/off",
+					"presentation": 1,
+					"presentation_rect": [
+						974.0,
+						122.0,
+						170,
+						20
+					]
 				}
 			},
 			{
@@ -1734,31 +1792,42 @@
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
-						1190.6666901111603,
-						934,
-						260,
+						951.0,
+						1600,
+						170,
 						20
 					],
 					"varname": "thegrid_3056",
-					"text": "escena 4: limpio"
+					"text": "efectos B on/off",
+					"presentation": 1,
+					"presentation_rect": [
+						974.0,
+						158.0,
+						170,
+						20
+					]
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3057",
-					"maxclass": "newobj",
+					"maxclass": "comment",
 					"numinlets": 1,
-					"numoutlets": 1,
+					"numoutlets": 0,
 					"patching_rect": [
-						1020.6666901111603,
-						860,
-						100,
-						22
+						951.0,
+						1620,
+						170,
+						20
 					],
 					"varname": "thegrid_3057",
-					"text": "prepend escena",
-					"outlettype": [
-						""
+					"text": "mezcla on/off",
+					"presentation": 1,
+					"presentation_rect": [
+						974.0,
+						194.0,
+						170,
+						20
 					]
 				}
 			},
@@ -1769,13 +1838,21 @@
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
-						890.6666901111603,
-						960,
-						600,
+						951.0,
+						1640,
+						400,
 						20
 					],
 					"varname": "thegrid_3058",
-					"text": "ENVOLVENTES · VERDE — templates de golpe y regreso (al tempo de Ableton)"
+					"text": "MEZCLA",
+					"presentation": 1,
+					"presentation_rect": [
+						10,
+						270.0,
+						400,
+						20
+					],
+					"fontface": 1
 				}
 			},
 			{
@@ -1785,13 +1862,20 @@
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
-						890.6666901111603,
-						980,
-						600,
+						951.0,
+						1660,
+						140,
 						20
 					],
 					"varname": "thegrid_3059",
-					"text": "Conecta cada número a la entrada del parámetro de Vizzie (pasa el mouse por la entrada"
+					"text": "crossfade A↔B",
+					"presentation": 1,
+					"presentation_rect": [
+						238.0,
+						310.0,
+						140,
+						20
+					]
 				}
 			},
 			{
@@ -1801,13 +1885,21 @@
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
-						890.6666901111603,
-						998,
-						600,
+						951.0,
+						1680,
+						700,
 						20
 					],
 					"varname": "thegrid_3060",
-					"text": "para ver su nombre). Para otro rango usa [scale 0. 1. mín máx]. Ajusta pico/base/compases"
+					"text": "TEMPLATES (apagados en reposo; los prende The Grid o Ableton)",
+					"presentation": 1,
+					"presentation_rect": [
+						10,
+						442.0,
+						700,
+						20
+					],
+					"fontface": 1
 				}
 			},
 			{
@@ -1817,71 +1909,89 @@
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
-						890.6666901111603,
-						1016,
-						600,
+						951.0,
+						1700,
+						188.0,
 						20
 					],
 					"varname": "thegrid_3061",
-					"text": "editando el texto del objeto: grid.env <pico> <base> <compases> · grid.strobe <por-compás> <compases>"
+					"text": "celda 1 · Caleidoscopio",
+					"presentation": 1,
+					"presentation_rect": [
+						10,
+						464.0,
+						188.0,
+						20
+					]
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3062",
-					"maxclass": "newobj",
+					"maxclass": "comment",
 					"numinlets": 1,
-					"numoutlets": 1,
+					"numoutlets": 0,
 					"patching_rect": [
-						890.6666901111603,
-						1050,
-						110,
-						22
+						951.0,
+						1720,
+						188.0,
+						20
 					],
 					"varname": "thegrid_3062",
-					"text": "r grid.visual.1",
-					"outlettype": [
-						""
+					"text": "celda 2 · Giro de color",
+					"presentation": 1,
+					"presentation_rect": [
+						210.0,
+						464.0,
+						188.0,
+						20
 					]
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3063",
-					"maxclass": "newobj",
+					"maxclass": "comment",
 					"numinlets": 1,
-					"numoutlets": 1,
+					"numoutlets": 0,
 					"patching_rect": [
-						890.6666901111603,
-						1078,
-						130,
-						22
+						951.0,
+						1740,
+						270.0,
+						20
 					],
 					"varname": "thegrid_3063",
-					"text": "grid.env 1. 0. 1",
-					"outlettype": [
-						""
+					"text": "celda 3 · Espejo + zoom",
+					"presentation": 1,
+					"presentation_rect": [
+						410.0,
+						464.0,
+						270.0,
+						20
 					]
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3064",
-					"maxclass": "flonum",
+					"maxclass": "comment",
 					"numinlets": 1,
-					"numoutlets": 2,
+					"numoutlets": 0,
 					"patching_rect": [
-						1030.6666901111603,
-						1078,
-						60,
-						22
+						951.0,
+						1760,
+						138.0,
+						20
 					],
 					"varname": "thegrid_3064",
-					"outlettype": [
-						"",
-						"bang"
-					],
-					"parameter_enable": 0
+					"text": "tarola · Flash",
+					"presentation": 1,
+					"presentation_rect": [
+						692.0,
+						464.0,
+						138.0,
+						20
+					]
 				}
 			},
 			{
@@ -1891,235 +2001,21 @@
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
-						1100.6666901111603,
-						1078,
-						420,
+						951.0,
+						1780,
+						400,
 						20
 					],
 					"varname": "thegrid_3065",
-					"text": "→ Caleidoscopio: segmentos/cantidad del caleidoscopio"
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3066",
-					"maxclass": "newobj",
-					"numinlets": 1,
-					"numoutlets": 1,
-					"patching_rect": [
-						890.6666901111603,
-						1110,
-						110,
-						22
-					],
-					"varname": "thegrid_3066",
-					"text": "r grid.visual.2",
-					"outlettype": [
-						""
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3067",
-					"maxclass": "newobj",
-					"numinlets": 1,
-					"numoutlets": 1,
-					"patching_rect": [
-						890.6666901111603,
-						1138,
-						130,
-						22
-					],
-					"varname": "thegrid_3067",
-					"text": "grid.env 0. 1. 2",
-					"outlettype": [
-						""
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3068",
-					"maxclass": "flonum",
-					"numinlets": 1,
-					"numoutlets": 2,
-					"patching_rect": [
-						1030.6666901111603,
-						1138,
-						60,
-						22
-					],
-					"varname": "thegrid_3068",
-					"outlettype": [
-						"",
-						"bang"
-					],
-					"parameter_enable": 0
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3069",
-					"maxclass": "comment",
-					"numinlets": 1,
-					"numoutlets": 0,
-					"patching_rect": [
-						1100.6666901111603,
-						1138,
-						420,
+					"text": "SALIDA",
+					"presentation": 1,
+					"presentation_rect": [
+						10,
+						634.0,
+						400,
 						20
 					],
-					"varname": "thegrid_3069",
-					"text": "→ Giro de color: tono (hue), una vuelta en 2 compases"
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3070",
-					"maxclass": "newobj",
-					"numinlets": 1,
-					"numoutlets": 1,
-					"patching_rect": [
-						890.6666901111603,
-						1170,
-						110,
-						22
-					],
-					"varname": "thegrid_3070",
-					"text": "r grid.visual.3",
-					"outlettype": [
-						""
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3071",
-					"maxclass": "newobj",
-					"numinlets": 1,
-					"numoutlets": 1,
-					"patching_rect": [
-						890.6666901111603,
-						1198,
-						130,
-						22
-					],
-					"varname": "thegrid_3071",
-					"text": "grid.env 1. 0. 1",
-					"outlettype": [
-						""
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3072",
-					"maxclass": "flonum",
-					"numinlets": 1,
-					"numoutlets": 2,
-					"patching_rect": [
-						1030.6666901111603,
-						1198,
-						60,
-						22
-					],
-					"varname": "thegrid_3072",
-					"outlettype": [
-						"",
-						"bang"
-					],
-					"parameter_enable": 0
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3073",
-					"maxclass": "comment",
-					"numinlets": 1,
-					"numoutlets": 0,
-					"patching_rect": [
-						1100.6666901111603,
-						1198,
-						420,
-						20
-					],
-					"varname": "thegrid_3073",
-					"text": "→ Espejo + zoom: zoom / cantidad del espejo"
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3074",
-					"maxclass": "newobj",
-					"numinlets": 1,
-					"numoutlets": 1,
-					"patching_rect": [
-						890.6666901111603,
-						1230,
-						110,
-						22
-					],
-					"varname": "thegrid_3074",
-					"text": "r live.flash",
-					"outlettype": [
-						""
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3075",
-					"maxclass": "newobj",
-					"numinlets": 1,
-					"numoutlets": 1,
-					"patching_rect": [
-						890.6666901111603,
-						1258,
-						130,
-						22
-					],
-					"varname": "thegrid_3075",
-					"text": "grid.env 1. 0. 0.25",
-					"outlettype": [
-						""
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3076",
-					"maxclass": "flonum",
-					"numinlets": 1,
-					"numoutlets": 2,
-					"patching_rect": [
-						1030.6666901111603,
-						1258,
-						60,
-						22
-					],
-					"varname": "thegrid_3076",
-					"outlettype": [
-						"",
-						"bang"
-					],
-					"parameter_enable": 0
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3077",
-					"maxclass": "comment",
-					"numinlets": 1,
-					"numoutlets": 0,
-					"patching_rect": [
-						1100.6666901111603,
-						1258,
-						420,
-						20
-					],
-					"varname": "thegrid_3077",
-					"text": "→ Flash de tarola: brillo (un cuarto de compás)"
+					"fontface": 1
 				}
 			}
 		],
@@ -2132,18 +2028,6 @@
 					],
 					"source": [
 						"obj-1",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"destination": [
-						"obj-19",
-						0
-					],
-					"source": [
-						"obj-11",
 						0
 					]
 				}
@@ -2215,18 +2099,6 @@
 			{
 				"patchline": {
 					"destination": [
-						"obj-26",
-						0
-					],
-					"source": [
-						"obj-18",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"destination": [
 						"obj-8",
 						0
 					],
@@ -2268,18 +2140,6 @@
 					],
 					"source": [
 						"obj-3",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"destination": [
-						"obj-29",
-						0
-					],
-					"source": [
-						"obj-30",
 						0
 					]
 				}
@@ -2337,7 +2197,91 @@
 			{
 				"patchline": {
 					"source": [
+						"obj-11",
+						0
+					],
+					"destination": [
+						"obj-17",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-17",
+						0
+					],
+					"destination": [
+						"obj-35",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-35",
+						0
+					],
+					"destination": [
+						"obj-6",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-6",
+						0
+					],
+					"destination": [
+						"obj-4",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-4",
+						0
+					],
+					"destination": [
+						"obj-19",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3003",
+						0
+					],
+					"destination": [
 						"obj-3004",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3004",
+						0
+					],
+					"destination": [
+						"obj-21",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3003",
 						0
 					],
 					"destination": [
@@ -2349,19 +2293,7 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3004",
-						0
-					],
-					"destination": [
-						"obj-3006",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3006",
+						"obj-3005",
 						0
 					],
 					"destination": [
@@ -2373,11 +2305,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3005",
+						"obj-3007",
 						0
 					],
 					"destination": [
-						"obj-12",
+						"obj-3008",
 						0
 					]
 				}
@@ -2397,35 +2329,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3008",
-						0
-					],
-					"destination": [
-						"obj-3010",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3010",
-						0
-					],
-					"destination": [
-						"obj-3001",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
 						"obj-3009",
 						0
 					],
 					"destination": [
-						"obj-16",
+						"obj-3010",
 						0
 					]
 				}
@@ -2433,23 +2341,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3012",
+						"obj-3010",
 						0
 					],
 					"destination": [
-						"obj-3013",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3012",
-						0
-					],
-					"destination": [
-						"obj-3014",
+						"obj-21",
 						0
 					]
 				}
@@ -2458,6 +2354,18 @@
 				"patchline": {
 					"source": [
 						"obj-3014",
+						0
+					],
+					"destination": [
+						"obj-3015",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3015",
 						0
 					],
 					"destination": [
@@ -2469,7 +2377,7 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3013",
+						"obj-3014",
 						0
 					],
 					"destination": [
@@ -2485,8 +2393,8 @@
 						0
 					],
 					"destination": [
-						"obj-3018",
-						0
+						"obj-17",
+						4
 					]
 				}
 			},
@@ -2505,48 +2413,36 @@
 			{
 				"patchline": {
 					"source": [
+						"obj-3019",
+						0
+					],
+					"destination": [
+						"obj-3001",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
 						"obj-3018",
+						0
+					],
+					"destination": [
+						"obj-3020",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3020",
+						0
+					],
+					"destination": [
+						"obj-35",
 						1
-					],
-					"destination": [
-						"obj-3020",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3019",
-						0
-					],
-					"destination": [
-						"obj-27",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3020",
-						0
-					],
-					"destination": [
-						"obj-27",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3021",
-						0
-					],
-					"destination": [
-						"obj-3022",
-						0
 					]
 				}
 			},
@@ -2554,18 +2450,6 @@
 				"patchline": {
 					"source": [
 						"obj-3022",
-						0
-					],
-					"destination": [
-						"obj-21",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3021",
 						0
 					],
 					"destination": [
@@ -2589,12 +2473,24 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3025",
+						"obj-3022",
 						0
 					],
 					"destination": [
-						"obj-3026",
+						"obj-3024",
 						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3024",
+						0
+					],
+					"destination": [
+						"obj-6",
+						6
 					]
 				}
 			},
@@ -2614,78 +2510,6 @@
 				"patchline": {
 					"source": [
 						"obj-3027",
-						0
-					],
-					"destination": [
-						"obj-21",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3030",
-						0
-					],
-					"destination": [
-						"obj-3031",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3031",
-						0
-					],
-					"destination": [
-						"obj-3032",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3032",
-						0
-					],
-					"destination": [
-						"obj-3033",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3033",
-						0
-					],
-					"destination": [
-						"obj-27",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3030",
-						0
-					],
-					"destination": [
-						"obj-3035",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3035",
 						0
 					],
 					"destination": [
@@ -2697,23 +2521,71 @@
 			{
 				"patchline": {
 					"source": [
+						"obj-3026",
+						0
+					],
+					"destination": [
+						"obj-3028",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3028",
+						0
+					],
+					"destination": [
+						"obj-4",
+						3
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3031",
+						0
+					],
+					"destination": [
+						"obj-27",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3033",
+						0
+					],
+					"destination": [
+						"obj-3034",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3035",
+						0
+					],
+					"destination": [
 						"obj-3036",
 						0
-					],
-					"destination": [
-						"obj-27",
-						0
 					]
 				}
 			},
 			{
 				"patchline": {
 					"source": [
-						"obj-3038",
+						"obj-3037",
 						0
 					],
 					"destination": [
-						"obj-3039",
+						"obj-3038",
 						0
 					]
 				}
@@ -2733,7 +2605,7 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3042",
+						"obj-3040",
 						0
 					],
 					"destination": [
@@ -2745,163 +2617,7 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3046",
-						0
-					],
-					"destination": [
-						"obj-3048",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3048",
-						0
-					],
-					"destination": [
-						"obj-3047",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3046",
-						1
-					],
-					"destination": [
-						"obj-3049",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3049",
-						0
-					],
-					"destination": [
-						"obj-3047",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3046",
-						2
-					],
-					"destination": [
-						"obj-3050",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3050",
-						0
-					],
-					"destination": [
-						"obj-3047",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3046",
-						3
-					],
-					"destination": [
-						"obj-3051",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3051",
-						0
-					],
-					"destination": [
-						"obj-3047",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3045",
-						0
-					],
-					"destination": [
-						"obj-3046",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3047",
-						0
-					],
-					"destination": [
-						"obj-12",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3047",
-						1
-					],
-					"destination": [
-						"obj-16",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3047",
-						2
-					],
-					"destination": [
-						"obj-27",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3045",
-						0
-					],
-					"destination": [
-						"obj-3057",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3057",
+						"obj-3043",
 						0
 					],
 					"destination": [
@@ -2913,11 +2629,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3062",
+						"obj-3041",
 						0
 					],
 					"destination": [
-						"obj-3063",
+						"obj-3044",
 						0
 					]
 				}
@@ -2925,11 +2641,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3063",
+						"obj-3044",
 						0
 					],
 					"destination": [
-						"obj-3064",
+						"obj-3042",
 						0
 					]
 				}
@@ -2937,11 +2653,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3066",
-						0
+						"obj-3041",
+						1
 					],
 					"destination": [
-						"obj-3067",
+						"obj-3046",
 						0
 					]
 				}
@@ -2949,11 +2665,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3067",
+						"obj-3046",
 						0
 					],
 					"destination": [
-						"obj-3068",
+						"obj-3042",
 						0
 					]
 				}
@@ -2961,11 +2677,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3070",
-						0
+						"obj-3041",
+						2
 					],
 					"destination": [
-						"obj-3071",
+						"obj-3048",
 						0
 					]
 				}
@@ -2973,11 +2689,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3071",
+						"obj-3048",
 						0
 					],
 					"destination": [
-						"obj-3072",
+						"obj-3042",
 						0
 					]
 				}
@@ -2985,11 +2701,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3074",
-						0
+						"obj-3041",
+						3
 					],
 					"destination": [
-						"obj-3075",
+						"obj-3050",
 						0
 					]
 				}
@@ -2997,11 +2713,47 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3075",
+						"obj-3050",
 						0
 					],
 					"destination": [
-						"obj-3076",
+						"obj-3042",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3042",
+						0
+					],
+					"destination": [
+						"obj-12",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3042",
+						1
+					],
+					"destination": [
+						"obj-16",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3042",
+						2
+					],
+					"destination": [
+						"obj-27",
 						0
 					]
 				}
@@ -3113,9 +2865,54 @@
 				"toggle[3]",
 				0
 			],
-			"obj-18": [
-				"dial",
-				"dial",
+			"obj-17::obj-17": [
+				"range[1]",
+				"range",
+				0
+			],
+			"obj-17::obj-24": [
+				"Y offset",
+				"Y offset",
+				0
+			],
+			"obj-17::obj-41": [
+				"pictctrl[9]",
+				"pictctrl[1]",
+				0
+			],
+			"obj-17::obj-47": [
+				"pictctrl[10]",
+				"pictctrl[1]",
+				0
+			],
+			"obj-17::obj-51": [
+				"pictctrl[36]",
+				"pictctrl[1]",
+				0
+			],
+			"obj-17::obj-53": [
+				"pictctrl[37]",
+				"pictctrl[1]",
+				0
+			],
+			"obj-17::obj-54": [
+				"Bound mode",
+				"Bound mode",
+				0
+			],
+			"obj-17::obj-56::obj-23": [
+				"gswitch2[18]",
+				"gswitch2",
+				0
+			],
+			"obj-17::obj-68": [
+				"X offset",
+				"X offset",
+				0
+			],
+			"obj-17::obj-94": [
+				"Interp mode[1]",
+				"Interp mode",
 				0
 			],
 			"obj-19::obj-12": [
@@ -3208,9 +3005,44 @@
 				"dial",
 				0
 			],
-			"obj-30": [
-				"dial[2]",
-				"dial",
+			"obj-35::obj-104": [
+				"pictctrl[92]",
+				"pictctrl[1]",
+				0
+			],
+			"obj-35::obj-119": [
+				"Hue",
+				"Hue",
+				0
+			],
+			"obj-35::obj-127": [
+				"Saturation",
+				"Saturation",
+				0
+			],
+			"obj-35::obj-142": [
+				"Luminance",
+				"Luminance",
+				0
+			],
+			"obj-35::obj-147": [
+				"pictctrl[91]",
+				"pictctrl[1]",
+				0
+			],
+			"obj-35::obj-148": [
+				"pictctrl[90]",
+				"pictctrl[1]",
+				0
+			],
+			"obj-35::obj-56::obj-23": [
+				"gswitch2[20]",
+				"gswitch2",
+				0
+			],
+			"obj-35::obj-6": [
+				"range[17]",
+				"range",
 				0
 			],
 			"obj-3::obj-16": [
@@ -3261,6 +3093,121 @@
 			"obj-3::obj-94": [
 				"Interp mode",
 				"Interp mode",
+				0
+			],
+			"obj-4::obj-104": [
+				"pictctrl[23]",
+				"pictctrl[1]",
+				0
+			],
+			"obj-4::obj-121": [
+				"Invert",
+				"Invert",
+				0
+			],
+			"obj-4::obj-128": [
+				"range[24]",
+				"range",
+				0
+			],
+			"obj-4::obj-24": [
+				"Color plane",
+				"Color plane",
+				0
+			],
+			"obj-4::obj-25": [
+				"Color palette",
+				"Color palette",
+				0
+			],
+			"obj-4::obj-26": [
+				"pictctrl[38]",
+				"pictctrl[1]",
+				0
+			],
+			"obj-4::obj-56::obj-23": [
+				"gswitch2[19]",
+				"gswitch2",
+				0
+			],
+			"obj-4::obj-6": [
+				"range[2]",
+				"range",
+				0
+			],
+			"obj-6::obj-104": [
+				"pictctrl[67]",
+				"pictctrl[1]",
+				0
+			],
+			"obj-6::obj-119": [
+				"Zoom[1]",
+				"Zoom",
+				0
+			],
+			"obj-6::obj-120": [
+				"Zoom range[1]",
+				"Zoom range",
+				1
+			],
+			"obj-6::obj-121": [
+				"zoom[13]",
+				"Zoom",
+				0
+			],
+			"obj-6::obj-3": [
+				"range[13]",
+				"range",
+				0
+			],
+			"obj-6::obj-37": [
+				"Y offset[1]",
+				"Y offset",
+				0
+			],
+			"obj-6::obj-41": [
+				"pictctrl[68]",
+				"pictctrl[1]",
+				0
+			],
+			"obj-6::obj-53": [
+				"pictctrl[70]",
+				"pictctrl[1]",
+				0
+			],
+			"obj-6::obj-56::obj-23": [
+				"gswitch2[4]",
+				"gswitch2",
+				0
+			],
+			"obj-6::obj-64": [
+				"Mode[1]",
+				"Mode",
+				0
+			],
+			"obj-6::obj-65": [
+				"pictctrl[84]",
+				"pictctrl[1]",
+				0
+			],
+			"obj-6::obj-66": [
+				"pictctrl[83]",
+				"pictctrl[1]",
+				0
+			],
+			"obj-6::obj-68": [
+				"X offset[1]",
+				"X offset",
+				0
+			],
+			"obj-6::obj-91": [
+				"pictctrl[69]",
+				"pictctrl[1]",
+				0
+			],
+			"obj-6::obj-92": [
+				"Rotation",
+				"Rotation",
 				0
 			],
 			"obj-7": [
@@ -3322,6 +3269,21 @@
 				"obj-15::obj-68": {
 					"parameter_longname": "Horizontal[1]"
 				},
+				"obj-17::obj-41": {
+					"parameter_longname": "pictctrl[9]"
+				},
+				"obj-17::obj-47": {
+					"parameter_longname": "pictctrl[10]"
+				},
+				"obj-17::obj-51": {
+					"parameter_longname": "pictctrl[36]"
+				},
+				"obj-17::obj-53": {
+					"parameter_longname": "pictctrl[37]"
+				},
+				"obj-17::obj-94": {
+					"parameter_longname": "Interp mode[1]"
+				},
 				"obj-1::obj-20": {
 					"parameter_longname": "pictctrl[97]"
 				},
@@ -3330,6 +3292,24 @@
 				},
 				"obj-1::obj-48": {
 					"parameter_longname": "pictctrl[86]"
+				},
+				"obj-4::obj-104": {
+					"parameter_longname": "pictctrl[23]"
+				},
+				"obj-4::obj-26": {
+					"parameter_longname": "pictctrl[38]"
+				},
+				"obj-6::obj-119": {
+					"parameter_longname": "Zoom[1]"
+				},
+				"obj-6::obj-37": {
+					"parameter_longname": "Y offset[1]"
+				},
+				"obj-6::obj-64": {
+					"parameter_longname": "Mode[1]"
+				},
+				"obj-6::obj-68": {
+					"parameter_longname": "X offset[1]"
 				},
 				"obj-9::obj-46": {
 					"parameter_longname": "pictctrl[30]"
@@ -3547,6 +3527,18 @@
 		},
 		"dependency_cache": [
 			{
+				"name": "colorizer.genjit",
+				"bootpath": "C74:/packages/Vizzie/patchers/gen",
+				"type": "gJIT",
+				"implicit": 1
+			},
+			{
+				"name": "data-handler-L.maxpat",
+				"bootpath": "C74:/packages/Vizzie/patchers/utils",
+				"type": "JSON",
+				"implicit": 1
+			},
+			{
 				"name": "data-handler.maxpat",
 				"bootpath": "C74:/packages/Vizzie/patchers/utils",
 				"type": "JSON",
@@ -3567,9 +3559,16 @@
 			},
 			{
 				"name": "greenBobVideo.mov",
-				"bootpath": "~/Documents/max-visuals/grid-max/bobGrid",
+				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 2",
 				"patcherrelativepath": ".",
 				"type": "MooV",
+				"implicit": 1
+			},
+			{
+				"name": "grid.env.maxpat",
+				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 2",
+				"patcherrelativepath": ".",
+				"type": "JSON",
 				"implicit": 1
 			},
 			{
@@ -3577,6 +3576,12 @@
 				"bootpath": "~/Library/Application Support/Cycling '74/Max 8/Examples/jitter-examples/javascript/render",
 				"patcherrelativepath": "../../../../Library/Application Support/Cycling '74/Max 8/Examples/jitter-examples/javascript/render",
 				"type": "TEXT",
+				"implicit": 1
+			},
+			{
+				"name": "lo_hi_UI_control.maxpat",
+				"bootpath": "C74:/packages/Vizzie/patchers/utils",
+				"type": "JSON",
 				"implicit": 1
 			},
 			{
@@ -3605,6 +3610,12 @@
 				"implicit": 1
 			},
 			{
+				"name": "vz.colorizr.maxpat",
+				"bootpath": "C74:/packages/Vizzie/patchers",
+				"type": "JSON",
+				"implicit": 1
+			},
+			{
 				"name": "vz.delayr.maxpat",
 				"bootpath": "C74:/packages/Vizzie/patchers",
 				"type": "JSON",
@@ -3623,7 +3634,19 @@
 				"implicit": 1
 			},
 			{
+				"name": "vz.husalir.maxpat",
+				"bootpath": "C74:/packages/Vizzie/patchers",
+				"type": "JSON",
+				"implicit": 1
+			},
+			{
 				"name": "vz.interpol8r.maxpat",
+				"bootpath": "C74:/packages/Vizzie/patchers",
+				"type": "JSON",
+				"implicit": 1
+			},
+			{
+				"name": "vz.kaleidr.maxpat",
 				"bootpath": "C74:/packages/Vizzie/patchers",
 				"type": "JSON",
 				"implicit": 1
@@ -3636,6 +3659,24 @@
 			},
 			{
 				"name": "vz.projectr.maxpat",
+				"bootpath": "C74:/packages/Vizzie/patchers",
+				"type": "JSON",
+				"implicit": 1
+			},
+			{
+				"name": "vz.randomizr.maxpat",
+				"bootpath": "C74:/packages/Vizzie/patchers",
+				"type": "JSON",
+				"implicit": 1
+			},
+			{
+				"name": "vz.trans4mr.maxpat",
+				"bootpath": "C74:/packages/Vizzie/patchers",
+				"type": "JSON",
+				"implicit": 1
+			},
+			{
+				"name": "vz.zoomr.maxpat",
 				"bootpath": "C74:/packages/Vizzie/patchers",
 				"type": "JSON",
 				"implicit": 1

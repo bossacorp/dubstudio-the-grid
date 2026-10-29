@@ -10,6 +10,11 @@
       Estrobo: al recibir un bang alterna 1/0 <por-compás> veces por compás
       durante <compases> y termina en 0. Ej: [grid.strobe 8 1]
 
+  grid.hold <compases>
+      Entra y sale: al recibir un bang saca 1 (prende un módulo) y a los
+      <compases> saca 0 (lo apaga). Otro bang antes de tiempo reinicia la
+      cuenta. Al abrir el patch saca 0 (módulo apagado). Ej: [grid.hold 2]
+
 La duración del compás llega de Ableton por [r live.barms] (ms); mientras no
 llegue se usa 2000 ms (120 BPM, 4/4).
 
@@ -120,6 +125,27 @@ def grid_strobe():
     p.save('grid.strobe.maxpat')
 
 
+def grid_hold():
+    p = Patch()
+    p.com(20, 10, 520, 'grid.hold <compases> — 1 al disparar, 0 a los N compases')
+    inl = p.box('inlet', [20, 40, 30, 30], None, 0, 1, [''], comment='bang: prende')
+    t2 = p.obj(20, 80, 50, 't b b', no=2, ot=['bang', 'bang'])
+    one = p.msg(80, 120, 30, '1')
+    dl = p.obj(20, 160, 80, 'delay 2000', ni=2, no=1, ot=['bang'])
+    zero = p.msg(20, 190, 30, '0')
+    out = p.box('outlet', [20, 240, 30, 30], None, 1, 0, comment='1 = prendido, 0 = apagado')
+    ex, _ = bar_ms(p, 240, 80, 'expr $f1 * #1')
+    off = p.obj(130, 190, 70, 'loadmess 0', no=1)
+    p.com(210, 190, 300, '← al abrir el patch: apagado')
+    p.wire(inl, 0, t2, 0)
+    p.wire(t2, 1, one, 0); p.wire(one, 0, out, 0)   # primero prende
+    p.wire(t2, 0, dl, 0)                            # luego cuenta (reinicia si ya contaba)
+    p.wire(ex, 0, dl, 1); p.wire(dl, 0, zero, 0)
+    p.wire(zero, 0, out, 0); p.wire(off, 0, out, 0)
+    p.save('grid.hold.maxpat')
+
+
 if __name__ == '__main__':
     grid_env()
     grid_strobe()
+    grid_hold()

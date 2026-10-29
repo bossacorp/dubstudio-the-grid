@@ -75,25 +75,23 @@ web/public/      Página pública 3×3, operador.html y pantalla.html (vanilla J
 max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
                  con send (grid.visual.1…grid.vote.3, grid.lock.<col>) y marca
                  el compás (/show/bar). Los patches de color usan [r grid.…]
-  bobGrid/       Patches de color (verde/amarillo/rojo, Vizzie) + videos, con
-                 dos bloques agregados a la derecha:
-                 THE GRID: celda 1 → efectos A, celda 2 → efectos B,
-                   celda 3 → crossfade A↔B, bloqueo → pausa, play al abrir
-                 ABLETON: live.flash → pulso del crossfade, live.knob.1 →
-                   crossfade, live.knob.2-4 → números libres para conectar,
-                   live.scene 1-4 → setups (A / B / A+B / limpio)
-                 ENVOLVENTES: templates por celda + flash de tarola con
-                   grid.env/grid.strobe; salidas SIN conectar (el artista las
-                   conecta al parámetro de Vizzie de cada template)
-    grid.env.maxpat     abstracción [grid.env pico base compases]: golpe y regreso
-    grid.strobe.maxpat  abstracción [grid.strobe por-compás compases]: estrobo 1/0
+  bobGrid/       Patches de color (verde/amarillo/rojo, Vizzie) + videos. Abren en
+                 presentación (solo módulos y controles). A la derecha, en la
+                 vista de cables: THE GRID (bloqueo → pausa, play al abrir),
+                 TEMPLATES (cada celda/tarola → su módulo, ver abajo) y
+                 ABLETON (perilla 1 → crossfade, 2-4 libres, escenas 1-4)
+    grid.env.maxpat     [grid.env pico base compases]: golpe y regreso
+    grid.hold.maxpat    [grid.hold compases]: 1 al disparar, 0 a los N compases
+    grid.strobe.maxpat  [grid.strobe por-compás compases]: estrobo 1/0
   ableton-bridge.maxpat  Mac mini: udpreceive 9200 + MIDI directo → send live.*
   ableton/GridOSC.amxd   Dispositivo Max MIDI Effect para Live (IPs editables
                  en su cara); GridOSC.maxpat es su fuente
   tools/generar_gridosc.py  Genera GridOSC.maxpat y GridOSC.amxd
-  tools/agregar_bloques.py  Agrega/actualiza esos bloques en una versión
-                 nueva de un patch de color (no toca lo existente)
-  tools/generar_abstracciones.py  Genera grid.env / grid.strobe en bobGrid/
+  tools/agregar_bloques.py  Integra una versión nueva de un patch de color:
+                 quita lo que no se usa, arma la cadena, cablea templates y
+                 acomoda la presentación (config por color dentro del script)
+  tools/generar_abstracciones.py  Genera grid.env / grid.hold / grid.strobe
+docs/plan-pruebas-colores.md  Plan de pruebas por color (celular, Ableton, operador)
 Dockerfile       Imagen del Grid Server (contexto: raíz del repo)
 docker-compose.yml
 .gitlab-ci.yml   CI: `npm test` en cada push (runner tag `self-hosted`, Linux Mint)
@@ -139,13 +137,27 @@ docker-compose.yml
   fuerza en un solo celular o pantalla (para comparar).
 - Arte propio del artista: reemplazará a `art.js` más adelante.
 
-## Templates de efectos (golpe y regreso)
-El efecto se lanza al extremo y regresa solo, al tempo de Ableton. Por color:
-- Verde (forma): 1 caleidoscopio · 2 giro de color · 3 espejo + zoom
-- Amarilla (dub): 1 eco dub (feedback DELAYR) · 2 reverb de imagen (FOGGR) ·
-  3 sirena (estrobo de brillo, 1 compás)
-- Roja (escena del ganador, 16 compases): 1 Raíces · 2 Steppers · 3 Cósmico
-- Tarola: flash de brillo de ¼ de compás
+## Templates de efectos (cableados en los patches de color)
+Dos tipos, al tempo de Ableton (`live.barms`):
+- **Entra y sale** (`grid.hold` / `grid.strobe`) → entrada on/off del módulo = su
+  ÚLTIMA entrada (convención que ya usaban los toggles del artista). En reposo
+  el módulo está apagado; su intensidad se ajusta en su panel.
+- **Golpe y regreso** (`grid.env`) → solo entradas confirmadas: el número 0..1
+  del crossfade (mixfadr entrada 3) y el tono de HUSALIR (entrada 2).
+Por color:
+- Verde: celda 1 KALEIDR 1 compás · 2 tono HUSALIR vuelta en 2 · 3 TRANS4MR
+  1 compás · tarola COLORIZR ¼. Cadena: mixfadr → kaleidr → husalir →
+  trans4mr → colorizr → projectr.
+- Amarilla: 1 eco (crossfade a B = DELAYR, regresa en 2) · 2 FOGGR 2 compases
+  · 3 sirena (crossfade A/B en corcheas, 1 compás) · tarola pulso a B ¼.
+  DELAYR prendido al abrir.
+- Roja (ganador, 16 compases): 1 Raíces (crossfade a A = fractal+niebla y
+  vuelve a limpio) · 2 Steppers (PIXL8R cada compás) · 3 Cósmico (KALEIDR +
+  crossfade a A) · tarola pulso a A ¼. B del mixfadr = video limpio.
+- Supuestos por confirmar en Max (pasar el mouse por la entrada): última
+  entrada = on/off en KALEIDR, TRANS4MR, COLORIZR, PIXL8R; entrada 2 = tono en
+  HUSALIR. Si alguno no coincide, se mueve ese cable o se ajusta la config de
+  `agregar_bloques.py`.
 
 ## Principio: KICS
 Keep It Cuban/Chill/Simple. La nube y la infraestructura pesada solo entran

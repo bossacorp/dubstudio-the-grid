@@ -120,18 +120,17 @@ o `GRID-ROJO`.
 4. *Probar sin Ableton:*
    `CONTRACT_TARGET=<ip-mac-mini>:9200 ONLY=live docker compose run --build --rm contract-tester`
 
-**Templates de efectos (bloque ENVOLVENTES).** Cada patch de color trae abajo
-a la derecha un bloque con un template por celda (y el flash de tarola): un
-`[grid.env pico base compases]` o `[grid.strobe por-compás compases]` que
-termina en un número **sin conectar**. Conecta ese número a la entrada del
-parámetro de Vizzie que dice su comentario (pasa el mouse sobre la entrada
-para ver su nombre; usa `[scale 0. 1. mín máx]` si necesita otro rango). Las
-caídas siguen el tempo de Ableton (`/live/barms`); sin Ableton usan 120 BPM.
-`grid.env.maxpat` y `grid.strobe.maxpat` deben ir en la misma carpeta que los
-patches.
+**Templates de efectos.** Los patches de `max/bobGrid/` ya traen cada celda
+(y la tarola de Ableton) conectada a su efecto; abren en vista de presentación
+(Cmd+Opción+E para ver los cables). Detalle por color y supuestos en
+`CLAUDE.md` ("Templates de efectos"); plan de pruebas en
+`docs/plan-pruebas-colores.md`. `grid.env`, `grid.hold` y `grid.strobe` deben
+ir en la misma carpeta que los patches.
 
 Si mandas una versión nueva de un patch de color, los bloques se reaplican con
-`python3 max/tools/agregar_bloques.py nuevo.maxpat max/bobGrid/<color>-bob-rebel-music.maxpat verde|amarillo|rojo`.
+`python3 max/tools/agregar_bloques.py nuevo.maxpat max/bobGrid/<color>-bob-rebel-music.maxpat verde|amarillo|rojo`
+(quita lo que no se usa, arma la cadena, cablea los templates y acomoda la
+presentación; se puede correr cuantas veces haga falta).
 
 **3 — Validación por color (patches de Max).** Con `grid-router.maxpat` y los
 tres patches de color abiertos en la Mac mini, manda el contrato completo
