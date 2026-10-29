@@ -75,14 +75,19 @@ web/public/      Página pública 3×3, operador.html y pantalla.html (vanilla J
 max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
                  con send (grid.visual.1…grid.vote.3, grid.lock.<col>) y marca
                  el compás (/show/bar). Los patches de color usan [r grid.…]
-  bobGrid/       Patches de color (verde/amarillo/rojo, Vizzie) + videos. Abren en
-                 presentación (solo módulos y controles). A la derecha, en la
-                 vista de cables: THE GRID (bloqueo → pausa, play al abrir),
-                 TEMPLATES (cada celda/tarola → su módulo, ver abajo) y
-                 ABLETON (perilla 1 → crossfade, 2-4 libres, escenas 1-4)
+  bobGrid/       Patches de color (verde/amarillo/rojo, Vizzie) + TODOS sus videos
+                 en la misma carpeta (bob*.mov y Donitas*.mp4; los clips guardan
+                 solo el nombre del archivo, volumen 0). Cada patch: video
+                 original + 2 videos nuevos cruzados en un mixfadr propio.
+                 Abren en presentación (solo módulos y controles). A la
+                 derecha, en la vista de cables: THE GRID (bloqueo → pausa
+                 todos los videos, play al abrir), TEMPLATES y ABLETON
+                 (perilla 1 → crossfade principal, perilla 2 → cruce de videos
+                 nuevos + "cruce auto" con grid.lfo, 3-4 libres, escenas 1-4)
     grid.env.maxpat     [grid.env pico base compases]: golpe y regreso
     grid.hold.maxpat    [grid.hold compases]: 1 al disparar, 0 a los N compases
     grid.strobe.maxpat  [grid.strobe por-compás compases]: estrobo 1/0
+    grid.lfo.maxpat     [grid.lfo compases]: va y viene 0↔1 sin parar (1 = corre)
   ableton-bridge.maxpat  Mac mini: udpreceive 9200 + MIDI directo → send live.*
   ableton/GridOSC.amxd   Dispositivo Max MIDI Effect para Live (IPs editables
                  en su cara); GridOSC.maxpat es su fuente
@@ -90,7 +95,7 @@ max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
   tools/agregar_bloques.py  Integra una versión nueva de un patch de color:
                  quita lo que no se usa, arma la cadena, cablea templates y
                  acomoda la presentación (config por color dentro del script)
-  tools/generar_abstracciones.py  Genera grid.env / grid.hold / grid.strobe
+  tools/generar_abstracciones.py  Genera grid.env / grid.hold / grid.strobe / grid.lfo
 docs/plan-pruebas-colores.md  Plan de pruebas por color (celular, Ableton, operador)
 Dockerfile       Imagen del Grid Server (contexto: raíz del repo)
 docker-compose.yml
@@ -145,15 +150,19 @@ Dos tipos, al tempo de Ableton (`live.barms`):
 - **Golpe y regreso** (`grid.env`) → solo entradas confirmadas: el número 0..1
   del crossfade (mixfadr entrada 3) y el tono de HUSALIR (entrada 2).
 Por color:
-- Verde: celda 1 KALEIDR 1 compás · 2 tono HUSALIR vuelta en 2 · 3 TRANS4MR
-  1 compás · tarola COLORIZR ¼. Cadena: mixfadr → kaleidr → husalir →
-  trans4mr → colorizr → projectr.
-- Amarilla: 1 eco (crossfade a B = DELAYR, regresa en 2) · 2 FOGGR 2 compases
-  · 3 sirena (crossfade A/B en corcheas, 1 compás) · tarola pulso a B ¼.
-  DELAYR prendido al abrir.
-- Roja (ganador, 16 compases): 1 Raíces (crossfade a A = fractal+niebla y
-  vuelve a limpio) · 2 Steppers (PIXL8R cada compás) · 3 Cósmico (KALEIDR +
-  crossfade a A) · tarola pulso a A ¼. B del mixfadr = video limpio.
+- Verde: A = bob → fractalizr → foggr; B = cruce Donitas1/2 → interpol8r →
+  delayr; salida: mixfadr → kaleidr → husalir → trans4mr → colorizr →
+  projectr. Celda 1 KALEIDR 1 compás · 2 tono HUSALIR vuelta en 2 · 3
+  TRANS4MR 1 compás · tarola COLORIZR ¼. Cruce auto cada 8 compases.
+- Amarilla: A = bob → foggr; B = cruce Donitas3/4 → delayr. 1 eco (crossfade
+  a B, regresa en 2) · 2 FOGGR 2 compases · 3 sirena (crossfade A/B en
+  corcheas, 1 compás) · tarola pulso a B ¼. DELAYR prendido al abrir. Cruce
+  auto cada 4 compases.
+- Roja (ganador, 16 compases; base crossfade 0.5 = se ven A y B): A = bob →
+  fractalizr → foggr; B = cruce Donitas5/5a → pixl8r → kaleidr (cadena del
+  artista). 1 Raíces (crossfade a A y vuelve a 0.5) · 2 Steppers (PIXL8R
+  cada compás) · 3 Cósmico (KALEIDR + crossfade a B) · tarola pulso a A ¼.
+  Cruce auto cada 16 compases.
 - Supuestos por confirmar en Max (pasar el mouse por la entrada): última
   entrada = on/off en KALEIDR, TRANS4MR, COLORIZR, PIXL8R; entrada 2 = tono en
   HUSALIR. Si alguno no coincide, se mueve ese cable o se ajusta la config de

@@ -124,8 +124,9 @@ o `GRID-ROJO`.
 (y la tarola de Ableton) conectada a su efecto; abren en vista de presentación
 (Cmd+Opción+E para ver los cables). Detalle por color y supuestos en
 `CLAUDE.md` ("Templates de efectos"); plan de pruebas en
-`docs/plan-pruebas-colores.md`. `grid.env`, `grid.hold` y `grid.strobe` deben
-ir en la misma carpeta que los patches.
+`docs/plan-pruebas-colores.md`. Los videos (`*.mov`, `Donitas*.mp4`) y
+`grid.env`, `grid.hold`, `grid.strobe` y `grid.lfo` deben ir en la misma
+carpeta que los patches.
 
 Si mandas una versión nueva de un patch de color, los bloques se reaplican con
 `python3 max/tools/agregar_bloques.py nuevo.maxpat max/bobGrid/<color>-bob-rebel-music.maxpat verde|amarillo|rojo`

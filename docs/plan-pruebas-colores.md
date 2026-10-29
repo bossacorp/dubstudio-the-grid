@@ -14,8 +14,10 @@ docker compose logs -f grid-server
 ```
 
 **Mac mini**
-- Carpeta con: los 3 patches de `max/bobGrid/`, sus videos, `grid.env`,
-  `grid.hold`, `grid.strobe`, `grid-router.maxpat` y `ableton-bridge.maxpat`.
+- Carpeta con: los 3 patches de `max/bobGrid/`, **todos los videos en la
+  misma carpeta** (bob*.mov y Donitas*.mp4, sin subcarpeta), `grid.env`,
+  `grid.hold`, `grid.strobe`, `grid.lfo`, `grid-router.maxpat` y
+  `ableton-bridge.maxpat`.
 - Abre `grid-router` (reloj **apagado**: el tempo lo manda Ableton),
   `ableton-bridge` y los 3 patches de color. Abren en vista de presentación;
   Cmd+Opción+E muestra los cables.
@@ -51,11 +53,13 @@ entrada indicada y confirma su nombre:
   avísame cuál era para corregir la herramienta.
 
 **Estado al abrir** (sin tocar nada, 2 s después de abrir):
-- [ ] Los 3 videos se reproducen solos.
+- [ ] Los 9 videos se reproducen solos (3 por patch), sin sonido.
+- [ ] En cada patch el MIXFADR de videos nuevos va y viene solo ("cruce
+  auto" prendido): verde cada 8 compases, amarillo cada 4, rojo cada 16.
 - [ ] Verde: KALEIDR, TRANS4MR y COLORIZR apagados; el tono de HUSALIR en 0.
 - [ ] Amarillo: FOGGR apagado, DELAYR prendido, crossfade en A.
-- [ ] Rojo: FRACTALIZR + FOGGR prendidos, crossfade en B (video limpio),
-  KALEIDR y PIXL8R apagados.
+- [ ] Rojo: FRACTALIZR + FOGGR prendidos, crossfade principal en 0.5 (se ven
+  el original y los nuevos), KALEIDR y PIXL8R apagados.
 
 **Intensidad**: como los módulos de templates están apagados en reposo, sube
 sus parámetros al extremo en su panel (que se note mucho) y guarda el patch.
@@ -74,9 +78,10 @@ imprimir `GRID-VERDE celda1 1`. Igual con `grid.fx.1`, `grid.vote.1` y
 | V3 | Celular | Toca verde 1 varias veces seguidas | El caleidoscopio se mantiene mientras toquen (cada toque reinicia el compás) | ☐ |
 | V4 | Ableton | Toca la tarola | COLORIZR entra ¼ de compás (destello de color) | ☐ |
 | V5 | Ableton | Mueve la perilla 1 | Crossfade A↔B del verde | ☐ |
+| V5b | Ableton | Apaga "cruce auto" y mueve la perilla 2 | Cruce entre Donitas1 y Donitas2 (cadena B) | ☐ |
 | V6 | Ableton | Lanza escenas 1→4 | solo A · solo B · A+B · limpio | ☐ |
 | V7 | Ableton | Cambia el BPM a 90 y luego a 140; toca verde 1 | El caleidoscopio dura **un compás** a cada tempo | ☐ |
-| V8 | Operador | Bloquea la verde | Video verde en pausa, columna apagada en celulares y pantalla; los toques no hacen nada | ☐ |
+| V8 | Operador | Bloquea la verde | Los 3 videos del verde en pausa, columna apagada en celulares y pantalla; los toques no hacen nada | ☐ |
 | V9 | Operador | Desbloquea | El video sigue; los toques vuelven a funcionar | ☐ |
 
 ## 3. Amarillo (fx: cae en el compás, con enfriamiento)
@@ -89,18 +94,20 @@ imprimir `GRID-VERDE celda1 1`. Igual con `grid.fx.1`, `grid.vote.1` y
 | A4 | 2 celulares | Uno toca 2, el otro toca 3 dos veces en el mismo compás | Sale solo la 3 (la más tocada) | ☐ |
 | A5 | Ableton | Toca la tarola | Pulso del crossfade a B (eco) de ¼ de compás | ☐ |
 | A6 | Ableton | Perilla 1 y escenas 1→4 | crossfade · niebla · eco · niebla + eco · limpio | ☐ |
+| A6b | Ableton | Apaga "cruce auto" y mueve la perilla 2 | Cruce entre Donitas3 y Donitas4 (lo que pasa por el eco) | ☐ |
 | A7 | Operador | Bloquea la amarilla con una celda pendiente | La pendiente se descarta; video amarillo en pausa | ☐ |
 
 ## 4. Rojo (voto: el ganador manda 16 compases)
 
 | # | Frente | Acción | Esperado | ✔ |
 |---|---|---|---|---|
-| R1 | Probador | `… ONLY=vote STEP_MS=35000 …` (a 120 BPM, 16 compases ≈ 32 s) | ganó 1 Raíces: salta a A (fractal + niebla) y vuelve a limpio en 16 compases · ganó 2 Steppers: pixelado prende/apaga cada compás · ganó 3 Cósmico: caleidoscopio + fractal que se desvanece | ☐ |
+| R1 | Probador | `… ONLY=vote STEP_MS=35000 …` (a 120 BPM, 16 compases ≈ 32 s) | ganó 1 Raíces: salta a A (bob con fractal + niebla) y vuelve a la mezcla en 16 compases · ganó 2 Steppers: pixelado en los videos nuevos, prende/apaga cada compás · ganó 3 Cósmico: caleidoscopio en los videos nuevos, a pantalla completa, que regresa a la mezcla | ☐ |
 | R2 | Celulares | Voten (2 por la 3, 1 por la 1) y esperen el cierre (compás 17, 33…) | Sale **solo la 3**; `/pantalla` muestra "GANÓ 3" al mismo tiempo que el visual | ☐ |
 | R3 | Celulares | Empate 1 a 1 | Gana una de las dos al azar; se ve su template | ☐ |
 | R4 | Operador | Mira el conteo y luego **anula el voto** | Las barras quedan en 0; al cerrar la ventana no sale ganador | ☐ |
 | R5 | Ableton | Toca la tarola | Pulso del crossfade a A (fractal) de ¼ de compás | ☐ |
-| R6 | Ableton | Escenas 1→4 | fractal + niebla · limpio · mezcla · limpio sin fractal | ☐ |
+| R6 | Ableton | Escenas 1→4 | original con fractal + niebla · videos nuevos · mezcla · mezcla sin fractal | ☐ |
+| R6b | Ableton | Apaga "cruce auto" y mueve la perilla 2 | Cruce entre Donitas5 y Donitas5a | ☐ |
 | R7 | Operador | Cambia "compases que se muestra el ganador" a 4 | Cambia solo el letrero de `/pantalla`; el visual sigue durando 16 (se ajusta en el patch: `grid.env … 16`) | ☐ |
 
 ## 5. Todo junto (ensayo del 17 nov)

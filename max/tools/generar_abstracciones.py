@@ -10,6 +10,11 @@
       Estrobo: al recibir un bang alterna 1/0 <por-compás> veces por compás
       durante <compases> y termina en 0. Ej: [grid.strobe 8 1]
 
+  grid.lfo <compases>
+      Movimiento continuo: va de 0 a 1 en <compases> y regresa, una y otra
+      vez. Entrada: 1 = corre, 0 = se detiene donde está. Arranca corriendo al
+      abrir el patch. Ej: [grid.lfo 8] para un cruce lento entre dos videos.
+
   grid.hold <compases>
       Entra y sale: al recibir un bang saca 1 (prende un módulo) y a los
       <compases> saca 0 (lo apaga). Otro bang antes de tiempo reinicia la
@@ -125,6 +130,39 @@ def grid_strobe():
     p.save('grid.strobe.maxpat')
 
 
+def grid_lfo():
+    p = Patch()
+    p.com(20, 10, 520, 'grid.lfo <compases> — sube 0→1 y baja 1→0, cada tramo en N compases')
+    inl = p.box('inlet', [20, 40, 30, 30], None, 0, 1, [''], comment='1 = corre, 0 = se detiene')
+    lm = p.obj(70, 40, 70, 'loadmess 1', no=1)
+    run = p.obj(20, 80, 50, 't i i', no=2, ot=['int', 'int'])
+    gate = p.obj(20, 220, 50, 'gate', ni=2, no=1)
+    kick = p.obj(120, 120, 60, 'sel 1', ni=2, no=2, ot=['bang', ''])
+    tog = p.box('toggle', [120, 250, 24, 24], None, 1, 1, ['int'], parameter_enable=0)
+    sel = p.obj(120, 285, 60, 'sel 0 1', ni=3, no=3, ot=['bang', 'bang', ''])
+    f0 = p.obj(120, 315, 40, 'f', ni=2, no=1, ot=['float'])
+    f1 = p.obj(170, 315, 40, 'f', ni=2, no=1, ot=['float'])
+    m0 = p.msg(120, 345, 50, '0. $1')
+    m1 = p.msg(180, 345, 50, '1. $1')
+    ln = p.obj(120, 380, 80, 'line 0. 20', ni=3, no=2, ot=['', 'bang'])
+    out = p.box('outlet', [120, 420, 30, 30], None, 1, 0, comment='valor 0..1')
+    ex, _ = bar_ms(p, 300, 120, 'expr $f1 * #1')
+    p.com(260, 380, 280, '← al terminar cada tramo, cambia de sentido')
+    p.wire(inl, 0, run, 0); p.wire(lm, 0, run, 0)
+    p.wire(run, 1, gate, 0)            # abre/cierra el regreso
+    p.wire(run, 0, kick, 0)            # al prender, arranca un tramo
+    p.wire(kick, 0, tog, 0)
+    p.wire(ln, 1, gate, 1)             # fin de tramo → (si corre) siguiente
+    p.wire(gate, 0, tog, 0)
+    p.wire(tog, 0, sel, 0)
+    p.wire(sel, 0, f0, 0); p.wire(sel, 1, f1, 0)
+    p.wire(ex, 0, f0, 1); p.wire(ex, 0, f1, 1)
+    p.wire(f0, 0, m0, 0); p.wire(f1, 0, m1, 0)
+    p.wire(m0, 0, ln, 0); p.wire(m1, 0, ln, 0)
+    p.wire(ln, 0, out, 0)
+    p.save('grid.lfo.maxpat')
+
+
 def grid_hold():
     p = Patch()
     p.com(20, 10, 520, 'grid.hold <compases> — 1 al disparar, 0 a los N compases')
@@ -149,3 +187,4 @@ if __name__ == '__main__':
     grid_env()
     grid_strobe()
     grid_hold()
+    grid_lfo()

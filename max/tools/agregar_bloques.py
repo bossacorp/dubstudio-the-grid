@@ -37,6 +37,7 @@ COLORS = {
         'quitar': ['vz.zoomr.maxpat', 'vz.randomizr.maxpat'],
         'post': ['vz.kaleidr.maxpat', 'vz.husalir.maxpat', 'vz.trans4mr.maxpat', 'vz.colorizr.maxpat'],
         'mix_b_desde_video': False,
+        'cruce_compases': 8,
         'templates': [
             ('grid.visual.1', 'grid.hold 1', ('mod', 'vz.kaleidr.maxpat', 'ultima'),
              'celda 1 · Caleidoscopio: KALEIDR entra 1 compás'),
@@ -61,6 +62,7 @@ COLORS = {
         'quitar': ['vz.randomizr.maxpat'],
         'post': [],
         'mix_b_desde_video': False,
+        'cruce_compases': 4,
         'templates': [
             ('grid.fx.1', 'grid.env 1. 0. 2', ('xfade',),
              'celda 1 · Eco dub: crossfade a B (pasa por DELAYR) y regresa en 2 compases'),
@@ -84,28 +86,30 @@ COLORS = {
     'rojo': {
         'col': 'vote',
         'quitar': ['vz.randomizr.maxpat'],
-        'post': ['vz.kaleidr.maxpat', 'vz.pixl8r.maxpat'],
-        # B del mixfadr estaba vacío: entra el video limpio.
-        'mix_b_desde_video': True,
+        # El artista armó la cadena B: videos nuevos → PIXL8R → KALEIDR → mixfadr B.
+        'post': [],
+        'mix_b_desde_video': False,
+        'cruce_compases': 16,
+        # Base: crossfade en 0.5 (se ven el video original y los nuevos).
         'templates': [
-            ('grid.vote.1', 'grid.env 0. 1. 16', ('xfade',),
-             'ganó 1 · Raíces: salta a A (fractal + niebla) y vuelve a limpio en 16 compases'),
+            ('grid.vote.1', 'grid.env 0. 0.5 16', ('xfade',),
+             'ganó 1 · Raíces: salta a A (fractal + niebla) y vuelve a la mezcla en 16 compases'),
             ('grid.vote.2', 'grid.strobe 1 16', ('mod', 'vz.pixl8r.maxpat', 'ultima'),
-             'ganó 2 · Steppers: PIXL8R corta cada compás durante 16 compases'),
+             'ganó 2 · Steppers: PIXL8R (en B) corta cada compás durante 16 compases'),
             ('grid.vote.3', 'grid.hold 16', ('mod', 'vz.kaleidr.maxpat', 'ultima'),
-             'ganó 3 · Cósmico: KALEIDR 16 compases…'),
-            ('grid.vote.3', 'grid.env 0. 1. 16', ('xfade',),
-             '…más el fractal (A), que regresa a limpio en 16 compases'),
-            ('live.flash', 'grid.env 0. 1. 0.25', ('xfade',),
+             'ganó 3 · Cósmico: KALEIDR (en B) 16 compases…'),
+            ('grid.vote.3', 'grid.env 1. 0.5 16', ('xfade',),
+             '…con el crossfade en B, que regresa a la mezcla en 16 compases'),
+            ('live.flash', 'grid.env 0. 0.5 0.25', ('xfade',),
              'tarola · Flash: pulso del crossfade a A, ¼ de compás'),
         ],
         # FRACTALIZR + FOGGR prendidos para que A tenga look.
         'al_abrir': [(('var', 'toggle[4]'), '1')],
         'escenas': ([('var', 'toggle[4]'), ('xfade',)],
-                    [('1 0.', 'escena 1: fractal + niebla (A)'),
-                     ('1 1.', 'escena 2: limpio (B)'),
+                    [('1 0.', 'escena 1: original con fractal + niebla (A)'),
+                     ('1 1.', 'escena 2: videos nuevos (B)'),
                      ('1 0.5', 'escena 3: mezcla A + B'),
-                     ('0 1.', 'escena 4: limpio, fractal apagado')]),
+                     ('0 0.5', 'escena 4: mezcla, fractal apagado')]),
         'etiquetas': {'toggle[4]': 'fractal + niebla on/off', 'toggle[3]': 'mezcla on/off',
                       'dial[1]': 'crossfade A↔B'},
     },
@@ -160,19 +164,53 @@ def main():
         p['lines'].append({'patchline': {'source': [a, ao], 'destination': [b, bi]}})
 
     # ---------------- 1. quitar lo que no se usa ----------------
-    drop({b['id'] for b in boxes().values() if b.get('name') in cfg['quitar']})
+    sobrantes = {b['id']: b['name'] for b in boxes().values() if b.get('name') in cfg['quitar']}
+    drop(set(sobrantes))
 
-    mix = by_name('vz.mixfadr.maxpat')
     proj = by_name('vz.projectr.maxpat')
-    playlist = next(b for b in boxes().values() if b['maxclass'] == 'jit.playlist')
-    if not mix or not proj:
+    mixers = [b for b in boxes().values() if b.get('name') == 'vz.mixfadr.maxpat']
+    if not mixers or not proj:
         sys.exit('No encontré vz.mixfadr o vz.projectr en el patch')
+
+    def reaches_output(bid):
+        """¿La salida de video de este módulo llega al projectr sin pasar por otro mixfadr?"""
+        cur, seen = bid, set()
+        while cur not in seen:
+            seen.add(cur)
+            nxt = [l['destination'][0] for l in outs(cur) if l['source'][1] == 0
+                   and boxes()[l['destination'][0]]['maxclass'] == 'bpatcher']
+            if proj['id'] in nxt:
+                return True
+            if not nxt or any(boxes()[n].get('name') == 'vz.mixfadr.maxpat' for n in nxt):
+                return False
+            cur = nxt[0]
+        return False
+
+    principal = [m for m in mixers if reaches_output(m['id'])]
+    mix = principal[0] if principal else mixers[0]
+    inner = [m for m in mixers if m['id'] != mix['id']]   # mezcladores de videos nuevos
+    playlists = [b for b in boxes().values() if b['maxclass'] == 'jit.playlist']
+    feeds_inner = {l['source'][0] for m in inner for l in ins(m['id'])}
+    playlist = next((pl for pl in playlists if pl['id'] not in feeds_inner), playlists[0])
+    plays = []
+    for pl in sorted(playlists, key=lambda b: (b['id'] in feeds_inner, b['patching_rect'][0])):
+        for l in ins(pl['id'], 0):
+            if boxes()[l['source'][0]]['maxclass'] == 'toggle' and l['source'][0] not in plays:
+                plays.append(l['source'][0])
     xfade = next((l['source'][0] for l in ins(mix['id'], 2)
                   if boxes()[l['source'][0]]['maxclass'] == 'flonum'), None)
-    play = next((l['source'][0] for l in ins(playlist['id'], 0)
-                 if boxes()[l['source'][0]]['maxclass'] == 'toggle'), None)
-    if not xfade or not play:
+    if not xfade or not plays:
         sys.exit('No encontré el número del crossfade o el toggle de play')
+    play = plays[0]
+
+    # Clips: solo el nombre del archivo (los videos van junto al patch) y volumen en 0.
+    for pl in playlists:
+        for clip in pl.get('data', {}).get('clips', []):
+            if clip.get('filename'):
+                clip['absolutepath'] = clip['filename']
+            clip.setdefault('content_state', {})['vol'] = 0
+    p['dependency_cache'] = [d for d in p.get('dependency_cache', [])
+                             if not d.get('name', '').lower().endswith(('.mov', '.mp4'))]
     by_var = {b.get('varname'): b['id'] for b in boxes().values() if b.get('varname')}
 
     def target(t):
@@ -191,7 +229,7 @@ def main():
     used = {target(t[2])[0] for t in cfg['templates']}
     used |= {target(t)[0] for t in cfg['escenas'][0]}
     used |= {target(t)[0] for t, _ in cfg['al_abrir']}
-    used |= {xfade, play}
+    used |= {xfade} | set(plays)
 
     # Controles que no llegan a ningún lado (dial → número → nada, toggles sueltos).
     while True:
@@ -200,7 +238,7 @@ def main():
         if not dead:
             break
         drop(dead)
-    quitados = [n.replace('.maxpat', '') for n in cfg['quitar']]
+    quitados = sorted({n.replace('.maxpat', '') for n in sobrantes.values()})
 
     # ---------------- 2. cadena de video ----------------
     chain = [by_name(n) for n in cfg['post']]
@@ -257,9 +295,10 @@ def main():
     rl = recv(0, Y + 30, f'grid.lock.{col}', 130)
     eq = new('newobj', 0, Y + 60, 40, '== 0', ni=2, no=1, outlettype=['int'])
     link(rl, 0, eq, 0)
-    link(eq, 0, play, 0)
+    for pid in plays:
+        link(eq, 0, pid, 0)
     printed(rl, 'bloqueo', 140, Y + 30)
-    comment(270, Y + 30, 300, 'bloqueo 1 → pausa el video · 0 → lo reanuda')
+    comment(270, Y + 30, 300, 'bloqueo 1 → pausa los videos · 0 → los reanuda')
     lb = new('newobj', 0, Y + 100, 60, 'loadbang', no=1, outlettype=['bang'])
     dl = new('newobj', 0, Y + 130, 80, 'delay 1000', ni=2, no=1, outlettype=['bang'])
     t = new('newobj', 0, Y + 160, 60, 't b b', no=2, outlettype=['bang', 'bang'])
@@ -267,8 +306,9 @@ def main():
     link(lb, 0, dl, 0)
     link(dl, 0, t, 0)
     link(t, 0, m1, 0)
-    link(m1, 0, play, 0)
-    comment(90, Y + 130, 400, 'al abrir: play del video (1 s después)')
+    for pid in plays:
+        link(m1, 0, pid, 0)
+    comment(90, Y + 130, 400, 'al abrir: play de todos los videos (1 s después)')
     for i, (tg, val) in enumerate(cfg['al_abrir']):
         mb = new('message', 60 + i * 50, Y + 190, 30, val, ni=2, no=1, outlettype=[''])
         link(t, 1, mb, 0)
@@ -308,12 +348,34 @@ def main():
     rk1 = recv(0, Y + 30, 'live.knob.1', 100)
     link(rk1, 0, xfade, 0)
     comment(110, Y + 30, 400, 'perilla 1 (0..1) → crossfade A↔B')
-    for i, k in enumerate((2, 3, 4)):
-        rk = recv(i * 120, Y + 62, f'live.knob.{k}', 100)
-        fk = new('flonum', i * 120, Y + 90, 60, ni=1, no=2, outlettype=['', 'bang'], parameter_enable=0)
+    # Cruce de los videos nuevos: grid.lfo (auto) + perilla 2 → crossfade del mixfadr nuevo.
+    cruce_toggles = []
+    rk2 = recv(0, Y + 62, 'live.knob.2', 100) if inner else None
+    for j, m in enumerate(inner):
+        cx = 330 + j * 200
+        fx = next((l['source'][0] for l in ins(m['id'], 2)
+                   if boxes()[l['source'][0]]['maxclass'] == 'flonum'), None)
+        if not fx:
+            fx = new('flonum', cx, Y + 150, 60, ni=1, no=2, outlettype=['', 'bang'], parameter_enable=0)
+            link(fx, 0, m['id'], 2)
+        lm = new('newobj', cx, Y + 62, 70, 'loadmess 1', no=1, outlettype=[''])
+        tg = new('toggle', cx, Y + 90, 24, ni=1, no=1, outlettype=['int'], parameter_enable=0, h=24)
+        lfo = new('newobj', cx, Y + 120, 90, f'grid.lfo {cfg["cruce_compases"]}', ni=1, no=1, outlettype=[''])
+        link(lm, 0, tg, 0)
+        link(tg, 0, lfo, 0)
+        link(lfo, 0, fx, 0)
+        link(rk2, 0, fx, 0)
+        cruce_toggles.append(tg)
+    if inner:
+        comment(0, Y + 90, 320, f'perilla 2 → cruce de los videos nuevos; "cruce auto" '
+                                f'(grid.lfo) lo mueve solo cada {cfg["cruce_compases"]} compases')
+    for i, k in enumerate((3, 4)):
+        rk = recv(i * 120, Y + 120, f'live.knob.{k}', 100)
+        fk = new('flonum', i * 120, Y + 148, 60, ni=1, no=2, outlettype=['', 'bang'], parameter_enable=0)
         link(rk, 0, fk, 0)
-    comment(0, Y + 116, 640, 'perillas 2-4 (0..1): conecta cada número al parámetro de Vizzie que quieras '
+    comment(0, Y + 174, 640, 'perillas 3-4 (0..1): conecta cada número al parámetro de Vizzie que quieras '
                              '(pasa el mouse por la entrada para ver su nombre)')
+    Y += 60
     targets, setups = cfg['escenas']
     rs = recv(0, Y + 150, 'live.scene', 90)
     ss = new('newobj', 0, Y + 180, 90, 'sel 1 2 3 4', ni=5, no=5, outlettype=['bang'] * 5)
@@ -378,16 +440,29 @@ def main():
     y = 10
     label(10, y, 500, f'{up} · bob rebel music — The Grid ({col})', bold=True)
     y += 28
-    label(10, y, 60, 'play')
-    show(play, 10, y + 20)
-    w, h = show(playlist['id'], 50, y + 18)
-    y += max(h, 30) + 30
-
-    label(10, y, 500, 'BASE — cadena A y cadena B (entran al MIXFADR)', bold=True)
+    label(10, y, 400, 'VIDEOS (play)', bold=True)
     y += 22
+    for pl in sorted(playlists, key=lambda b: (b['id'] in feeds_inner, b['patching_rect'][0])):
+        tg = next((l['source'][0] for l in ins(pl['id'], 0) if l['source'][0] in plays), None)
+        if tg and not boxes()[tg].get('presentation'):
+            show(tg, 10, y + 2)
+        w, h = show(pl['id'], 50, y)
+        label(60 + w, y + 4, 260, 'video original' if pl['id'] == playlist['id'] else 'video nuevo (cruce)')
+        y += max(h, 28) + 6
+    y += 14
+
+    label(10, y, 500, 'BASE — cadena A y cadena B (entran al MIXFADR principal)', bold=True)
+    y += 22
+    inner_ids = {m['id'] for m in inner}
+    tags = {b['id']: ('cruce de videos nuevos' if b['id'] in inner_ids else template_label.get(b.get('name'), ''))
+            for b in base_mods}
+    if any(tags.values()):
+        y += 20   # fila de etiquetas arriba de los módulos
     x = 10
     row_h = 0
     for b in base_mods:
+        if tags[b['id']]:
+            label(x, y - 20, b['patching_rect'][2], tags[b['id']])
         w, h = show(b['id'], x, y)
         x += w + 12
         row_h = max(row_h, h)
@@ -397,12 +472,15 @@ def main():
         label(x + 30, y + i * 36 + 2, 170, cfg['etiquetas'].get(tg.get('varname'), tg.get('varname', '')))
     y += max(row_h, len(toggles) * 36) + 20
 
-    label(10, y, 400, 'MEZCLA', bold=True)
+    label(10, y, 400, 'MEZCLA PRINCIPAL', bold=True)
     y += 22
     w, h = show(mix['id'], 10, y)
     if dial:
         show(dial['id'], 10 + w + 12, y + 10)
         label(10 + w + 60, y + 18, 140, cfg['etiquetas'].get('dial[1]', ''))
+    for j, tg in enumerate(cruce_toggles):
+        show(tg, 10 + w + 12, y + 70 + j * 30)
+        label(10 + w + 42, y + 72 + j * 30, 260, f'cruce auto de videos nuevos ({cfg["cruce_compases"]} compases)')
     y += h + 20
 
     if chain:
