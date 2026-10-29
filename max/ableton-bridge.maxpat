@@ -91,15 +91,16 @@
      "id": "obj-5",
      "maxclass": "newobj",
      "numinlets": 1,
-     "numoutlets": 8,
+     "numoutlets": 9,
      "patching_rect": [
       20,
       95,
       700,
       22
      ],
-     "text": "route /live/hit /live/scene /live/cc /live/knob/1 /live/knob/2 /live/knob/3 /live/knob/4",
+     "text": "route /live/hit /live/scene /live/cc /live/knob/1 /live/knob/2 /live/knob/3 /live/knob/4 /live/barms",
      "outlettype": [
+      "",
       "",
       "",
       "",
@@ -716,6 +717,36 @@
       ""
      ]
     }
+   },
+   {
+    "box": {
+     "id": "obj-41",
+     "maxclass": "newobj",
+     "text": "s live.barms",
+     "numinlets": 1,
+     "numoutlets": 0,
+     "patching_rect": [
+      720,
+      150,
+      90,
+      22
+     ]
+    }
+   },
+   {
+    "box": {
+     "id": "obj-42",
+     "maxclass": "comment",
+     "text": "duración del compás (ms) → envolventes",
+     "numinlets": 1,
+     "numoutlets": 0,
+     "patching_rect": [
+      720,
+      175,
+      250,
+      20
+     ]
+    }
    }
   ],
   "lines": [
@@ -747,7 +778,7 @@
     "patchline": {
      "source": [
       "obj-5",
-      7
+      8
      ],
      "destination": [
       "obj-6",
@@ -1171,6 +1202,18 @@
      ],
      "destination": [
       "obj-14",
+      0
+     ]
+    }
+   },
+   {
+    "patchline": {
+     "source": [
+      "obj-5",
+      7
+     ],
+     "destination": [
+      "obj-41",
       0
      ]
     }

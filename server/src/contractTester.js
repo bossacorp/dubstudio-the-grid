@@ -17,6 +17,7 @@ const COLORS = { visual: 'verde', fx: 'amarilla', vote: 'roja' };
 // Lo que manda el dispositivo GridOSC de Ableton (max/ableton/GridOSC.maxpat).
 function liveSequence() {
   return [
+    ['/live/barms', 2000.5, 'compás de 2 s (~120 BPM) → duración de las envolventes'],
     ['/live/hit', [38, 110], 'tarola (38) → destello en los tres tercios'],
     ['/live/hit', [40, 90], 'tarola (40) → destello'],
     ['/live/hit', [36, 100], 'bombo (36) → solo live.hit, sin destello'],

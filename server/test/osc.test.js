@@ -81,7 +81,7 @@ test('probador en modo live: lo que manda Ableton (GridOSC)', async () => {
   const { contractSequence } = await import('../src/contractTester.js');
   const steps = contractSequence({ only: 'live' });
   const addresses = new Set(steps.map(([address]) => address));
-  assert.deepEqual([...addresses].sort(), ['/live/cc', '/live/hit', '/live/knob/1', '/live/scene']);
+  assert.deepEqual([...addresses].sort(), ['/live/barms', '/live/cc', '/live/hit', '/live/knob/1', '/live/scene']);
   // no se mezcla con el contrato de The Grid
   assert.equal(contractSequence().some(([address]) => address.startsWith('/live/')), false);
 });

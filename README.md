@@ -120,6 +120,16 @@ o `GRID-ROJO`.
 4. *Probar sin Ableton:*
    `CONTRACT_TARGET=<ip-mac-mini>:9200 ONLY=live docker compose run --build --rm contract-tester`
 
+**Templates de efectos (bloque ENVOLVENTES).** Cada patch de color trae abajo
+a la derecha un bloque con un template por celda (y el flash de tarola): un
+`[grid.env pico base compases]` o `[grid.strobe por-compás compases]` que
+termina en un número **sin conectar**. Conecta ese número a la entrada del
+parámetro de Vizzie que dice su comentario (pasa el mouse sobre la entrada
+para ver su nombre; usa `[scale 0. 1. mín máx]` si necesita otro rango). Las
+caídas siguen el tempo de Ableton (`/live/barms`); sin Ableton usan 120 BPM.
+`grid.env.maxpat` y `grid.strobe.maxpat` deben ir en la misma carpeta que los
+patches.
+
 Si mandas una versión nueva de un patch de color, los bloques se reaplican con
 `python3 max/tools/agregar_bloques.py nuevo.maxpat max/bobGrid/<color>-bob-rebel-music.maxpat verde|amarillo|rojo`.
 

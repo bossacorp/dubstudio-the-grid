@@ -11,7 +11,9 @@ Qué hace el dispositivo:
   - notas → OSC a la Mac mini (:9200): modo "golpes" /live/hit nota vel,
     modo "escenas" /live/scene n (C1 = 1, C#1 = 2, ...)
   - CC → /live/cc num val; 4 perillas automatizables → /live/knob/1..4 (0..1)
-  - compás de Live → /show/bar n al Grid Server (Linux Mint :9100)
+  - compás de Live → /show/bar n al Grid Server (Linux Mint :9100) y la
+    duración del compás en ms → /live/barms a la Mac mini (para que las
+    envolventes de los visuales caigan al tempo de Live)
   - las IPs de la Mac mini y la Linux Mint se editan en la cara del
     dispositivo (4 casillas cada una) y se guardan con el set de Live
 
@@ -148,7 +150,17 @@ def build():
     tb = d.obj(20, 845, 170, 'udpsend 192.168.1.10 9100', no=0)
     pb2 = d.obj(220, 845, 90, 'print GridOSC', no=0)
     d.wire(ct, 0, me, 0); d.wire(me, 0, tr, 0); d.wire(tr, 0, pb, 0)
+
+    # Duración del compás (ms) según tempo y compás de Live. transport saca
+    # de derecha a izquierda: primero el compás (4 4), al final el tempo.
+    ts = d.obj(200, 680, 70, 'unpack 4 4', no=2, ot=['int', 'int'])
+    ex = d.obj(200, 710, 230, 'expr 60000. / $f1 * $i2 * 4. / $i3', ni=3, no=1)
+    chg = d.obj(200, 740, 60, 'change 0.', ni=2, no=3, ot=['', 'int', 'int'])
+    pms = d.obj(200, 770, 120, 'prepend /live/barms')
+    d.wire(tr, 5, ts, 0); d.wire(ts, 0, ex, 1); d.wire(ts, 1, ex, 2)
+    d.wire(tr, 4, ex, 0); d.wire(ex, 0, chg, 0); d.wire(chg, 0, pms, 0)
     d.wire(pb, 0, tb, 0); d.wire(pb, 0, pb2, 0); d.wire(mint_host, 0, tb, 0)
+    d.wire(pms, 0, tx, 0); d.wire(pms, 0, pl, 0)
 
     # Al cargar el dispositivo, cada control manda su valor guardado.
     td = d.obj(500, 590, 100, 'live.thisdevice', no=3, ot=['bang', 'int', 'int'])

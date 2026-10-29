@@ -1748,6 +1748,366 @@
 						""
 					]
 				}
+			},
+			{
+				"box": {
+					"id": "obj-3058",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						890.6666901111603,
+						960,
+						600,
+						20
+					],
+					"varname": "thegrid_3058",
+					"text": "ENVOLVENTES · ROJO — templates de golpe y regreso (al tempo de Ableton)"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3059",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						890.6666901111603,
+						980,
+						600,
+						20
+					],
+					"varname": "thegrid_3059",
+					"text": "Conecta cada número a la entrada del parámetro de Vizzie (pasa el mouse por la entrada"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3060",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						890.6666901111603,
+						998,
+						600,
+						20
+					],
+					"varname": "thegrid_3060",
+					"text": "para ver su nombre). Para otro rango usa [scale 0. 1. mín máx]. Ajusta pico/base/compases"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3061",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						890.6666901111603,
+						1016,
+						600,
+						20
+					],
+					"varname": "thegrid_3061",
+					"text": "editando el texto del objeto: grid.env <pico> <base> <compases> · grid.strobe <por-compás> <compases>"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3062",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"patching_rect": [
+						890.6666901111603,
+						1050,
+						110,
+						22
+					],
+					"varname": "thegrid_3062",
+					"text": "r grid.vote.1",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3063",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"patching_rect": [
+						890.6666901111603,
+						1078,
+						130,
+						22
+					],
+					"varname": "thegrid_3063",
+					"text": "grid.env 1. 0. 16",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3064",
+					"maxclass": "flonum",
+					"numinlets": 1,
+					"numoutlets": 2,
+					"patching_rect": [
+						1030.6666901111603,
+						1078,
+						60,
+						22
+					],
+					"varname": "thegrid_3064",
+					"outlettype": [
+						"",
+						"bang"
+					],
+					"parameter_enable": 0
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3065",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						1100.6666901111603,
+						1078,
+						420,
+						20
+					],
+					"varname": "thegrid_3065",
+					"text": "→ Raíces: calidez + niebla suave (se desvanece en 16 compases)"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3066",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"patching_rect": [
+						890.6666901111603,
+						1110,
+						110,
+						22
+					],
+					"varname": "thegrid_3066",
+					"text": "r grid.vote.2",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3067",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"patching_rect": [
+						890.6666901111603,
+						1138,
+						130,
+						22
+					],
+					"varname": "thegrid_3067",
+					"text": "grid.strobe 1 16",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3068",
+					"maxclass": "flonum",
+					"numinlets": 1,
+					"numoutlets": 2,
+					"patching_rect": [
+						1030.6666901111603,
+						1138,
+						60,
+						22
+					],
+					"varname": "thegrid_3068",
+					"outlettype": [
+						"",
+						"bang"
+					],
+					"parameter_enable": 0
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3069",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						1100.6666901111603,
+						1138,
+						420,
+						20
+					],
+					"varname": "thegrid_3069",
+					"text": "→ Steppers: pixelado/posterizado con cortes cada compás"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3070",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"patching_rect": [
+						890.6666901111603,
+						1170,
+						110,
+						22
+					],
+					"varname": "thegrid_3070",
+					"text": "r grid.vote.3",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3071",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"patching_rect": [
+						890.6666901111603,
+						1198,
+						130,
+						22
+					],
+					"varname": "thegrid_3071",
+					"text": "grid.env 1. 0. 16",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3072",
+					"maxclass": "flonum",
+					"numinlets": 1,
+					"numoutlets": 2,
+					"patching_rect": [
+						1030.6666901111603,
+						1198,
+						60,
+						22
+					],
+					"varname": "thegrid_3072",
+					"outlettype": [
+						"",
+						"bang"
+					],
+					"parameter_enable": 0
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3073",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						1100.6666901111603,
+						1198,
+						420,
+						20
+					],
+					"varname": "thegrid_3073",
+					"text": "→ Cósmico: fractal + caleidoscopio (se desvanece en 16 compases)"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3074",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"patching_rect": [
+						890.6666901111603,
+						1230,
+						110,
+						22
+					],
+					"varname": "thegrid_3074",
+					"text": "r live.flash",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3075",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"patching_rect": [
+						890.6666901111603,
+						1258,
+						130,
+						22
+					],
+					"varname": "thegrid_3075",
+					"text": "grid.env 1. 0. 0.25",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3076",
+					"maxclass": "flonum",
+					"numinlets": 1,
+					"numoutlets": 2,
+					"patching_rect": [
+						1030.6666901111603,
+						1258,
+						60,
+						22
+					],
+					"varname": "thegrid_3076",
+					"outlettype": [
+						"",
+						"bang"
+					],
+					"parameter_enable": 0
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3077",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						1100.6666901111603,
+						1258,
+						420,
+						20
+					],
+					"varname": "thegrid_3077",
+					"text": "→ Flash de tarola: brillo (un cuarto de compás)"
+				}
 			}
 		],
 		"lines": [
@@ -2533,6 +2893,102 @@
 					],
 					"destination": [
 						"obj-3001",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3062",
+						0
+					],
+					"destination": [
+						"obj-3063",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3063",
+						0
+					],
+					"destination": [
+						"obj-3064",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3066",
+						0
+					],
+					"destination": [
+						"obj-3067",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3067",
+						0
+					],
+					"destination": [
+						"obj-3068",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3070",
+						0
+					],
+					"destination": [
+						"obj-3071",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3071",
+						0
+					],
+					"destination": [
+						"obj-3072",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3074",
+						0
+					],
+					"destination": [
+						"obj-3075",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3075",
+						0
+					],
+					"destination": [
+						"obj-3076",
 						0
 					]
 				}

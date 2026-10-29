@@ -50,6 +50,8 @@ Lo manda `max/ableton/GridOSC.maxpat` (dispositivo M4L) y lo recibe
 - `/live/scene <n>` → `live.scene` (en modo "escenas": C1 = 1, C#1 = 2, D1 = 3, D#1 = 4; semitonos)
 - `/live/cc <num> <val>` → `live.cc`; CC 21-24 (editable) → `live.knob.1..4`
 - `/live/knob/1..4 <0..1>` → `live.knob.1..4` (perillas automatizables en Live)
+- `/live/barms <ms>` → `live.barms`: duración del compás según el tempo de Live
+  (la manda el GridOSC con "Compás" encendido); la usan grid.env/grid.strobe
 El puente también escucha MIDI directo (`notein`/`ctlin`, apagado por defecto).
 
 ## Estructura del repo
@@ -80,12 +82,18 @@ max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
                  ABLETON: live.flash → pulso del crossfade, live.knob.1 →
                    crossfade, live.knob.2-4 → números libres para conectar,
                    live.scene 1-4 → setups (A / B / A+B / limpio)
+                 ENVOLVENTES: templates por celda + flash de tarola con
+                   grid.env/grid.strobe; salidas SIN conectar (el artista las
+                   conecta al parámetro de Vizzie de cada template)
+    grid.env.maxpat     abstracción [grid.env pico base compases]: golpe y regreso
+    grid.strobe.maxpat  abstracción [grid.strobe por-compás compases]: estrobo 1/0
   ableton-bridge.maxpat  Mac mini: udpreceive 9200 + MIDI directo → send live.*
   ableton/GridOSC.amxd   Dispositivo Max MIDI Effect para Live (IPs editables
                  en su cara); GridOSC.maxpat es su fuente
   tools/generar_gridosc.py  Genera GridOSC.maxpat y GridOSC.amxd
   tools/agregar_bloques.py  Agrega/actualiza esos bloques en una versión
                  nueva de un patch de color (no toca lo existente)
+  tools/generar_abstracciones.py  Genera grid.env / grid.strobe en bobGrid/
 Dockerfile       Imagen del Grid Server (contexto: raíz del repo)
 docker-compose.yml
 .gitlab-ci.yml   CI: `npm test` en cada push (runner tag `self-hosted`, Linux Mint)
@@ -130,6 +138,14 @@ docker-compose.yml
   theme}`), `THEME` en `.env` fija el inicial. `?tema=<estilo>` en la URL lo
   fuerza en un solo celular o pantalla (para comparar).
 - Arte propio del artista: reemplazará a `art.js` más adelante.
+
+## Templates de efectos (golpe y regreso)
+El efecto se lanza al extremo y regresa solo, al tempo de Ableton. Por color:
+- Verde (forma): 1 caleidoscopio · 2 giro de color · 3 espejo + zoom
+- Amarilla (dub): 1 eco dub (feedback DELAYR) · 2 reverb de imagen (FOGGR) ·
+  3 sirena (estrobo de brillo, 1 compás)
+- Roja (escena del ganador, 16 compases): 1 Raíces · 2 Steppers · 3 Cósmico
+- Tarola: flash de brillo de ¼ de compás
 
 ## Principio: KICS
 Keep It Cuban/Chill/Simple. La nube y la infraestructura pesada solo entran

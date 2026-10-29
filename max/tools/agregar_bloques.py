@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
-"""Agrega a un patch de color (Vizzie) los bloques "THE GRID" y "ABLETON".
+"""Agrega a un patch de color (Vizzie) los bloques "THE GRID", "ABLETON" y
+"ENVOLVENTES" (templates de efectos con grid.env / grid.strobe).
 
 No toca nada de lo existente: solo agrega objetos y cables a la derecha.
 Si el patch ya tenía bloques de una corrida anterior, los quita primero, así
 se puede volver a correr sobre una versión nueva del patch.
+
+Las salidas de ENVOLVENTES quedan en números SIN conectar: se conectan a mano
+a la entrada del parámetro de Vizzie que corresponde a cada template. Las
+abstracciones grid.env / grid.strobe deben estar en la misma carpeta que el
+patch (max/tools/generar_abstracciones.py las genera en max/bobGrid/).
 
 Uso:
   python3 max/tools/agregar_bloques.py ENTRADA.maxpat SALIDA.maxpat COLOR
@@ -18,6 +24,27 @@ Supone los controles que tienen los patches de bobGrid:
 """
 import json
 import sys
+
+# Templates por color: (receptor, objeto, a qué conectarlo).
+# grid.env <pico> <base> <compases> · grid.strobe <por-compás> <compases>
+TEMPLATES = {
+    'verde': [
+        ('grid.visual.1', 'grid.env 1. 0. 1', 'Caleidoscopio: segmentos/cantidad del caleidoscopio'),
+        ('grid.visual.2', 'grid.env 0. 1. 2', 'Giro de color: tono (hue), una vuelta en 2 compases'),
+        ('grid.visual.3', 'grid.env 1. 0. 1', 'Espejo + zoom: zoom / cantidad del espejo'),
+    ],
+    'amarillo': [
+        ('grid.fx.1', 'grid.env 0.9 0. 2', 'Eco dub: retroalimentación (feedback) del DELAYR'),
+        ('grid.fx.2', 'grid.env 1. 0. 2', 'Reverb de imagen: cantidad del FOGGR / desenfoque'),
+        ('grid.fx.3', 'grid.strobe 8 1', 'Sirena: brillo o contraste (1/0 en corcheas, 1 compás)'),
+    ],
+    'rojo': [
+        ('grid.vote.1', 'grid.env 1. 0. 16', 'Raíces: calidez + niebla suave (se desvanece en 16 compases)'),
+        ('grid.vote.2', 'grid.strobe 1 16', 'Steppers: pixelado/posterizado con cortes cada compás'),
+        ('grid.vote.3', 'grid.env 1. 0. 16', 'Cósmico: fractal + caleidoscopio (se desvanece en 16 compases)'),
+    ],
+}
+FLASH_TEMPLATE = ('live.flash', 'grid.env 1. 0. 0.25', 'Flash de tarola: brillo (un cuarto de compás)')
 
 COLORS = {
     'verde': 'visual',
@@ -185,6 +212,20 @@ def main():
     wire(up_, 0, ctl['chain_a'], 0); wire(up_, 1, ctl['chain_b'], 0); wire(up_, 2, ctl['xfade'], 0)
     ps = new('newobj', 130, Y + 300, 100, 'prepend escena', no=1, outlettype=[''])
     wire(rs, 0, ps, 0); wire(ps, 0, pr, 0)
+
+    # ---------------------------- ENVOLVENTES ----------------------------
+    Y = 960
+    comment(0, Y, 600, f'ENVOLVENTES · {up} — templates de golpe y regreso (al tempo de Ableton)')
+    comment(0, Y + 20, 600, 'Conecta cada número a la entrada del parámetro de Vizzie (pasa el mouse por la entrada')
+    comment(0, Y + 38, 600, 'para ver su nombre). Para otro rango usa [scale 0. 1. mín máx]. Ajusta pico/base/compases')
+    comment(0, Y + 56, 600, 'editando el texto del objeto: grid.env <pico> <base> <compases> · grid.strobe <por-compás> <compases>')
+    for i, (recv, tmpl, label) in enumerate(TEMPLATES[color] + [FLASH_TEMPLATE]):
+        y = Y + 90 + i * 60
+        r = new('newobj', 0, y, 110, f'r {recv}', no=1, outlettype=[''])
+        e = new('newobj', 0, y + 28, 130, tmpl, ni=1, no=1, outlettype=[''])
+        f = new('flonum', 140, y + 28, 60, ni=1, no=2, outlettype=['', 'bang'], parameter_enable=0)
+        comment(210, y + 28, 420, f'→ {label}')
+        wire(r, 0, e, 0); wire(e, 0, f, 0)
 
     # Nombre del projectr según el color (venía copiado como greenProjectr).
     english = {'verde': 'green', 'amarillo': 'yellow', 'rojo': 'red'}[color]
