@@ -2,10 +2,10 @@
 // contrato OSC para revisar color por color que cada celda reacciona, sin
 // público ni servidor. Va directo a Max (no pasa por el Grid Server).
 //
-//   CONTRACT_TARGET=<ip-mac-mini>:9000 docker compose run --rm contract-tester
+//   CONTRACT_TARGET=<ip-mac-mini>:9000 docker compose run --build --rm contract-tester
 //   ONLY=fx  → solo una columna (visual | fx | vote | lock)
 //   ONLY=live → simula a Ableton contra ableton-bridge.maxpat (puerto 9200):
-//   CONTRACT_TARGET=<ip-mac-mini>:9200 ONLY=live docker compose run --rm contract-tester
+//   CONTRACT_TARGET=<ip-mac-mini>:9200 ONLY=live docker compose run --build --rm contract-tester
 //   STEP_MS=3000 → pausa entre mensajes
 import { pathToFileURL } from 'node:url';
 import { Client } from 'node-osc';

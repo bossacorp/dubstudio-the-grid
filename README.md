@@ -115,7 +115,7 @@ o `GRID-ROJO`.
 3. *En la Mac mini:* abre `max/ableton-bridge.maxpat` junto al router y los
    patches de color.
 4. *Probar sin Ableton:*
-   `CONTRACT_TARGET=<ip-mac-mini>:9200 ONLY=live docker compose run --rm contract-tester`
+   `CONTRACT_TARGET=<ip-mac-mini>:9200 ONLY=live docker compose run --build --rm contract-tester`
 
 Si mandas una versión nueva de un patch de color, los bloques se reaplican con
 `python3 max/tools/agregar_bloques.py nuevo.maxpat max/bobGrid/<color>-bob-rebel-music.maxpat verde|amarillo|rojo`.
@@ -125,8 +125,8 @@ tres patches de color abiertos en la Mac mini, manda el contrato completo
 directo a Max, un mensaje cada 2 s:
 
 ```
-CONTRACT_TARGET=<ip-mac-mini>:9000 docker compose run --rm contract-tester
-CONTRACT_TARGET=<ip-mac-mini>:9000 ONLY=fx STEP_MS=4000 docker compose run --rm contract-tester
+CONTRACT_TARGET=<ip-mac-mini>:9000 docker compose run --build --rm contract-tester
+CONTRACT_TARGET=<ip-mac-mini>:9000 ONLY=fx STEP_MS=4000 docker compose run --build --rm contract-tester
 ```
 
 `ONLY` = `visual` | `fx` | `vote` | `lock`. Para cada línea que imprime, revisa:

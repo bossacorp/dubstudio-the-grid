@@ -40,7 +40,7 @@ services:
       - clock
 
   # Probador de contrato: manda a Max cada mensaje del contrato, uno por uno.
-  #   CONTRACT_TARGET=<ip-mac-mini>:9000 docker compose run --rm contract-tester
+  #   CONTRACT_TARGET=<ip-mac-mini>:9000 docker compose run --build --rm contract-tester
   contract-tester:
     build:
       context: .
