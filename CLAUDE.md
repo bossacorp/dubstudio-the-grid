@@ -81,7 +81,9 @@ max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
                    crossfade, live.knob.2-4 → números libres para conectar,
                    live.scene 1-4 → setups (A / B / A+B / limpio)
   ableton-bridge.maxpat  Mac mini: udpreceive 9200 + MIDI directo → send live.*
-  ableton/GridOSC.maxpat Contenido del dispositivo Max MIDI Effect para Live
+  ableton/GridOSC.amxd   Dispositivo Max MIDI Effect para Live (IPs editables
+                 en su cara); GridOSC.maxpat es su fuente
+  tools/generar_gridosc.py  Genera GridOSC.maxpat y GridOSC.amxd
   tools/agregar_bloques.py  Agrega/actualiza esos bloques en una versión
                  nueva de un patch de color (no toca lo existente)
 Dockerfile       Imagen del Grid Server (contexto: raíz del repo)

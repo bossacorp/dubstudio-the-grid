@@ -101,11 +101,14 @@ o `GRID-ROJO`.
 
 **Ableton (MacBook) → visuales y compás.** Ableton manda el tempo.
 
-1. *Crear el dispositivo (una vez):* en Live arrastra un **Max MIDI Effect** a
-   una pista MIDI → **Edit**. En Max abre `max/ableton/GridOSC.maxpat`,
-   selecciona todo (Cmd+A), copia, pégalo en el dispositivo (borra antes el
-   `midiin → midiout` que trae), edita las IPs de los dos `udpsend` (Mac mini
-   :9200 y Linux Mint :9100) y guárdalo como `GridOSC.amxd`.
+1. *El dispositivo:* arrastra `max/ableton/GridOSC.amxd` a una pista MIDI (antes
+   del instrumento). En su cara escribe la IP de la **Mac mini** (:9200) y la de
+   la **Linux Mint** (:9100) en las 4 casillas de cada una; se guardan con el
+   set. Si Live no lo abre, ármalo a mano: **Max MIDI Effect** → **Edit** →
+   abre `GridOSC.maxpat` (abre en vista de cables), Cmd+A, copia, pega en el
+   dispositivo (borra antes el `midiin → midiout`), activa *Open in
+   Presentation* en el inspector del patcher y guarda como `GridOSC.amxd`.
+   Se regenera con `python3 max/tools/generar_gridosc.py`.
 2. *Usarlo:* ponlo en las pistas que deben mover visuales (el MIDI sigue
    pasando al instrumento). Modo **golpes**: cada nota sale como
    `/live/hit` (tarolas 38/40 → destello). Modo **escenas**: en una pista de
