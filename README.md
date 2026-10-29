@@ -109,7 +109,7 @@ o `GRID-ROJO`.
 2. *Usarlo:* ponlo en las pistas que deben mover visuales (el MIDI sigue
    pasando al instrumento). Modo **golpes**: cada nota sale como
    `/live/hit` (tarolas 38/40 → destello). Modo **escenas**: en una pista de
-   control, un clip por escena con una nota (C1 = escena 1, D1 = 2…). Las 4
+   control, un clip por escena con una nota (C1 = escena 1, C#1 = 2, D1 = 3, D#1 = 4). Las 4
    perillas se automatizan o se mapean a tu microKORG/MC-101. Deja **Compás**
    encendido en un solo dispositivo y apaga el reloj del `grid-router`.
 3. *En la Mac mini:* abre `max/ableton-bridge.maxpat` junto al router y los

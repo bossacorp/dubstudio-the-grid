@@ -47,7 +47,7 @@ Lo manda `max/ableton/GridOSC.maxpat` (dispositivo M4L) y lo recibe
 `max/ableton-bridge.maxpat`, que lo reparte con `send`:
 - `/live/hit <nota> <vel>` → `live.hit`; las notas de tarola (38/40, editable
   en el puente) además disparan `live.flash` (destello)
-- `/live/scene <n>` → `live.scene` (en modo "escenas": nota C1 = 1, D1 = 2…)
+- `/live/scene <n>` → `live.scene` (en modo "escenas": C1 = 1, C#1 = 2, D1 = 3, D#1 = 4; semitonos)
 - `/live/cc <num> <val>` → `live.cc`; CC 21-24 (editable) → `live.knob.1..4`
 - `/live/knob/1..4 <0..1>` → `live.knob.1..4` (perillas automatizables en Live)
 El puente también escucha MIDI directo (`notein`/`ctlin`, apagado por defecto).
