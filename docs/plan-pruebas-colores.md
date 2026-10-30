@@ -49,14 +49,19 @@ entrada indicada y confirma su nombre:
 | Verde | HUSALIR | 2 | hue / tono |
 | Rojo | KALEIDR | 5 (última) | on/off |
 | Rojo | PIXL8R | 3 (última) | on/off |
+| Los 3 | XFADR | 3 | crossfade / fade (0..1) — aquí entra el número del crossfade + LFO |
 
 - [ ] Todas coinciden. Si alguna no, mueve ese cable a la entrada correcta y
   avísame cuál era para corregir la herramienta.
 
 **Estado al abrir** (sin tocar nada, 2 s después de abrir):
 - [ ] Los 6 videos se reproducen solos (2 por patch), sin sonido.
-- [ ] Verde ya no trae INTERPOL8R ni DELAYR: el video nuevo (Donitas1) entra
-  directo a la B del MIXFADR.
+- [ ] Ningún patch trae MIXFADR: la mezcla principal es el **XFADR** (video
+  original en su entrada 1 = A, video nuevo en la 2 = B). Ya no existe el
+  toggle "mezcla on/off" (iba al MIXFADR y el XFADR no lo usa).
+- [ ] Verde: el video nuevo (Donitas1) entra directo a la B del XFADR; la
+  salida del XFADR va a KALEIDR → HUSALIR → TRANS4MR → COLORIZR → PROJECTR.
+- [ ] Amarillo y rojo: la salida del XFADR va directo al PROJECTR.
 - [ ] En cada patch el panel **LFO (suave)** está prendido y el crossfade se
   mece despacio alrededor de su valor (no brinca): verde 8 compases / prof.
   0.15, amarillo 4 / 0.1, rojo 16 / 0.2.
@@ -64,6 +69,13 @@ entrada indicada y confirma su nombre:
 - [ ] Amarillo: FOGGR apagado, DELAYR prendido, crossfade en A.
 - [ ] Rojo: FRACTALIZR + FOGGR prendidos, crossfade principal en 0.5 (se ven
   el original y el nuevo), KALEIDR y PIXL8R apagados.
+
+**Rendimiento (la razón del cambio a XFADR)**, con los 3 patches abiertos y
+los 6 videos corriendo, en el Monitor de Actividad y en el PROJECTR:
+- [ ] El CPU de Max baja respecto a la versión con MIXFADR (anota el % antes y
+  después si aún tienes la versión anterior).
+- [ ] Los videos corren fluidos en los 3 PROJECTR; mover el dial del
+  crossfade de 0 a 1 no traba la imagen ni hace que se pierdan efectos.
 
 **Intensidad**: como los módulos de templates están apagados en reposo, sube
 sus parámetros al extremo en su panel (que se note mucho) y guarda el patch.
@@ -75,7 +87,7 @@ sus parámetros al extremo en su panel (que se note mucho) y guarda el patch.
 |---|---|---|---|
 | L1 | Apaga el toggle del panel LFO | El vaivén se desvanece en ½ s y el crossfade se queda en el valor del dial (sin salto) | ☐ |
 | L2 | Préndelo, pon prof. 0.4 y compases 2 | Vaivén más amplio y rápido; el cambio de compases entra al terminar la rampa en curso, sin brinco | ☐ |
-| L3 | Dial del crossfade en 1 (todo B) | El LFO sigue meciendo, ahora hacia A (rebota en 1, no se queda pegado) | ☐ |
+| L3 | Dial del crossfade en 1 (todo B, en el XFADR) | El LFO sigue meciendo, ahora hacia A (rebota en 1, no se queda pegado) | ☐ |
 | L4 | Prof. en 0 | Crossfade quieto, igual que antes del LFO | ☐ |
 
 Anota la profundidad y los compases que te gusten por color: se dejan como
@@ -139,6 +151,9 @@ imprimir `GRID-VERDE celda1 1`. Igual con `grid.fx.1`, `grid.vote.1` y
 ## Qué reportar
 
 - Las filas que fallaron (por número: V3, A4…).
+- Si la entrada 3 del XFADR no es el crossfade, cuál es (se cambia
+  `XFADE_IN` en `agregar_bloques.py`).
+- El % de CPU de Max con XFADR (y con MIXFADR, si lo mediste).
 - En la sección 1, qué decía cada entrada si no coincidía.
 - Valores del LFO que te gustaron por color (compases y profundidad).
 - Qué template se notó poco: se ajusta subiendo la intensidad en el panel del

@@ -48,6 +48,46 @@
 		"boxes": [
 			{
 				"box": {
+					"annotation": "## Crossfade between two videos ##",
+					"bgmode": 1,
+					"border": 0,
+					"clickthrough": 0,
+					"enablehscroll": 0,
+					"enablevscroll": 0,
+					"id": "obj-34",
+					"lockeddragscroll": 0,
+					"lockedsize": 0,
+					"maxclass": "bpatcher",
+					"name": "vz.xfadr.maxpat",
+					"numinlets": 3,
+					"numoutlets": 1,
+					"offset": [
+						0.0,
+						0.0
+					],
+					"outlettype": [
+						"jit_gl_texture"
+					],
+					"patching_rect": [
+						491.0,
+						418.0,
+						118.0,
+						130.0
+					],
+					"prototypename": "pixl",
+					"varname": "xfadr",
+					"viewvisibility": 1,
+					"presentation": 1,
+					"presentation_rect": [
+						10,
+						340.0,
+						118.0,
+						130.0
+					]
+				}
+			},
+			{
+				"box": {
 					"bgcolor": [
 						0.211764705882353,
 						0.474509803921569,
@@ -343,51 +383,6 @@
 			},
 			{
 				"box": {
-					"bgcolor": [
-						0.211764705882353,
-						0.474509803921569,
-						0.141176470588235,
-						1.0
-					],
-					"id": "obj-7",
-					"maxclass": "toggle",
-					"numinlets": 1,
-					"numoutlets": 1,
-					"outlettype": [
-						"int"
-					],
-					"parameter_enable": 1,
-					"patching_rect": [
-						366.00001090765,
-						736.0,
-						24.0,
-						24.0
-					],
-					"saved_attribute_attributes": {
-						"valueof": {
-							"parameter_enum": [
-								"off",
-								"on"
-							],
-							"parameter_longname": "toggle[6]",
-							"parameter_mmax": 1,
-							"parameter_modmode": 0,
-							"parameter_shortname": "toggle[3]",
-							"parameter_type": 2
-						}
-					},
-					"varname": "toggle[3]",
-					"presentation": 1,
-					"presentation_rect": [
-						480.0,
-						204.0,
-						24.0,
-						24.0
-					]
-				}
-			},
-			{
-				"box": {
 					"format": 6,
 					"id": "obj-27",
 					"maxclass": "flonum",
@@ -445,7 +440,7 @@
 					"varname": "dial[1]",
 					"presentation": 1,
 					"presentation_rect": [
-						190.0,
+						140.0,
 						350.0,
 						40.0,
 						40.0
@@ -585,51 +580,6 @@
 						10,
 						168.0,
 						258.0,
-						130.0
-					]
-				}
-			},
-			{
-				"box": {
-					"annotation": "## Smoothly crossfade between two videos and composite them ##",
-					"bgcolor": [
-						0.211764705882353,
-						0.474509803921569,
-						0.141176470588235,
-						1.0
-					],
-					"bgmode": 1,
-					"border": 0,
-					"clickthrough": 0,
-					"enablehscroll": 0,
-					"enablevscroll": 0,
-					"id": "obj-11",
-					"lockeddragscroll": 0,
-					"lockedsize": 0,
-					"maxclass": "bpatcher",
-					"name": "vz.mixfadr.maxpat",
-					"numinlets": 4,
-					"numoutlets": 1,
-					"offset": [
-						0.0,
-						0.0
-					],
-					"outlettype": [
-						"jit_gl_texture"
-					],
-					"patching_rect": [
-						122.00000363588333,
-						706.0000210404396,
-						168.0,
-						130.0
-					],
-					"varname": "mixfadr",
-					"viewvisibility": 1,
-					"presentation": 1,
-					"presentation_rect": [
-						10,
-						340.0,
-						168.0,
 						130.0
 					]
 				}
@@ -1334,7 +1284,7 @@
 					"viewvisibility": 1,
 					"presentation": 1,
 					"presentation_rect": [
-						190.0,
+						140.0,
 						426.0,
 						210,
 						54
@@ -1411,7 +1361,7 @@
 						20
 					],
 					"varname": "thegrid_3037",
-					"text": "crossfade = base + LFO (rebota en 1) → mixfadr"
+					"text": "crossfade = base + LFO (rebota en 1) → XFADR"
 				}
 			},
 			{
@@ -1890,7 +1840,7 @@
 						20
 					],
 					"varname": "thegrid_3062",
-					"text": "BASE — cadena A y cadena B (entran al MIXFADR principal)",
+					"text": "BASE — cadena A y cadena B (entran al XFADR)",
 					"presentation": 1,
 					"presentation_rect": [
 						10,
@@ -1933,33 +1883,10 @@
 					"patching_rect": [
 						951.0,
 						1760,
-						170,
-						20
-					],
-					"varname": "thegrid_3064",
-					"text": "mezcla on/off",
-					"presentation": 1,
-					"presentation_rect": [
-						510.0,
-						206.0,
-						170,
-						20
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3065",
-					"maxclass": "comment",
-					"numinlets": 1,
-					"numoutlets": 0,
-					"patching_rect": [
-						951.0,
-						1780,
 						400,
 						20
 					],
-					"varname": "thegrid_3065",
+					"varname": "thegrid_3064",
 					"text": "MEZCLA PRINCIPAL",
 					"presentation": 1,
 					"presentation_rect": [
@@ -1973,6 +1900,29 @@
 			},
 			{
 				"box": {
+					"id": "obj-3065",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						951.0,
+						1780,
+						140,
+						20
+					],
+					"varname": "thegrid_3065",
+					"text": "crossfade A↔B",
+					"presentation": 1,
+					"presentation_rect": [
+						188.0,
+						358.0,
+						140,
+						20
+					]
+				}
+			},
+			{
+				"box": {
 					"id": "obj-3066",
 					"maxclass": "comment",
 					"numinlets": 1,
@@ -1980,16 +1930,16 @@
 					"patching_rect": [
 						951.0,
 						1800,
-						140,
+						260,
 						20
 					],
 					"varname": "thegrid_3066",
-					"text": "crossfade A↔B",
+					"text": "vaivén del crossfade (perilla 2 = prof.)",
 					"presentation": 1,
 					"presentation_rect": [
-						238.0,
-						358.0,
-						140,
+						140.0,
+						406.0,
+						260,
 						20
 					]
 				}
@@ -2003,18 +1953,19 @@
 					"patching_rect": [
 						951.0,
 						1820,
-						260,
+						700,
 						20
 					],
 					"varname": "thegrid_3067",
-					"text": "vaivén del crossfade (perilla 2 = prof.)",
+					"text": "TEMPLATES (apagados en reposo; los prende The Grid o Ableton)",
 					"presentation": 1,
 					"presentation_rect": [
-						190.0,
-						406.0,
-						260,
+						10,
+						500.0,
+						700,
 						20
-					]
+					],
+					"fontface": 1
 				}
 			},
 			{
@@ -2026,19 +1977,18 @@
 					"patching_rect": [
 						951.0,
 						1840,
-						700,
+						188.0,
 						20
 					],
 					"varname": "thegrid_3068",
-					"text": "TEMPLATES (apagados en reposo; los prende The Grid o Ableton)",
+					"text": "celda 1 · Caleidoscopio",
 					"presentation": 1,
 					"presentation_rect": [
 						10,
-						500.0,
-						700,
+						522.0,
+						188.0,
 						20
-					],
-					"fontface": 1
+					]
 				}
 			},
 			{
@@ -2054,10 +2004,10 @@
 						20
 					],
 					"varname": "thegrid_3069",
-					"text": "celda 1 · Caleidoscopio",
+					"text": "celda 2 · Giro de color",
 					"presentation": 1,
 					"presentation_rect": [
-						10,
+						210.0,
 						522.0,
 						188.0,
 						20
@@ -2073,16 +2023,16 @@
 					"patching_rect": [
 						951.0,
 						1880,
-						188.0,
+						270.0,
 						20
 					],
 					"varname": "thegrid_3070",
-					"text": "celda 2 · Giro de color",
+					"text": "celda 3 · Espejo + zoom",
 					"presentation": 1,
 					"presentation_rect": [
-						210.0,
+						410.0,
 						522.0,
-						188.0,
+						270.0,
 						20
 					]
 				}
@@ -2096,16 +2046,16 @@
 					"patching_rect": [
 						951.0,
 						1900,
-						270.0,
+						138.0,
 						20
 					],
 					"varname": "thegrid_3071",
-					"text": "celda 3 · Espejo + zoom",
+					"text": "tarola · Flash",
 					"presentation": 1,
 					"presentation_rect": [
-						410.0,
+						692.0,
 						522.0,
-						270.0,
+						138.0,
 						20
 					]
 				}
@@ -2119,33 +2069,10 @@
 					"patching_rect": [
 						951.0,
 						1920,
-						138.0,
-						20
-					],
-					"varname": "thegrid_3072",
-					"text": "tarola · Flash",
-					"presentation": 1,
-					"presentation_rect": [
-						692.0,
-						522.0,
-						138.0,
-						20
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3073",
-					"maxclass": "comment",
-					"numinlets": 1,
-					"numoutlets": 0,
-					"patching_rect": [
-						951.0,
-						1940,
 						400,
 						20
 					],
-					"varname": "thegrid_3073",
+					"varname": "thegrid_3072",
 					"text": "SALIDA",
 					"presentation": 1,
 					"presentation_rect": [
@@ -2236,24 +2163,11 @@
 			{
 				"patchline": {
 					"destination": [
-						"obj-11",
+						"obj-34",
 						1
 					],
-					"order": 0,
 					"source": [
 						"obj-5",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"destination": [
-						"obj-11",
-						3
-					],
-					"source": [
-						"obj-7",
 						0
 					]
 				}
@@ -2273,7 +2187,7 @@
 			{
 				"patchline": {
 					"destination": [
-						"obj-11",
+						"obj-34",
 						0
 					],
 					"source": [
@@ -2285,7 +2199,7 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-11",
+						"obj-34",
 						0
 					],
 					"destination": [
@@ -2721,7 +2635,7 @@
 						0
 					],
 					"destination": [
-						"obj-11",
+						"obj-34",
 						2
 					]
 				}
@@ -2932,41 +2846,6 @@
 			}
 		],
 		"parameters": {
-			"obj-11::obj-17::obj-23": [
-				"gswitch2[10]",
-				"gswitch2",
-				0
-			],
-			"obj-11::obj-21": [
-				"range[19]",
-				"range",
-				0
-			],
-			"obj-11::obj-24": [
-				"pictctrl[98]",
-				"pictctrl[1]",
-				0
-			],
-			"obj-11::obj-26": [
-				"Crossfade",
-				"Crossfade",
-				0
-			],
-			"obj-11::obj-39": [
-				"Operator mode",
-				"Operator mode",
-				0
-			],
-			"obj-11::obj-51": [
-				"pictctrl[47]",
-				"pictctrl[1]",
-				0
-			],
-			"obj-11::obj-56::obj-23": [
-				"gswitch2[9]",
-				"gswitch2",
-				0
-			],
 			"obj-12": [
 				"toggle[7]",
 				"toggle[3]",
@@ -3075,6 +2954,31 @@
 			"obj-28": [
 				"dial[1]",
 				"dial",
+				0
+			],
+			"obj-34::obj-17::obj-23": [
+				"gswitch2[5]",
+				"gswitch2",
+				0
+			],
+			"obj-34::obj-2": [
+				"range[4]",
+				"range",
+				0
+			],
+			"obj-34::obj-51": [
+				"pictctrl[3]",
+				"pictctrl[1]",
+				0
+			],
+			"obj-34::obj-56::obj-23": [
+				"gswitch2[3]",
+				"gswitch2",
+				0
+			],
+			"obj-34::obj-6": [
+				"crossfade",
+				"Crossfade",
 				0
 			],
 			"obj-35::obj-104": [
@@ -3282,11 +3186,6 @@
 				"Rotation",
 				0
 			],
-			"obj-7": [
-				"toggle[6]",
-				"toggle[3]",
-				0
-			],
 			"obj-9::obj-3": [
 				"range[6]",
 				"range",
@@ -3329,18 +3228,6 @@
 			],
 			"parameterbanks": {},
 			"parameter_overrides": {
-				"obj-15::obj-24": {
-					"parameter_longname": "Vertical[1]"
-				},
-				"obj-15::obj-47": {
-					"parameter_longname": "pictctrl[22]"
-				},
-				"obj-15::obj-53": {
-					"parameter_longname": "pictctrl[21]"
-				},
-				"obj-15::obj-68": {
-					"parameter_longname": "Horizontal[1]"
-				},
 				"obj-17::obj-41": {
 					"parameter_longname": "pictctrl[9]"
 				},
@@ -3356,14 +3243,8 @@
 				"obj-17::obj-94": {
 					"parameter_longname": "Interp mode[1]"
 				},
-				"obj-1::obj-20": {
-					"parameter_longname": "pictctrl[97]"
-				},
-				"obj-1::obj-24": {
-					"parameter_longname": "Crossfade[2]"
-				},
-				"obj-1::obj-48": {
-					"parameter_longname": "pictctrl[86]"
+				"obj-34::obj-51": {
+					"parameter_longname": "pictctrl[3]"
 				},
 				"obj-4::obj-104": {
 					"parameter_longname": "pictctrl[23]"
@@ -3625,30 +3506,23 @@
 			},
 			{
 				"name": "grid.env.maxpat",
-				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 4",
+				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 6",
 				"patcherrelativepath": ".",
 				"type": "JSON",
 				"implicit": 1
 			},
 			{
 				"name": "grid.hold.maxpat",
-				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 4",
+				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 6",
 				"patcherrelativepath": ".",
 				"type": "JSON",
 				"implicit": 1
 			},
 			{
 				"name": "grid.lfo.maxpat",
-				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 4",
+				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 6",
 				"patcherrelativepath": ".",
 				"type": "JSON",
-				"implicit": 1
-			},
-			{
-				"name": "jit.gl.textureset.js",
-				"bootpath": "~/Library/Application Support/Cycling '74/Max 8/Examples/jitter-examples/javascript/render",
-				"patcherrelativepath": "../../../../Library/Application Support/Cycling '74/Max 8/Examples/jitter-examples/javascript/render",
-				"type": "TEXT",
 				"implicit": 1
 			},
 			{
@@ -3689,12 +3563,6 @@
 				"implicit": 1
 			},
 			{
-				"name": "vz.delayr.maxpat",
-				"bootpath": "C74:/packages/Vizzie/patchers",
-				"type": "JSON",
-				"implicit": 1
-			},
-			{
 				"name": "vz.foggr.maxpat",
 				"bootpath": "C74:/packages/Vizzie/patchers",
 				"type": "JSON",
@@ -3713,19 +3581,7 @@
 				"implicit": 1
 			},
 			{
-				"name": "vz.interpol8r.maxpat",
-				"bootpath": "C74:/packages/Vizzie/patchers",
-				"type": "JSON",
-				"implicit": 1
-			},
-			{
 				"name": "vz.kaleidr.maxpat",
-				"bootpath": "C74:/packages/Vizzie/patchers",
-				"type": "JSON",
-				"implicit": 1
-			},
-			{
-				"name": "vz.mixfadr.maxpat",
 				"bootpath": "C74:/packages/Vizzie/patchers",
 				"type": "JSON",
 				"implicit": 1
@@ -3738,6 +3594,12 @@
 			},
 			{
 				"name": "vz.trans4mr.maxpat",
+				"bootpath": "C74:/packages/Vizzie/patchers",
+				"type": "JSON",
+				"implicit": 1
+			},
+			{
+				"name": "vz.xfadr.maxpat",
 				"bootpath": "C74:/packages/Vizzie/patchers",
 				"type": "JSON",
 				"implicit": 1

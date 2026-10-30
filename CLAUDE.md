@@ -79,13 +79,13 @@ max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
                  en la misma carpeta (bob*.mov y Donitas*.mp4; los clips guardan
                  solo el nombre del archivo, volumen 0). Cada patch: 2 videos
                  (original = A, uno nuevo con coristas = B) en un solo
-                 mixfadr (se quitaron los mixfadr de cruce: pesaban mucho al
-                 proyectar). Abren en presentación (solo módulos y
+                 xfadr (se quitaron todos los mixfadr: cambiar de modo
+                 constantemente alentaba la proyección con 6 videos). Abren en presentación (solo módulos y
                  controles). A la derecha, en la vista de cables: THE GRID
                  (bloqueo → pausa los videos, play al abrir), TEMPLATES y
                  ABLETON (perilla 1 → crossfade, perilla 2 → profundidad del
                  LFO, 3-4 libres, escenas 1-4). El crossfade que llega al
-                 mixfadr = número base + LFO (rebota en 1, nunca brinca)
+                 xfadr (entrada 3) = número base + LFO (rebota en 1, nunca brinca)
     grid.env.maxpat     [grid.env pico base compases]: golpe y regreso
     grid.hold.maxpat    [grid.hold compases]: 1 al disparar, 0 a los N compases
     grid.strobe.maxpat  [grid.strobe por-compás compases]: estrobo 1/0
@@ -153,10 +153,10 @@ Dos tipos, al tempo de Ableton (`live.barms`):
   ÚLTIMA entrada (convención que ya usaban los toggles del artista). En reposo
   el módulo está apagado; su intensidad se ajusta en su panel.
 - **Golpe y regreso** (`grid.env`) → solo entradas confirmadas: el número 0..1
-  del crossfade (mixfadr entrada 3) y el tono de HUSALIR (entrada 2).
+  del crossfade (xfadr entrada 3) y el tono de HUSALIR (entrada 2).
 Por color:
 - Verde (simplificado): A = bob → fractalizr → foggr; B = Donitas1 directo;
-  salida: mixfadr → kaleidr → husalir → trans4mr → colorizr → projectr.
+  salida: xfadr → kaleidr → husalir → trans4mr → colorizr → projectr.
   Celda 1 KALEIDR 1 compás · 2 tono HUSALIR vuelta en 2 · 3 TRANS4MR 1
   compás · tarola COLORIZR ¼. LFO 8 compases, prof. 0.15.
 - Amarilla: A = bob → foggr; B = Donitas3 → delayr. 1 eco (crossfade a B,
@@ -168,12 +168,12 @@ Por color:
   1 Raíces (crossfade a A y vuelve a 0.5) · 2 Steppers (PIXL8R cada compás) ·
   3 Cósmico (KALEIDR + crossfade a B) · tarola pulso a A ¼. LFO 16 compases,
   prof. 0.2.
-- Lección aprendida: un LFO que escribe directo el crossfade del mixfadr pelea
+- Lección aprendida: un LFO que escribe directo el crossfade de la mezcla pelea
   con perilla/templates y brinca. Por eso el LFO solo suma un vaivén suave.
 - Supuestos por confirmar en Max (pasar el mouse por la entrada): última
   entrada = on/off en KALEIDR, TRANS4MR, COLORIZR, PIXL8R; entrada 2 = tono en
-  HUSALIR. Si alguno no coincide, se mueve ese cable o se ajusta la config de
-  `agregar_bloques.py`.
+  HUSALIR; entrada 3 = crossfade en XFADR. Si alguno no coincide, se mueve
+  ese cable o se ajusta la config de `agregar_bloques.py`.
 
 ## Principio: KICS
 Keep It Cuban/Chill/Simple. La nube y la infraestructura pesada solo entran

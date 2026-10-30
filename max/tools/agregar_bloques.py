@@ -9,11 +9,15 @@ Qué hace (se puede volver a correr sobre una versión nueva del patch):
   1. Quita lo que ya no se usa: los módulos listados en `quitar` y los
      controles (dial, número, toggle) que no llegan a ningún lado, y los
      módulos cuyo video ya no llega a la salida (ramas muertas).
-  2. Arma la cadena de video: mixfadr → módulos de templates → projectr.
+     Si el patch trae un XFADR, el MIXFADR se quita: pesa mucho al proyectar
+     (cambia de modo constantemente y alenta los visuales). El XFADR queda
+     como mezcla principal; su toggle "mezcla on/off" ya no tiene a dónde ir
+     y se quita también.
+  2. Arma la cadena de video: xfadr → módulos de templates → projectr.
   3. Agrega a la derecha (vista de cables) los bloques THE GRID, ABLETON y
      TEMPLATES, con cada template conectado a su módulo.
   4. Mete un LFO suave (bpatcher grid.lfo) que SUMA un vaivén al crossfade
-     principal: número del crossfade + LFO → (rebota en 1) → mixfadr entrada 3.
+     principal: número del crossfade + LFO → (rebota en 1) → xfadr entrada 3.
      La perilla, los templates y las escenas siguen moviendo la base.
   5. Acomoda la vista de presentación: solo módulos y controles que se
      manipulan, con etiquetas; el resto queda fuera.
@@ -24,8 +28,8 @@ Templates:
     patch). El módulo está apagado en reposo; su intensidad se ajusta en su
     panel.
   - "golpe y regreso" ([grid.env ...]) → solo a entradas confirmadas: el
-    crossfade del mixfadr (el número 0..1 que entra a su entrada 2) y el tono
-    de HUSALIR (entrada 1).
+    crossfade del xfadr (el número 0..1 que entra a su entrada 3) y el tono
+    de HUSALIR (entrada 2).
 Las abstracciones grid.env / grid.hold / grid.strobe / grid.lfo deben estar en la misma
 carpeta que el patch (max/tools/generar_abstracciones.py).
 """
@@ -33,6 +37,10 @@ import json
 import sys
 
 TAG = 'thegrid_'
+# Mezcla principal, en orden de preferencia. Las dos llevan A en la entrada 1,
+# B en la 2 y el crossfade (0..1) en la 3.
+MEZCLAS = ('vz.xfadr.maxpat', 'vz.mixfadr.maxpat')
+XFADE_IN = 2
 
 # Destinos: ('mod', nombre, 'ultima' | n) · ('xfade',) · ('var', varname)
 COLORS = {
@@ -59,8 +67,7 @@ COLORS = {
                      ('0 1.', 'escena 2: B (coristas)'),
                      ('1 0.5', 'escena 3: A + B mezclados'),
                      ('0 0.', 'escena 4: bob limpio')]),
-        'etiquetas': {'toggle[4]': 'fractal + niebla on/off',
-                      'toggle[3]': 'mezcla on/off', 'dial[1]': 'crossfade A↔B'},
+        'etiquetas': {'toggle[4]': 'fractal + niebla on/off', 'dial[1]': 'crossfade A↔B'},
     },
     'amarillo': {
         'col': 'fx',
@@ -86,12 +93,12 @@ COLORS = {
                      ('1 1 0.5', 'escena 3: niebla + eco'),
                      ('0 1 0.', 'escena 4: limpio')]),
         'etiquetas': {'toggle[4]': 'niebla (FOGGR) on/off', 'toggle[5]': 'eco (DELAYR) on/off',
-                      'toggle[3]': 'mezcla on/off', 'dial[1]': 'crossfade A↔B'},
+                      'dial[1]': 'crossfade A↔B'},
     },
     'rojo': {
         'col': 'vote',
         'quitar': ['vz.randomizr.maxpat'],
-        # El artista armó la cadena B: videos nuevos → PIXL8R → KALEIDR → mixfadr B.
+        # El artista armó la cadena B: videos nuevos → PIXL8R → KALEIDR → xfadr B.
         'post': [],
         'mix_b_desde_video': False,
         'lfo': (16, 0.2),
@@ -115,13 +122,13 @@ COLORS = {
                      ('1 1.', 'escena 2: videos nuevos (B)'),
                      ('1 0.5', 'escena 3: mezcla A + B'),
                      ('0 0.5', 'escena 4: mezcla, fractal apagado')]),
-        'etiquetas': {'toggle[4]': 'fractal + niebla on/off', 'toggle[3]': 'mezcla on/off',
-                      'dial[1]': 'crossfade A↔B'},
+        'etiquetas': {'toggle[4]': 'fractal + niebla on/off', 'dial[1]': 'crossfade A↔B'},
     },
 }
 
 LABEL = {'vz.kaleidr.maxpat': 'KALEIDR', 'vz.husalir.maxpat': 'HUSALIR', 'vz.trans4mr.maxpat': 'TRANS4MR',
-         'vz.colorizr.maxpat': 'COLORIZR', 'vz.pixl8r.maxpat': 'PIXL8R'}
+         'vz.colorizr.maxpat': 'COLORIZR', 'vz.pixl8r.maxpat': 'PIXL8R',
+         'vz.xfadr.maxpat': 'XFADR', 'vz.mixfadr.maxpat': 'MIXFADR'}
 
 
 def main():
@@ -149,7 +156,7 @@ def main():
         for k in [k for k in params if k.split('::')[0] in ids]:
             del params[k]
 
-    # El LFO se mete entre el número del crossfade y el mixfadr: antes de
+    # El LFO se mete entre el número del crossfade y la mezcla: antes de
     # quitarlo, recuerda qué número era para devolverle su cable.
     gen_ids = {x['box']['id'] for x in p['boxes'] if generated(x['box'])}
     xfade_prev = [l['patchline']['source'][0] for l in p['lines']
@@ -176,16 +183,19 @@ def main():
         p['lines'].append({'patchline': {'source': [a, ao], 'destination': [b, bi]}})
 
     # ---------------- 1. quitar lo que no se usa ----------------
-    sobrantes = {b['id']: b['name'] for b in boxes().values() if b.get('name') in cfg['quitar']}
+    quitar = list(cfg['quitar'])
+    mezcla = next((n for n in MEZCLAS if by_name(n)), None)
+    quitar += [n for n in MEZCLAS if n != mezcla]   # con XFADR, fuera el MIXFADR
+    sobrantes = {b['id']: b['name'] for b in boxes().values() if b.get('name') in quitar}
     drop(set(sobrantes))
 
     proj = by_name('vz.projectr.maxpat')
-    mixers = [b for b in boxes().values() if b.get('name') == 'vz.mixfadr.maxpat']
+    mixers = [b for b in boxes().values() if b.get('name') == mezcla]
     if not mixers or not proj:
-        sys.exit('No encontré vz.mixfadr o vz.projectr en el patch')
+        sys.exit('No encontré vz.xfadr / vz.mixfadr o vz.projectr en el patch')
 
     def reaches_output(bid):
-        """¿La salida de video de este módulo llega al projectr sin pasar por otro mixfadr?"""
+        """¿La salida de video de este módulo llega al projectr sin pasar por otra mezcla?"""
         cur, seen = bid, set()
         while cur not in seen:
             seen.add(cur)
@@ -193,7 +203,7 @@ def main():
                    and boxes()[l['destination'][0]]['maxclass'] == 'bpatcher']
             if proj['id'] in nxt:
                 return True
-            if not nxt or any(boxes()[n].get('name') == 'vz.mixfadr.maxpat' for n in nxt):
+            if not nxt or any(boxes()[n].get('name') == mezcla for n in nxt):
                 return False
             cur = nxt[0]
         return False
@@ -202,7 +212,7 @@ def main():
     mix = principal[0] if principal else mixers[0]
 
     def mix_inlet(bid):
-        """Entrada del mixfadr principal a la que llega el video de este objeto (9 = ninguna)."""
+        """Entrada de la mezcla principal a la que llega el video de este objeto (9 = ninguna)."""
         cur, seen = bid, set()
         while cur not in seen:
             seen.add(cur)
@@ -223,11 +233,11 @@ def main():
         for l in ins(pl['id'], 0):
             if boxes()[l['source'][0]]['maxclass'] == 'toggle' and l['source'][0] not in plays:
                 plays.append(l['source'][0])
-    xfade = next((l['source'][0] for l in ins(mix['id'], 2)
+    xfade = next((l['source'][0] for l in ins(mix['id'], XFADE_IN)
                   if boxes()[l['source'][0]]['maxclass'] == 'flonum'), None)
     if not xfade and xfade_prev and xfade_prev[0] in boxes():
         xfade = xfade_prev[0]
-        link(xfade, 0, mix['id'], 2)
+        link(xfade, 0, mix['id'], XFADE_IN)
     if not xfade or not plays:
         sys.exit('No encontré el número del crossfade o el toggle de play')
     play = plays[0]
@@ -239,7 +249,8 @@ def main():
                 clip['absolutepath'] = clip['filename']
             clip.setdefault('content_state', {})['vol'] = 0
     p['dependency_cache'] = [d for d in p.get('dependency_cache', [])
-                             if not d.get('name', '').lower().endswith(('.mov', '.mp4'))]
+                             if not d.get('name', '').lower().endswith(('.mov', '.mp4'))
+                             and not (d.get('name') in quitar and not by_name(d['name']))]
     by_var = {b.get('varname'): b['id'] for b in boxes().values() if b.get('varname')}
 
     def target(t):
@@ -389,7 +400,7 @@ def main():
         dest = boxes()[tid]
         where = (LABEL.get(dest.get('name'), dest.get('name', '')) or dest.get('varname') or 'crossfade')
         if tg[0] == 'xfade':
-            where = 'crossfade (número → mixfadr entrada 3)'
+            where = f'crossfade (número → {LABEL[mezcla]} entrada {XFADE_IN + 1})'
         elif tg[0] == 'mod':
             where = f'{where} entrada {tin + 1}' + (' = on/off' if tg[2] == 'ultima' else (' = tono' if tin == 1 else ''))
         elif tg[0] == 'var':
@@ -402,11 +413,11 @@ def main():
     rk1 = recv(0, Y + 30, 'live.knob.1', 100)
     link(rk1, 0, xfade, 0)
     comment(110, Y + 30, 400, 'perilla 1 (0..1) → crossfade A↔B')
-    # LFO: número del crossfade (base) + vaivén suave → mixfadr entrada 3.
+    # LFO: número del crossfade (base) + vaivén suave → mezcla entrada 3.
     # Si la suma pasa de 1 rebota hacia abajo, así nunca se queda pegado.
     bars, depth = cfg['lfo']
     p['lines'] = [l for l in p['lines']
-                  if not (l['patchline']['source'][0] == xfade and l['patchline']['destination'] == [mix['id'], 2])]
+                  if not (l['patchline']['source'][0] == xfade and l['patchline']['destination'] == [mix['id'], XFADE_IN])]
     lfo = new('bpatcher', 330, Y + 30, 210, None, ni=3, no=1, outlettype=[''], h=54,
               name='grid.lfo.maxpat', args=[bars, depth], embed=0, offset=[0.0, 0.0],
               bgmode=0, border=0, clickthrough=0, enablehscroll=0, enablevscroll=0, lockeddragscroll=0,
@@ -418,8 +429,8 @@ def main():
     link(lfo, 0, pk, 1)
     link(pk, 0, sm, 0)
     link(sm, 0, cl, 0)
-    link(cl, 0, mix['id'], 2)
-    comment(410, Y + 100, 330, 'crossfade = base + LFO (rebota en 1) → mixfadr')
+    link(cl, 0, mix['id'], XFADE_IN)
+    comment(410, Y + 100, 330, f'crossfade = base + LFO (rebota en 1) → {LABEL[mezcla]}')
     rk2 = recv(0, Y + 62, 'live.knob.2', 100)
     k2 = new('newobj', 110, Y + 62, 50, '* 0.5', ni=2, no=1, outlettype=['float'])
     link(rk2, 0, k2, 0)
@@ -458,7 +469,7 @@ def main():
     post_ids = [m['id'] for m in chain]
     base_mods = [b for b in B.values() if b['maxclass'] == 'bpatcher' and b['id'] not in post_ids
                  and b['id'] not in (mix['id'], proj['id']) and not generated(b)]
-    # orden de cadena: primero lo que llega a la entrada A del mixfadr, luego B;
+    # orden de cadena: primero lo que llega a la entrada A de la mezcla, luego B;
     # dentro de cada cadena, en el orden en que pasa el video
     def chain_key(b):
         depth, cur, seen = 0, b['id'], set()
@@ -474,7 +485,7 @@ def main():
             depth += 1
         return (9, depth)
     base_mods.sort(key=chain_key)
-    toggles = [B[by_var[v]] for v in ('toggle[4]', 'toggle[5]', 'toggle[3]') if v in by_var and by_var[v] in B]
+    toggles = [B[by_var[v]] for v in ('toggle[4]', 'toggle[5]') if v in by_var and by_var[v] in B]
     toggles = [t for t in toggles if t['id'] not in plays]
     dial = B.get(by_var.get('dial[1]'))
     template_label = {}
@@ -509,7 +520,7 @@ def main():
         y += max(h, 28) + 6
     y += 14
 
-    label(10, y, 500, 'BASE — cadena A y cadena B (entran al MIXFADR principal)', bold=True)
+    label(10, y, 500, f'BASE — cadena A y cadena B (entran al {LABEL[mezcla]})', bold=True)
     y += 22
     tags = {b['id']: template_label.get(b.get('name'), '') for b in base_mods}
     if any(tags.values()):
