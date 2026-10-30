@@ -76,8 +76,13 @@ max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
                  con send (grid.visual.1…grid.vote.3, grid.lock.<col>) y marca
                  el compás (/show/bar). Los patches de color usan [r grid.…]
   bobGrid/       Patches de color (verde/amarillo/rojo, Vizzie) + TODOS sus videos
-                 en la misma carpeta (bob*.mov y Donitas*.mp4; los clips guardan
-                 solo el nombre del archivo, volumen 0). Cada patch: 2 videos
+                 en la misma carpeta. Los patches usan las versiones HAP
+                 (*Bob-hap.mov, Donitas*-hap.mov: sin audio, las descomprime
+                 la tarjeta de video; los bob son una sola foto → 2 s a 5 fps)
+                 con output_texture 1 en los jit.playlist; los originales
+                 (*BobVideo.mov, Donitas*.mp4) se quedan para regresar. Los
+                 clips guardan solo el nombre del archivo, volumen 0. Junto al
+                 PROJECTR, un jit.fpsgui mide los fps que le llegan. Cada patch: 2 videos
                  (original = A, uno nuevo con coristas = B) en un solo
                  xfadr (se quitaron todos los mixfadr: cambiar de modo
                  constantemente alentaba la proyección con 6 videos). Abren en presentación (solo módulos y
@@ -101,6 +106,8 @@ max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
                  a la salida), arma la cadena, mete el LFO, cablea templates y
                  acomoda la presentación (config por color dentro del script)
   tools/generar_abstracciones.py  Genera grid.env / grid.hold / grid.strobe / grid.lfo
+  tools/convertir_videos.sh  Convierte los videos de bobGrid a HAP (ffmpeg; se
+                 corre fuera de la Mac mini y los .mov se suben al repo)
 docs/plan-pruebas-colores.md  Plan de pruebas por color (celular, Ableton, operador)
 Dockerfile       Imagen del Grid Server (contexto: raíz del repo)
 docker-compose.yml

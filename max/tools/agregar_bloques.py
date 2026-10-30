@@ -21,6 +21,10 @@ Qué hace (se puede volver a correr sobre una versión nueva del patch):
      La perilla, los templates y las escenas siguen moviendo la base.
   5. Acomoda la vista de presentación: solo módulos y controles que se
      manipulan, con etiquetas; el resto queda fuera.
+  6. Rendimiento: los clips usan las versiones HAP de los videos
+     (max/tools/convertir_videos.sh), los jit.playlist mandan textura directo
+     a la tarjeta de video (output_texture 1) y un medidor de fps
+     (jit.fpsgui) mide lo que llega al projectr.
 
 Templates:
   - "entra y sale" ([grid.hold N] o [grid.strobe ...]) → entrada on/off del
@@ -41,6 +45,12 @@ TAG = 'thegrid_'
 # B en la 2 y el crossfade (0..1) en la 3.
 MEZCLAS = ('vz.xfadr.maxpat', 'vz.mixfadr.maxpat')
 XFADE_IN = 2
+# Videos → su versión HAP (convertir_videos.sh). Para regresar a un original,
+# arrastra el archivo original al jit.playlist en Max.
+VIDEOS_HAP = {'Donitas1.mp4': 'Donitas1-hap.mov', 'Donitas3.mp4': 'Donitas3-hap.mov',
+              'Donitas5.mp4': 'Donitas5-hap.mov', 'greenBobVideo.mov': 'greenBob-hap.mov',
+              'yellowBobVideo.mov': 'yellowBob-hap.mov', 'redBobVideo.mov': 'redBob-hap.mov'}
+OUTPUT_TEXTURE = 1   # 0 = como antes (el video pasa por el CPU)
 
 # Destinos: ('mod', nombre, 'ultima' | n) · ('xfade',) · ('var', varname)
 COLORS = {
@@ -242,10 +252,14 @@ def main():
         sys.exit('No encontré el número del crossfade o el toggle de play')
     play = plays[0]
 
-    # Clips: solo el nombre del archivo (los videos van junto al patch) y volumen en 0.
+    # Clips: versión HAP, solo el nombre del archivo (los videos van junto al
+    # patch), volumen en 0 y textura directo a la tarjeta de video.
     for pl in playlists:
+        pl['output_texture'] = OUTPUT_TEXTURE
+        pl['outlettype'] = ['jit_gl_texture' if OUTPUT_TEXTURE else 'jit_matrix', '', 'dictionary']
         for clip in pl.get('data', {}).get('clips', []):
             if clip.get('filename'):
+                clip['filename'] = VIDEOS_HAP.get(clip['filename'], clip['filename'])
                 clip['absolutepath'] = clip['filename']
             clip.setdefault('content_state', {})['vol'] = 0
     p['dependency_cache'] = [d for d in p.get('dependency_cache', [])
@@ -407,6 +421,13 @@ def main():
             where = f'{tg[1]}'
         comment(260, y + 26, 560, f'{label}  →  {where}')
 
+    # Medidor de fps: cuenta los cuadros que llegan al projectr.
+    salida = next((l['source'] for l in ins(proj['id'], 0)), None)
+    if salida:
+        fps = new('jit.fpsgui', 600, 70, 80, None, ni=1, no=2, outlettype=['', ''], h=36, mode=0)
+        link(salida[0], salida[1], fps, 0)
+        comment(600, 40, 300, 'fps que llegan al PROJECTR (meta: 30 o más)')
+
     # ABLETON: perillas y escenas.
     Y = Y + 70 + len(cfg['templates']) * 55
     comment(0, Y, 640, f'ABLETON · {up} — abre también ableton-bridge.maxpat (el flash de tarola está en TEMPLATES)')
@@ -562,7 +583,10 @@ def main():
         y += row_h + 20
 
     label(10, y, 400, 'SALIDA', bold=True)
-    show(proj['id'], 10, y + 22)
+    w, _ = show(proj['id'], 10, y + 22)
+    if salida:
+        show(fps, 10 + w + 12, y + 22)
+        label(10 + w + 12, y + 62, 120, 'fps')
 
     p['openinpresentation'] = 1
     json.dump(doc, open(dst, 'w', encoding='utf-8'), indent='\t', ensure_ascii=False)

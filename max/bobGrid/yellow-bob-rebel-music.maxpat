@@ -136,8 +136,8 @@
 					"data": {
 						"clips": [
 							{
-								"absolutepath": "Donitas3.mp4",
-								"filename": "Donitas3.mp4",
+								"absolutepath": "Donitas3-hap.mov",
+								"filename": "Donitas3-hap.mov",
 								"filekind": "moviefile",
 								"id": "u284003567",
 								"loop": 1,
@@ -155,11 +155,11 @@
 					"numinlets": 1,
 					"numoutlets": 3,
 					"outlettype": [
-						"jit_matrix",
+						"jit_gl_texture",
 						"",
 						"dictionary"
 					],
-					"output_texture": 0,
+					"output_texture": 1,
 					"parameter_enable": 0,
 					"patching_rect": [
 						430.0,
@@ -475,8 +475,8 @@
 					"data": {
 						"clips": [
 							{
-								"absolutepath": "yellowBobVideo.mov",
-								"filename": "yellowBobVideo.mov",
+								"absolutepath": "yellowBob-hap.mov",
+								"filename": "yellowBob-hap.mov",
 								"filekind": "moviefile",
 								"id": "u197007374",
 								"loop": 1,
@@ -494,11 +494,11 @@
 					"numinlets": 1,
 					"numoutlets": 3,
 					"outlettype": [
-						"jit_matrix",
+						"jit_gl_texture",
 						"",
 						"dictionary"
 					],
-					"output_texture": 0,
+					"output_texture": 1,
 					"parameter_enable": 0,
 					"patching_rect": [
 						98.0,
@@ -1115,36 +1115,44 @@
 			{
 				"box": {
 					"id": "obj-3032",
-					"maxclass": "comment",
+					"maxclass": "jit.fpsgui",
 					"numinlets": 1,
-					"numoutlets": 0,
+					"numoutlets": 2,
 					"patching_rect": [
-						890.6666901111603,
-						590,
-						640,
-						20
+						1490.6666901111603,
+						70,
+						80,
+						36
 					],
 					"varname": "thegrid_3032",
-					"text": "ABLETON · AMARILLO — abre también ableton-bridge.maxpat (el flash de tarola está en TEMPLATES)"
+					"outlettype": [
+						"",
+						""
+					],
+					"mode": 0,
+					"presentation": 1,
+					"presentation_rect": [
+						190.0,
+						523.0,
+						80,
+						36
+					]
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3033",
-					"maxclass": "newobj",
+					"maxclass": "comment",
 					"numinlets": 1,
-					"numoutlets": 1,
+					"numoutlets": 0,
 					"patching_rect": [
-						890.6666901111603,
-						620,
-						100,
-						22
+						1490.6666901111603,
+						40,
+						300,
+						20
 					],
 					"varname": "thegrid_3033",
-					"text": "r live.knob.1",
-					"outlettype": [
-						""
-					]
+					"text": "fps que llegan al PROJECTR (meta: 30 o más)"
 				}
 			},
 			{
@@ -1154,18 +1162,53 @@
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
-						1000.6666901111603,
-						620,
-						400,
+						890.6666901111603,
+						590,
+						640,
 						20
 					],
 					"varname": "thegrid_3034",
-					"text": "perilla 1 (0..1) → crossfade A↔B"
+					"text": "ABLETON · AMARILLO — abre también ableton-bridge.maxpat (el flash de tarola está en TEMPLATES)"
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3035",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"patching_rect": [
+						890.6666901111603,
+						620,
+						100,
+						22
+					],
+					"varname": "thegrid_3035",
+					"text": "r live.knob.1",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3036",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						1000.6666901111603,
+						620,
+						400,
+						20
+					],
+					"varname": "thegrid_3036",
+					"text": "perilla 1 (0..1) → crossfade A↔B"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3037",
 					"maxclass": "bpatcher",
 					"numinlets": 3,
 					"numoutlets": 1,
@@ -1175,7 +1218,7 @@
 						210,
 						54
 					],
-					"varname": "thegrid_3035",
+					"varname": "thegrid_3037",
 					"outlettype": [
 						""
 					],
@@ -1208,7 +1251,7 @@
 			},
 			{
 				"box": {
-					"id": "obj-3036",
+					"id": "obj-3038",
 					"maxclass": "newobj",
 					"numinlets": 2,
 					"numoutlets": 1,
@@ -1227,7 +1270,7 @@
 			},
 			{
 				"box": {
-					"id": "obj-3037",
+					"id": "obj-3039",
 					"maxclass": "newobj",
 					"numinlets": 2,
 					"numoutlets": 1,
@@ -1237,7 +1280,7 @@
 						200,
 						22
 					],
-					"varname": "thegrid_3037",
+					"varname": "thegrid_3039",
 					"text": "expr 1. - abs(1. - ($f1 + $f2))",
 					"outlettype": [
 						""
@@ -1246,7 +1289,7 @@
 			},
 			{
 				"box": {
-					"id": "obj-3038",
+					"id": "obj-3040",
 					"maxclass": "newobj",
 					"numinlets": 3,
 					"numoutlets": 1,
@@ -1256,7 +1299,7 @@
 						70,
 						22
 					],
-					"varname": "thegrid_3038",
+					"varname": "thegrid_3040",
 					"text": "clip 0. 1.",
 					"outlettype": [
 						""
@@ -1265,7 +1308,7 @@
 			},
 			{
 				"box": {
-					"id": "obj-3039",
+					"id": "obj-3041",
 					"maxclass": "comment",
 					"numinlets": 1,
 					"numoutlets": 0,
@@ -1275,13 +1318,13 @@
 						330,
 						20
 					],
-					"varname": "thegrid_3039",
+					"varname": "thegrid_3041",
 					"text": "crossfade = base + LFO (rebota en 1) → XFADR"
 				}
 			},
 			{
 				"box": {
-					"id": "obj-3040",
+					"id": "obj-3042",
 					"maxclass": "newobj",
 					"numinlets": 1,
 					"numoutlets": 1,
@@ -1291,7 +1334,7 @@
 						100,
 						22
 					],
-					"varname": "thegrid_3040",
+					"varname": "thegrid_3042",
 					"text": "r live.knob.2",
 					"outlettype": [
 						""
@@ -1300,7 +1343,7 @@
 			},
 			{
 				"box": {
-					"id": "obj-3041",
+					"id": "obj-3043",
 					"maxclass": "newobj",
 					"numinlets": 2,
 					"numoutlets": 1,
@@ -1310,7 +1353,7 @@
 						50,
 						22
 					],
-					"varname": "thegrid_3041",
+					"varname": "thegrid_3043",
 					"text": "* 0.5",
 					"outlettype": [
 						"float"
@@ -1319,7 +1362,7 @@
 			},
 			{
 				"box": {
-					"id": "obj-3042",
+					"id": "obj-3044",
 					"maxclass": "comment",
 					"numinlets": 1,
 					"numoutlets": 0,
@@ -1329,47 +1372,8 @@
 						320,
 						20
 					],
-					"varname": "thegrid_3042",
-					"text": "perilla 2 → profundidad del LFO (0..0.5) · inicial: 4 compases, 0.1"
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3043",
-					"maxclass": "newobj",
-					"numinlets": 1,
-					"numoutlets": 1,
-					"patching_rect": [
-						890.6666901111603,
-						710,
-						100,
-						22
-					],
-					"varname": "thegrid_3043",
-					"text": "r live.knob.3",
-					"outlettype": [
-						""
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3044",
-					"maxclass": "flonum",
-					"numinlets": 1,
-					"numoutlets": 2,
-					"patching_rect": [
-						890.6666901111603,
-						738,
-						60,
-						22
-					],
 					"varname": "thegrid_3044",
-					"outlettype": [
-						"",
-						"bang"
-					],
-					"parameter_enable": 0
+					"text": "perilla 2 → profundidad del LFO (0..0.5) · inicial: 4 compases, 0.1"
 				}
 			},
 			{
@@ -1379,13 +1383,13 @@
 					"numinlets": 1,
 					"numoutlets": 1,
 					"patching_rect": [
-						1010.6666901111603,
+						890.6666901111603,
 						710,
 						100,
 						22
 					],
 					"varname": "thegrid_3045",
-					"text": "r live.knob.4",
+					"text": "r live.knob.3",
 					"outlettype": [
 						""
 					]
@@ -1398,7 +1402,7 @@
 					"numinlets": 1,
 					"numoutlets": 2,
 					"patching_rect": [
-						1010.6666901111603,
+						890.6666901111603,
 						738,
 						60,
 						22
@@ -1414,6 +1418,45 @@
 			{
 				"box": {
 					"id": "obj-3047",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"patching_rect": [
+						1010.6666901111603,
+						710,
+						100,
+						22
+					],
+					"varname": "thegrid_3047",
+					"text": "r live.knob.4",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3048",
+					"maxclass": "flonum",
+					"numinlets": 1,
+					"numoutlets": 2,
+					"patching_rect": [
+						1010.6666901111603,
+						738,
+						60,
+						22
+					],
+					"varname": "thegrid_3048",
+					"outlettype": [
+						"",
+						"bang"
+					],
+					"parameter_enable": 0
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3049",
 					"maxclass": "comment",
 					"numinlets": 1,
 					"numoutlets": 0,
@@ -1423,13 +1466,13 @@
 						640,
 						20
 					],
-					"varname": "thegrid_3047",
+					"varname": "thegrid_3049",
 					"text": "perillas 3-4 (0..1): conecta cada número al parámetro de Vizzie que quieras (pasa el mouse por la entrada para ver su nombre)"
 				}
 			},
 			{
 				"box": {
-					"id": "obj-3048",
+					"id": "obj-3050",
 					"maxclass": "newobj",
 					"numinlets": 1,
 					"numoutlets": 1,
@@ -1439,7 +1482,7 @@
 						90,
 						22
 					],
-					"varname": "thegrid_3048",
+					"varname": "thegrid_3050",
 					"text": "r live.scene",
 					"outlettype": [
 						""
@@ -1448,7 +1491,7 @@
 			},
 			{
 				"box": {
-					"id": "obj-3049",
+					"id": "obj-3051",
 					"maxclass": "newobj",
 					"numinlets": 5,
 					"numoutlets": 5,
@@ -1458,7 +1501,7 @@
 						90,
 						22
 					],
-					"varname": "thegrid_3049",
+					"varname": "thegrid_3051",
 					"text": "sel 1 2 3 4",
 					"outlettype": [
 						"bang",
@@ -1471,7 +1514,7 @@
 			},
 			{
 				"box": {
-					"id": "obj-3050",
+					"id": "obj-3052",
 					"maxclass": "newobj",
 					"numinlets": 1,
 					"numoutlets": 3,
@@ -1481,7 +1524,7 @@
 						110,
 						22
 					],
-					"varname": "thegrid_3050",
+					"varname": "thegrid_3052",
 					"text": "unpack 0 0 0.",
 					"outlettype": [
 						"int",
@@ -1492,7 +1535,7 @@
 			},
 			{
 				"box": {
-					"id": "obj-3051",
+					"id": "obj-3053",
 					"maxclass": "newobj",
 					"numinlets": 1,
 					"numoutlets": 1,
@@ -1502,46 +1545,11 @@
 						120,
 						22
 					],
-					"varname": "thegrid_3051",
+					"varname": "thegrid_3053",
 					"text": "prepend escena",
 					"outlettype": [
 						""
 					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3052",
-					"maxclass": "message",
-					"numinlets": 2,
-					"numoutlets": 1,
-					"patching_rect": [
-						890.6666901111603,
-						860,
-						60,
-						22
-					],
-					"varname": "thegrid_3052",
-					"text": "1 1 0.",
-					"outlettype": [
-						""
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3053",
-					"maxclass": "comment",
-					"numinlets": 1,
-					"numoutlets": 0,
-					"patching_rect": [
-						1190.6666901111603,
-						830,
-						340,
-						20
-					],
-					"varname": "thegrid_3053",
-					"text": "escena 1: niebla (A)"
 				}
 			},
 			{
@@ -1551,13 +1559,13 @@
 					"numinlets": 2,
 					"numoutlets": 1,
 					"patching_rect": [
-						960.6666901111603,
+						890.6666901111603,
 						860,
 						60,
 						22
 					],
 					"varname": "thegrid_3054",
-					"text": "0 1 1.",
+					"text": "1 1 0.",
 					"outlettype": [
 						""
 					]
@@ -1571,12 +1579,12 @@
 					"numoutlets": 0,
 					"patching_rect": [
 						1190.6666901111603,
-						848,
+						830,
 						340,
 						20
 					],
 					"varname": "thegrid_3055",
-					"text": "escena 2: eco (B)"
+					"text": "escena 1: niebla (A)"
 				}
 			},
 			{
@@ -1586,13 +1594,13 @@
 					"numinlets": 2,
 					"numoutlets": 1,
 					"patching_rect": [
-						1030.6666901111603,
+						960.6666901111603,
 						860,
 						60,
 						22
 					],
 					"varname": "thegrid_3056",
-					"text": "1 1 0.5",
+					"text": "0 1 1.",
 					"outlettype": [
 						""
 					]
@@ -1606,12 +1614,12 @@
 					"numoutlets": 0,
 					"patching_rect": [
 						1190.6666901111603,
-						866,
+						848,
 						340,
 						20
 					],
 					"varname": "thegrid_3057",
-					"text": "escena 3: niebla + eco"
+					"text": "escena 2: eco (B)"
 				}
 			},
 			{
@@ -1621,13 +1629,13 @@
 					"numinlets": 2,
 					"numoutlets": 1,
 					"patching_rect": [
-						1100.6666901111603,
+						1030.6666901111603,
 						860,
 						60,
 						22
 					],
 					"varname": "thegrid_3058",
-					"text": "0 1 0.",
+					"text": "1 1 0.5",
 					"outlettype": [
 						""
 					]
@@ -1641,27 +1649,62 @@
 					"numoutlets": 0,
 					"patching_rect": [
 						1190.6666901111603,
-						884,
+						866,
 						340,
 						20
 					],
 					"varname": "thegrid_3059",
-					"text": "escena 4: limpio"
+					"text": "escena 3: niebla + eco"
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3060",
+					"maxclass": "message",
+					"numinlets": 2,
+					"numoutlets": 1,
+					"patching_rect": [
+						1100.6666901111603,
+						860,
+						60,
+						22
+					],
+					"varname": "thegrid_3060",
+					"text": "0 1 0.",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3061",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						1190.6666901111603,
+						884,
+						340,
+						20
+					],
+					"varname": "thegrid_3061",
+					"text": "escena 4: limpio"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3062",
 					"maxclass": "comment",
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
 						890.6666901111603,
-						1680,
+						1720,
 						500,
 						20
 					],
-					"varname": "thegrid_3060",
+					"varname": "thegrid_3062",
 					"text": "AMARILLO · bob rebel music — The Grid (fx)",
 					"presentation": 1,
 					"presentation_rect": [
@@ -1675,17 +1718,17 @@
 			},
 			{
 				"box": {
-					"id": "obj-3061",
+					"id": "obj-3063",
 					"maxclass": "comment",
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
 						890.6666901111603,
-						1700,
+						1740,
 						400,
 						20
 					],
-					"varname": "thegrid_3061",
+					"varname": "thegrid_3063",
 					"text": "VIDEOS (play)",
 					"presentation": 1,
 					"presentation_rect": [
@@ -1699,17 +1742,17 @@
 			},
 			{
 				"box": {
-					"id": "obj-3062",
+					"id": "obj-3064",
 					"maxclass": "comment",
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
 						890.6666901111603,
-						1720,
+						1760,
 						260,
 						20
 					],
-					"varname": "thegrid_3062",
+					"varname": "thegrid_3064",
 					"text": "video original (A)",
 					"presentation": 1,
 					"presentation_rect": [
@@ -1722,53 +1765,6 @@
 			},
 			{
 				"box": {
-					"id": "obj-3063",
-					"maxclass": "comment",
-					"numinlets": 1,
-					"numoutlets": 0,
-					"patching_rect": [
-						890.6666901111603,
-						1740,
-						260,
-						20
-					],
-					"varname": "thegrid_3063",
-					"text": "video nuevo (B)",
-					"presentation": 1,
-					"presentation_rect": [
-						210.0,
-						101.0,
-						260,
-						20
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3064",
-					"maxclass": "comment",
-					"numinlets": 1,
-					"numoutlets": 0,
-					"patching_rect": [
-						890.6666901111603,
-						1760,
-						500,
-						20
-					],
-					"varname": "thegrid_3064",
-					"text": "BASE — cadena A y cadena B (entran al XFADR)",
-					"presentation": 1,
-					"presentation_rect": [
-						10,
-						147.0,
-						500,
-						20
-					],
-					"fontface": 1
-				}
-			},
-			{
-				"box": {
 					"id": "obj-3065",
 					"maxclass": "comment",
 					"numinlets": 1,
@@ -1776,16 +1772,16 @@
 					"patching_rect": [
 						890.6666901111603,
 						1780,
-						170,
+						260,
 						20
 					],
 					"varname": "thegrid_3065",
-					"text": "niebla (FOGGR) on/off",
+					"text": "video nuevo (B)",
 					"presentation": 1,
 					"presentation_rect": [
-						440.0,
-						171.0,
-						170,
+						210.0,
+						101.0,
+						260,
 						20
 					]
 				}
@@ -1799,18 +1795,19 @@
 					"patching_rect": [
 						890.6666901111603,
 						1800,
-						170,
+						500,
 						20
 					],
 					"varname": "thegrid_3066",
-					"text": "eco (DELAYR) on/off",
+					"text": "BASE — cadena A y cadena B (entran al XFADR)",
 					"presentation": 1,
 					"presentation_rect": [
-						440.0,
-						207.0,
-						170,
+						10,
+						147.0,
+						500,
 						20
-					]
+					],
+					"fontface": 1
 				}
 			},
 			{
@@ -1822,19 +1819,18 @@
 					"patching_rect": [
 						890.6666901111603,
 						1820,
-						400,
+						170,
 						20
 					],
 					"varname": "thegrid_3067",
-					"text": "MEZCLA PRINCIPAL",
+					"text": "niebla (FOGGR) on/off",
 					"presentation": 1,
 					"presentation_rect": [
-						10,
-						319.0,
-						400,
+						440.0,
+						171.0,
+						170,
 						20
-					],
-					"fontface": 1
+					]
 				}
 			},
 			{
@@ -1846,16 +1842,16 @@
 					"patching_rect": [
 						890.6666901111603,
 						1840,
-						140,
+						170,
 						20
 					],
 					"varname": "thegrid_3068",
-					"text": "crossfade A↔B",
+					"text": "eco (DELAYR) on/off",
 					"presentation": 1,
 					"presentation_rect": [
-						188.0,
-						359.0,
-						140,
+						440.0,
+						207.0,
+						170,
 						20
 					]
 				}
@@ -1869,10 +1865,57 @@
 					"patching_rect": [
 						890.6666901111603,
 						1860,
-						260,
+						400,
 						20
 					],
 					"varname": "thegrid_3069",
+					"text": "MEZCLA PRINCIPAL",
+					"presentation": 1,
+					"presentation_rect": [
+						10,
+						319.0,
+						400,
+						20
+					],
+					"fontface": 1
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3070",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						890.6666901111603,
+						1880,
+						140,
+						20
+					],
+					"varname": "thegrid_3070",
+					"text": "crossfade A↔B",
+					"presentation": 1,
+					"presentation_rect": [
+						188.0,
+						359.0,
+						140,
+						20
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3071",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						890.6666901111603,
+						1900,
+						260,
+						20
+					],
+					"varname": "thegrid_3071",
 					"text": "vaivén del crossfade (perilla 2 = prof.)",
 					"presentation": 1,
 					"presentation_rect": [
@@ -1885,17 +1928,17 @@
 			},
 			{
 				"box": {
-					"id": "obj-3070",
+					"id": "obj-3072",
 					"maxclass": "comment",
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
 						890.6666901111603,
-						1880,
+						1920,
 						400,
 						20
 					],
-					"varname": "thegrid_3070",
+					"varname": "thegrid_3072",
 					"text": "SALIDA",
 					"presentation": 1,
 					"presentation_rect": [
@@ -1905,6 +1948,29 @@
 						20
 					],
 					"fontface": 1
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3073",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						890.6666901111603,
+						1940,
+						120,
+						20
+					],
+					"varname": "thegrid_3073",
+					"text": "fps",
+					"presentation": 1,
+					"presentation_rect": [
+						190.0,
+						563.0,
+						120,
+						20
+					]
 				}
 			}
 		],
@@ -2368,23 +2434,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3033",
+						"obj-34",
 						0
 					],
 					"destination": [
-						"obj-27",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-27",
-						0
-					],
-					"destination": [
-						"obj-3036",
+						"obj-3032",
 						0
 					]
 				}
@@ -2396,7 +2450,31 @@
 						0
 					],
 					"destination": [
-						"obj-3036",
+						"obj-27",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-27",
+						0
+					],
+					"destination": [
+						"obj-3038",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3037",
+						0
+					],
+					"destination": [
+						"obj-3038",
 						1
 					]
 				}
@@ -2404,11 +2482,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3036",
+						"obj-3038",
 						0
 					],
 					"destination": [
-						"obj-3037",
+						"obj-3039",
 						0
 					]
 				}
@@ -2416,11 +2494,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3037",
+						"obj-3039",
 						0
 					],
 					"destination": [
-						"obj-3038",
+						"obj-3040",
 						0
 					]
 				}
@@ -2428,7 +2506,7 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3038",
+						"obj-3040",
 						0
 					],
 					"destination": [
@@ -2440,24 +2518,12 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3040",
+						"obj-3042",
 						0
 					],
 					"destination": [
-						"obj-3041",
+						"obj-3043",
 						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3041",
-						0
-					],
-					"destination": [
-						"obj-3035",
-						2
 					]
 				}
 			},
@@ -2468,8 +2534,8 @@
 						0
 					],
 					"destination": [
-						"obj-3044",
-						0
+						"obj-3037",
+						2
 					]
 				}
 			},
@@ -2488,11 +2554,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3048",
+						"obj-3047",
 						0
 					],
 					"destination": [
-						"obj-3049",
+						"obj-3048",
 						0
 					]
 				}
@@ -2500,7 +2566,7 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3048",
+						"obj-3050",
 						0
 					],
 					"destination": [
@@ -2512,7 +2578,19 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3051",
+						"obj-3050",
+						0
+					],
+					"destination": [
+						"obj-3053",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3053",
 						0
 					],
 					"destination": [
@@ -2524,7 +2602,19 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3049",
+						"obj-3051",
+						0
+					],
+					"destination": [
+						"obj-3054",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3054",
 						0
 					],
 					"destination": [
@@ -2536,23 +2626,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3052",
-						0
-					],
-					"destination": [
-						"obj-3050",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3049",
+						"obj-3051",
 						1
 					],
 					"destination": [
-						"obj-3054",
+						"obj-3056",
 						0
 					]
 				}
@@ -2560,11 +2638,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3054",
+						"obj-3056",
 						0
 					],
 					"destination": [
-						"obj-3050",
+						"obj-3052",
 						0
 					]
 				}
@@ -2572,11 +2650,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3049",
+						"obj-3051",
 						2
 					],
 					"destination": [
-						"obj-3056",
+						"obj-3058",
 						0
 					]
 				}
@@ -2584,11 +2662,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3056",
+						"obj-3058",
 						0
 					],
 					"destination": [
-						"obj-3050",
+						"obj-3052",
 						0
 					]
 				}
@@ -2596,11 +2674,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3049",
+						"obj-3051",
 						3
 					],
 					"destination": [
-						"obj-3058",
+						"obj-3060",
 						0
 					]
 				}
@@ -2608,11 +2686,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3058",
+						"obj-3060",
 						0
 					],
 					"destination": [
-						"obj-3050",
+						"obj-3052",
 						0
 					]
 				}
@@ -2620,7 +2698,7 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3050",
+						"obj-3052",
 						0
 					],
 					"destination": [
@@ -2632,7 +2710,7 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3050",
+						"obj-3052",
 						1
 					],
 					"destination": [
@@ -2644,7 +2722,7 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3050",
+						"obj-3052",
 						2
 					],
 					"destination": [

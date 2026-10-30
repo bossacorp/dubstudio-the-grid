@@ -15,8 +15,9 @@ docker compose logs -f grid-server
 
 **Mac mini**
 - Carpeta con: los 3 patches de `max/bobGrid/`, **todos los videos en la
-  misma carpeta** (greenBobVideo/yellowBobVideo/redBobVideo.mov y
-  Donitas1/3/5.mp4, sin subcarpeta), `grid.env`,
+  misma carpeta, sin subcarpeta**: los HAP que usan los patches
+  (greenBob/yellowBob/redBob-hap.mov y Donitas1/3/5-hap.mov) y, para
+  regresar si hace falta, los originales (…BobVideo.mov, Donitas*.mp4); `grid.env`,
   `grid.hold`, `grid.strobe`, `grid.lfo`, `grid-router.maxpat` y
   `ableton-bridge.maxpat`.
 - Abre `grid-router` (reloj **apagado**: el tempo lo manda Ableton),
@@ -55,7 +56,11 @@ entrada indicada y confirma su nombre:
   avísame cuál era para corregir la herramienta.
 
 **Estado al abrir** (sin tocar nada, 2 s después de abrir):
-- [ ] Los 6 videos se reproducen solos (2 por patch), sin sonido.
+- [ ] Los 6 videos se reproducen solos (2 por patch), sin sonido. Son los
+  **HAP** (`…-hap.mov`): si alguno sale negro o la consola dice que no
+  encuentra el archivo, revisa que los `-hap.mov` estén en la carpeta.
+- [ ] Junto a cada PROJECTR hay un **medidor de fps** (los cuadros que le
+  llegan) y marca un número estable.
 - [ ] Ningún patch trae MIXFADR: la mezcla principal es el **XFADR** (video
   original en su entrada 1 = A, video nuevo en la 2 = B). Ya no existe el
   toggle "mezcla on/off" (iba al MIXFADR y el XFADR no lo usa).
@@ -70,12 +75,34 @@ entrada indicada y confirma su nombre:
 - [ ] Rojo: FRACTALIZR + FOGGR prendidos, crossfade principal en 0.5 (se ven
   el original y el nuevo), KALEIDR y PIXL8R apagados.
 
-**Rendimiento (la razón del cambio a XFADR)**, con los 3 patches abiertos y
-los 6 videos corriendo, en el Monitor de Actividad y en el PROJECTR:
-- [ ] El CPU de Max baja respecto a la versión con MIXFADR (anota el % antes y
-  después si aún tienes la versión anterior).
-- [ ] Los videos corren fluidos en los 3 PROJECTR; mover el dial del
-  crossfade de 0 a 1 no traba la imagen ni hace que se pierdan efectos.
+**Rendimiento.** Cambios de esta versión: videos en HAP (los descomprime la
+tarjeta de video), sin audio, los bob como imagen fija (5 fps), video directo a
+la tarjeta de video (`output_texture 1` en los `jit.playlist`) y medidor de
+fps. Mide con los 3 patches abiertos, los 6 videos corriendo y **sin tocar
+Max con el mouse** (minimiza las ventanas de los patches, deja solo las de
+PROJECTR). Referencia de la versión anterior: Max ≈ 118 % con los 3
+abiertos, 60–70 % con uno, hasta 98 % moviendo el mouse; OBS ≈ 93 %.
+
+| # | Medición | Antes | Ahora | ✔ |
+|---|---|---|---|---|
+| P1 | CPU de Max, 3 patches abiertos (Monitor de Actividad) | ≈ 118 % | | ☐ |
+| P2 | CPU de Max, un solo patch | 60–70 % | | ☐ |
+| P3 | CPU de Max moviendo cosas con el mouse | hasta 98 % (uno) | | ☐ |
+| P4 | CPU de OBS al mismo tiempo | ≈ 93 % | | ☐ |
+| P5 | fps de cada medidor (verde / amarillo / rojo) | – | / / | ☐ |
+| P6 | Mover el dial del crossfade de 0 a 1 y disparar templates | – | Fluido, sin que se pierdan efectos | ☐ |
+
+Si algo sale mal con `output_texture 1` (video negro, congelado o
+parpadeando): en el inspector del `jit.playlist` pon **Output Texture** en
+off, prueba de nuevo y avísame (se regresa en `agregar_bloques.py`,
+`OUTPUT_TEXTURE = 0`).
+
+**PROJECTR a 30 fps (por revisar).** Vizzie dibuja a 60 por defecto y los
+videos son de 30. No encontré documentado cómo se ajusta en el PROJECTR, así
+que se revisa en Max: abre la ayuda del módulo (clic derecho sobre PROJECTR →
+Open vz.projectr Help) y busca si tiene `fps` / `sync`. Si lo tiene, ponlo en
+30 y anota en P1–P5 si bajó el CPU; dime qué ajustaste para dejarlo fijo en
+los patches.
 
 **Intensidad**: como los módulos de templates están apagados en reposo, sube
 sus parámetros al extremo en su panel (que se note mucho) y guarda el patch.
@@ -153,7 +180,7 @@ imprimir `GRID-VERDE celda1 1`. Igual con `grid.fx.1`, `grid.vote.1` y
 - Las filas que fallaron (por número: V3, A4…).
 - Si la entrada 3 del XFADR no es el crossfade, cuál es (se cambia
   `XFADE_IN` en `agregar_bloques.py`).
-- El % de CPU de Max con XFADR (y con MIXFADR, si lo mediste).
+- La tabla P1–P6 llena, y si encontraste el ajuste de fps del PROJECTR.
 - En la sección 1, qué decía cada entrada si no coincidía.
 - Valores del LFO que te gustaron por color (compases y profundidad).
 - Qué template se notó poco: se ajusta subiendo la intensidad en el panel del
