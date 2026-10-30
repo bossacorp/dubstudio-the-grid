@@ -86,15 +86,9 @@ Si el patch no abre bien, se arma a mano:
 
 **Patches de color (`max/bobGrid/`).** Copia la carpeta completa a la Mac
 mini (los videos van junto a los patches) y abre `grid-router.maxpat` y los tres
-patches. Cada uno trae a la derecha un bloque **THE GRID**:
-
-| Mensaje | Qué hace en el tercio de su color |
-|---|---|
-| celda 1 | prende/apaga efectos A (`toggle[4]` → fractalizr/foggr) |
-| celda 2 | prende/apaga efectos B (`toggle[5]` → interpol8r/delayr) |
-| celda 3 | salta el crossfade del `mixfadr`: A (`0.`) ↔ B (`1.`) |
-| bloqueo 1/0 | pausa / reanuda el video |
-| al abrir | play del video al segundo |
+patches. Cada patch mezcla 2 videos (original = A, nuevo = B) en un `mixfadr`
+y trae a la derecha los bloques **THE GRID** (bloqueo → pausa los videos; play
+al abrir), **TEMPLATES** (qué hace cada celda, ver abajo) y **ABLETON**.
 
 Cada mensaje se imprime en la Max Console como `GRID-VERDE`, `GRID-AMARILLO`
 o `GRID-ROJO`.
@@ -128,10 +122,16 @@ o `GRID-ROJO`.
 `grid.env`, `grid.hold`, `grid.strobe` y `grid.lfo` deben ir en la misma
 carpeta que los patches.
 
+**LFO (vaivén del crossfade).** Cada patch trae en la presentación un panel
+`grid.lfo` (on/off, compases por ciclo, profundidad) que **suma** un vaivén
+suave al crossfade: la perilla 1, los templates y las escenas mueven la base y
+el LFO solo la mece alrededor (si pasa de 1, rebota). La perilla 2 de Ableton
+controla la profundidad (0..0.5); en 0 no se mueve nada.
+
 Si mandas una versión nueva de un patch de color, los bloques se reaplican con
 `python3 max/tools/agregar_bloques.py nuevo.maxpat max/bobGrid/<color>-bob-rebel-music.maxpat verde|amarillo|rojo`
-(quita lo que no se usa, arma la cadena, cablea los templates y acomoda la
-presentación; se puede correr cuantas veces haga falta).
+(quita lo que no se usa, arma la cadena, mete el LFO, cablea los templates y
+acomoda la presentación; se puede correr cuantas veces haga falta).
 
 **3 — Validación por color (patches de Max).** Con `grid-router.maxpat` y los
 tres patches de color abiertos en la Mac mini, manda el contrato completo

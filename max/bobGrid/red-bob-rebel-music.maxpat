@@ -93,96 +93,6 @@
 			},
 			{
 				"box": {
-					"annotation": "## Smoothly crossfade between two videos and composite them ##",
-					"bgcolor": [
-						0.211764705882353,
-						0.474509803921569,
-						0.141176470588235,
-						1.0
-					],
-					"bgmode": 1,
-					"border": 0,
-					"clickthrough": 0,
-					"enablehscroll": 0,
-					"enablevscroll": 0,
-					"id": "obj-13",
-					"lockeddragscroll": 0,
-					"lockedsize": 0,
-					"maxclass": "bpatcher",
-					"name": "vz.mixfadr.maxpat",
-					"numinlets": 4,
-					"numoutlets": 1,
-					"offset": [
-						0.0,
-						0.0
-					],
-					"outlettype": [
-						"jit_gl_texture"
-					],
-					"patching_rect": [
-						416.0,
-						276.0,
-						168.0,
-						130.0
-					],
-					"varname": "mixfadr[1]",
-					"viewvisibility": 1,
-					"presentation": 1,
-					"presentation_rect": [
-						480.0,
-						224.0,
-						168.0,
-						130.0
-					]
-				}
-			},
-			{
-				"box": {
-					"data": {
-						"clips": [
-							{
-								"absolutepath": "Donitas5a.mp4",
-								"filename": "Donitas5a.mp4",
-								"filekind": "moviefile",
-								"id": "u641006072",
-								"loop": 1,
-								"content_state": {
-									"vol": 0,
-									"loop": 1
-								}
-							}
-						]
-					},
-					"drawto": "",
-					"id": "obj-10",
-					"loop": 1,
-					"maxclass": "jit.playlist",
-					"numinlets": 1,
-					"numoutlets": 3,
-					"outlettype": [
-						"jit_matrix",
-						"",
-						"dictionary"
-					],
-					"output_texture": 0,
-					"parameter_enable": 0,
-					"patching_rect": [
-						556.0,
-						232.0,
-						150.0,
-						30.0
-					],
-					"presentation": 1,
-					"presentation_rect": [
-						50,
-						132.0,
-						150.0,
-						30.0
-					]
-				}
-			},
-			{
-				"box": {
 					"data": {
 						"clips": [
 							{
@@ -212,8 +122,8 @@
 					"output_texture": 0,
 					"parameter_enable": 0,
 					"patching_rect": [
-						366.00001090765,
-						232.0,
+						507.0,
+						266.0,
 						150.0,
 						30.0
 					],
@@ -259,8 +169,8 @@
 					"viewvisibility": 1,
 					"presentation": 1,
 					"presentation_rect": [
-						800.0,
-						224.0,
+						620.0,
+						188.0,
 						188.0,
 						130.0
 					]
@@ -299,8 +209,8 @@
 					"viewvisibility": 1,
 					"presentation": 1,
 					"presentation_rect": [
-						660.0,
-						224.0,
+						480.0,
+						188.0,
 						128.0,
 						130.0
 					]
@@ -389,8 +299,8 @@
 					"varname": "toggle[4]",
 					"presentation": 1,
 					"presentation_rect": [
-						1000.0,
-						224.0,
+						820.0,
+						188.0,
 						24.0,
 						24.0
 					]
@@ -434,8 +344,8 @@
 					"varname": "toggle[3]",
 					"presentation": 1,
 					"presentation_rect": [
-						1000.0,
-						260.0,
+						820.0,
+						224.0,
 						24.0,
 						24.0
 					]
@@ -501,7 +411,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						190.0,
-						406.0,
+						370.0,
 						40.0,
 						40.0
 					]
@@ -592,7 +502,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						280.0,
-						224.0,
+						188.0,
 						188.0,
 						130.0
 					]
@@ -638,7 +548,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						10,
-						224.0,
+						188.0,
 						258.0,
 						130.0
 					]
@@ -683,7 +593,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						10,
-						396.0,
+						360.0,
 						168.0,
 						130.0
 					]
@@ -723,7 +633,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						10,
-						568.0,
+						542.0,
 						168.0,
 						108.0
 					]
@@ -1375,17 +1285,60 @@
 			{
 				"box": {
 					"id": "obj-3037",
-					"maxclass": "newobj",
-					"numinlets": 1,
+					"maxclass": "bpatcher",
+					"numinlets": 3,
 					"numoutlets": 1,
 					"patching_rect": [
-						875.0,
-						707,
-						100,
-						22
+						1205.0,
+						675,
+						210,
+						54
 					],
 					"varname": "thegrid_3037",
-					"text": "r live.knob.2",
+					"outlettype": [
+						""
+					],
+					"name": "grid.lfo.maxpat",
+					"args": [
+						16,
+						0.2
+					],
+					"embed": 0,
+					"offset": [
+						0.0,
+						0.0
+					],
+					"bgmode": 0,
+					"border": 0,
+					"clickthrough": 0,
+					"enablehscroll": 0,
+					"enablevscroll": 0,
+					"lockeddragscroll": 0,
+					"lockedsize": 0,
+					"viewvisibility": 1,
+					"presentation": 1,
+					"presentation_rect": [
+						190.0,
+						446.0,
+						210,
+						54
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3038",
+					"maxclass": "newobj",
+					"numinlets": 2,
+					"numoutlets": 1,
+					"patching_rect": [
+						1205.0,
+						745,
+						70,
+						22
+					],
+					"varname": "thegrid_xfade_in",
+					"text": "pak 0. 0.",
 					"outlettype": [
 						""
 					]
@@ -1393,38 +1346,18 @@
 			},
 			{
 				"box": {
-					"id": "obj-3038",
-					"maxclass": "flonum",
-					"numinlets": 1,
-					"numoutlets": 2,
-					"patching_rect": [
-						1205.0,
-						795,
-						60,
-						22
-					],
-					"varname": "thegrid_3038",
-					"outlettype": [
-						"",
-						"bang"
-					],
-					"parameter_enable": 0
-				}
-			},
-			{
-				"box": {
 					"id": "obj-3039",
 					"maxclass": "newobj",
-					"numinlets": 1,
+					"numinlets": 2,
 					"numoutlets": 1,
 					"patching_rect": [
 						1205.0,
-						707,
-						70,
+						773,
+						200,
 						22
 					],
 					"varname": "thegrid_3039",
-					"text": "loadmess 1",
+					"text": "expr 1. - abs(1. - ($f1 + $f2))",
 					"outlettype": [
 						""
 					]
@@ -1433,101 +1366,90 @@
 			{
 				"box": {
 					"id": "obj-3040",
-					"maxclass": "toggle",
-					"numinlets": 1,
+					"maxclass": "newobj",
+					"numinlets": 3,
 					"numoutlets": 1,
 					"patching_rect": [
 						1205.0,
-						735,
-						24,
-						24
+						801,
+						70,
+						22
 					],
 					"varname": "thegrid_3040",
+					"text": "clip 0. 1.",
 					"outlettype": [
-						"int"
-					],
-					"parameter_enable": 0,
-					"presentation": 1,
-					"presentation_rect": [
-						190.0,
-						466.0,
-						24,
-						24
+						""
 					]
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3041",
-					"maxclass": "newobj",
+					"maxclass": "comment",
 					"numinlets": 1,
-					"numoutlets": 1,
+					"numoutlets": 0,
 					"patching_rect": [
-						1205.0,
-						765,
-						90,
-						22
+						1285.0,
+						745,
+						330,
+						20
 					],
 					"varname": "thegrid_3041",
-					"text": "grid.lfo 16",
-					"outlettype": [
-						""
-					]
+					"text": "crossfade = base + LFO (rebota en 1) → mixfadr"
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3042",
-					"maxclass": "comment",
+					"maxclass": "newobj",
 					"numinlets": 1,
-					"numoutlets": 0,
+					"numoutlets": 1,
 					"patching_rect": [
 						875.0,
-						735,
-						320,
-						20
+						707,
+						100,
+						22
 					],
 					"varname": "thegrid_3042",
-					"text": "perilla 2 → cruce de los videos nuevos; \"cruce auto\" (grid.lfo) lo mueve solo cada 16 compases"
+					"text": "r live.knob.2",
+					"outlettype": [
+						""
+					]
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3043",
 					"maxclass": "newobj",
-					"numinlets": 1,
+					"numinlets": 2,
 					"numoutlets": 1,
 					"patching_rect": [
-						875.0,
-						765,
-						100,
+						985.0,
+						707,
+						50,
 						22
 					],
 					"varname": "thegrid_3043",
-					"text": "r live.knob.3",
+					"text": "* 0.5",
 					"outlettype": [
-						""
+						"float"
 					]
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3044",
-					"maxclass": "flonum",
+					"maxclass": "comment",
 					"numinlets": 1,
-					"numoutlets": 2,
+					"numoutlets": 0,
 					"patching_rect": [
 						875.0,
-						793,
-						60,
-						22
+						733,
+						320,
+						20
 					],
 					"varname": "thegrid_3044",
-					"outlettype": [
-						"",
-						"bang"
-					],
-					"parameter_enable": 0
+					"text": "perilla 2 → profundidad del LFO (0..0.5) · inicial: 16 compases, 0.2"
 				}
 			},
 			{
@@ -1537,13 +1459,13 @@
 					"numinlets": 1,
 					"numoutlets": 1,
 					"patching_rect": [
-						995.0,
+						875.0,
 						765,
 						100,
 						22
 					],
 					"varname": "thegrid_3045",
-					"text": "r live.knob.4",
+					"text": "r live.knob.3",
 					"outlettype": [
 						""
 					]
@@ -1556,7 +1478,7 @@
 					"numinlets": 1,
 					"numoutlets": 2,
 					"patching_rect": [
-						995.0,
+						875.0,
 						793,
 						60,
 						22
@@ -1572,6 +1494,45 @@
 			{
 				"box": {
 					"id": "obj-3047",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 1,
+					"patching_rect": [
+						995.0,
+						765,
+						100,
+						22
+					],
+					"varname": "thegrid_3047",
+					"text": "r live.knob.4",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3048",
+					"maxclass": "flonum",
+					"numinlets": 1,
+					"numoutlets": 2,
+					"patching_rect": [
+						995.0,
+						793,
+						60,
+						22
+					],
+					"varname": "thegrid_3048",
+					"outlettype": [
+						"",
+						"bang"
+					],
+					"parameter_enable": 0
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3049",
 					"maxclass": "comment",
 					"numinlets": 1,
 					"numoutlets": 0,
@@ -1581,13 +1542,13 @@
 						640,
 						20
 					],
-					"varname": "thegrid_3047",
+					"varname": "thegrid_3049",
 					"text": "perillas 3-4 (0..1): conecta cada número al parámetro de Vizzie que quieras (pasa el mouse por la entrada para ver su nombre)"
 				}
 			},
 			{
 				"box": {
-					"id": "obj-3048",
+					"id": "obj-3050",
 					"maxclass": "newobj",
 					"numinlets": 1,
 					"numoutlets": 1,
@@ -1597,7 +1558,7 @@
 						90,
 						22
 					],
-					"varname": "thegrid_3048",
+					"varname": "thegrid_3050",
 					"text": "r live.scene",
 					"outlettype": [
 						""
@@ -1606,7 +1567,7 @@
 			},
 			{
 				"box": {
-					"id": "obj-3049",
+					"id": "obj-3051",
 					"maxclass": "newobj",
 					"numinlets": 5,
 					"numoutlets": 5,
@@ -1616,7 +1577,7 @@
 						90,
 						22
 					],
-					"varname": "thegrid_3049",
+					"varname": "thegrid_3051",
 					"text": "sel 1 2 3 4",
 					"outlettype": [
 						"bang",
@@ -1629,7 +1590,7 @@
 			},
 			{
 				"box": {
-					"id": "obj-3050",
+					"id": "obj-3052",
 					"maxclass": "newobj",
 					"numinlets": 1,
 					"numoutlets": 2,
@@ -1639,7 +1600,7 @@
 						110,
 						22
 					],
-					"varname": "thegrid_3050",
+					"varname": "thegrid_3052",
 					"text": "unpack 0 0.",
 					"outlettype": [
 						"int",
@@ -1649,7 +1610,7 @@
 			},
 			{
 				"box": {
-					"id": "obj-3051",
+					"id": "obj-3053",
 					"maxclass": "newobj",
 					"numinlets": 1,
 					"numoutlets": 1,
@@ -1659,46 +1620,11 @@
 						120,
 						22
 					],
-					"varname": "thegrid_3051",
+					"varname": "thegrid_3053",
 					"text": "prepend escena",
 					"outlettype": [
 						""
 					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3052",
-					"maxclass": "message",
-					"numinlets": 2,
-					"numoutlets": 1,
-					"patching_rect": [
-						875.0,
-						915,
-						60,
-						22
-					],
-					"varname": "thegrid_3052",
-					"text": "1 0.",
-					"outlettype": [
-						""
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3053",
-					"maxclass": "comment",
-					"numinlets": 1,
-					"numoutlets": 0,
-					"patching_rect": [
-						1175.0,
-						885,
-						340,
-						20
-					],
-					"varname": "thegrid_3053",
-					"text": "escena 1: original con fractal + niebla (A)"
 				}
 			},
 			{
@@ -1708,13 +1634,13 @@
 					"numinlets": 2,
 					"numoutlets": 1,
 					"patching_rect": [
-						945.0,
+						875.0,
 						915,
 						60,
 						22
 					],
 					"varname": "thegrid_3054",
-					"text": "1 1.",
+					"text": "1 0.",
 					"outlettype": [
 						""
 					]
@@ -1728,12 +1654,12 @@
 					"numoutlets": 0,
 					"patching_rect": [
 						1175.0,
-						903,
+						885,
 						340,
 						20
 					],
 					"varname": "thegrid_3055",
-					"text": "escena 2: videos nuevos (B)"
+					"text": "escena 1: original con fractal + niebla (A)"
 				}
 			},
 			{
@@ -1743,13 +1669,13 @@
 					"numinlets": 2,
 					"numoutlets": 1,
 					"patching_rect": [
-						1015.0,
+						945.0,
 						915,
 						60,
 						22
 					],
 					"varname": "thegrid_3056",
-					"text": "1 0.5",
+					"text": "1 1.",
 					"outlettype": [
 						""
 					]
@@ -1763,12 +1689,12 @@
 					"numoutlets": 0,
 					"patching_rect": [
 						1175.0,
-						921,
+						903,
 						340,
 						20
 					],
 					"varname": "thegrid_3057",
-					"text": "escena 3: mezcla A + B"
+					"text": "escena 2: videos nuevos (B)"
 				}
 			},
 			{
@@ -1778,13 +1704,13 @@
 					"numinlets": 2,
 					"numoutlets": 1,
 					"patching_rect": [
-						1085.0,
+						1015.0,
 						915,
 						60,
 						22
 					],
 					"varname": "thegrid_3058",
-					"text": "0 0.5",
+					"text": "1 0.5",
 					"outlettype": [
 						""
 					]
@@ -1798,27 +1724,62 @@
 					"numoutlets": 0,
 					"patching_rect": [
 						1175.0,
-						939,
+						921,
 						340,
 						20
 					],
 					"varname": "thegrid_3059",
-					"text": "escena 4: mezcla, fractal apagado"
+					"text": "escena 3: mezcla A + B"
 				}
 			},
 			{
 				"box": {
 					"id": "obj-3060",
+					"maxclass": "message",
+					"numinlets": 2,
+					"numoutlets": 1,
+					"patching_rect": [
+						1085.0,
+						915,
+						60,
+						22
+					],
+					"varname": "thegrid_3060",
+					"text": "0 0.5",
+					"outlettype": [
+						""
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3061",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						1175.0,
+						939,
+						340,
+						20
+					],
+					"varname": "thegrid_3061",
+					"text": "escena 4: mezcla, fractal apagado"
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3062",
 					"maxclass": "comment",
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
 						875.0,
-						1680,
+						1720,
 						500,
 						20
 					],
-					"varname": "thegrid_3060",
+					"varname": "thegrid_3062",
 					"text": "ROJO · bob rebel music — The Grid (vote)",
 					"presentation": 1,
 					"presentation_rect": [
@@ -1832,17 +1793,17 @@
 			},
 			{
 				"box": {
-					"id": "obj-3061",
+					"id": "obj-3063",
 					"maxclass": "comment",
 					"numinlets": 1,
 					"numoutlets": 0,
 					"patching_rect": [
 						875.0,
-						1700,
+						1740,
 						400,
 						20
 					],
-					"varname": "thegrid_3061",
+					"varname": "thegrid_3063",
 					"text": "VIDEOS (play)",
 					"presentation": 1,
 					"presentation_rect": [
@@ -1852,52 +1813,6 @@
 						20
 					],
 					"fontface": 1
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3062",
-					"maxclass": "comment",
-					"numinlets": 1,
-					"numoutlets": 0,
-					"patching_rect": [
-						875.0,
-						1720,
-						260,
-						20
-					],
-					"varname": "thegrid_3062",
-					"text": "video original",
-					"presentation": 1,
-					"presentation_rect": [
-						210.0,
-						64,
-						260,
-						20
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-3063",
-					"maxclass": "comment",
-					"numinlets": 1,
-					"numoutlets": 0,
-					"patching_rect": [
-						875.0,
-						1740,
-						260,
-						20
-					],
-					"varname": "thegrid_3063",
-					"text": "video nuevo (cruce)",
-					"presentation": 1,
-					"presentation_rect": [
-						210.0,
-						100.0,
-						260,
-						20
-					]
 				}
 			},
 			{
@@ -1913,11 +1828,11 @@
 						20
 					],
 					"varname": "thegrid_3064",
-					"text": "video nuevo (cruce)",
+					"text": "video original (A)",
 					"presentation": 1,
 					"presentation_rect": [
 						210.0,
-						136.0,
+						64,
 						260,
 						20
 					]
@@ -1932,19 +1847,18 @@
 					"patching_rect": [
 						875.0,
 						1780,
-						500,
+						260,
 						20
 					],
 					"varname": "thegrid_3065",
-					"text": "BASE — cadena A y cadena B (entran al MIXFADR principal)",
+					"text": "video nuevo (B)",
 					"presentation": 1,
 					"presentation_rect": [
-						10,
-						182.0,
-						500,
+						210.0,
+						100.0,
+						260,
 						20
-					],
-					"fontface": 1
+					]
 				}
 			},
 			{
@@ -1956,18 +1870,19 @@
 					"patching_rect": [
 						875.0,
 						1800,
-						168.0,
+						500,
 						20
 					],
 					"varname": "thegrid_3066",
-					"text": "cruce de videos nuevos",
+					"text": "BASE — cadena A y cadena B (entran al MIXFADR principal)",
 					"presentation": 1,
 					"presentation_rect": [
-						480.0,
-						204.0,
-						168.0,
+						10,
+						146.0,
+						500,
 						20
-					]
+					],
+					"fontface": 1
 				}
 			},
 			{
@@ -1986,8 +1901,8 @@
 					"text": "ganó 2 · Steppers",
 					"presentation": 1,
 					"presentation_rect": [
-						660.0,
-						204.0,
+						480.0,
+						168.0,
 						128.0,
 						20
 					]
@@ -2009,8 +1924,8 @@
 					"text": "ganó 3 · Cósmico",
 					"presentation": 1,
 					"presentation_rect": [
-						800.0,
-						204.0,
+						620.0,
+						168.0,
 						188.0,
 						20
 					]
@@ -2032,8 +1947,8 @@
 					"text": "fractal + niebla on/off",
 					"presentation": 1,
 					"presentation_rect": [
-						1030.0,
-						226.0,
+						850.0,
+						190.0,
 						170,
 						20
 					]
@@ -2055,8 +1970,8 @@
 					"text": "mezcla on/off",
 					"presentation": 1,
 					"presentation_rect": [
-						1030.0,
-						262.0,
+						850.0,
+						226.0,
 						170,
 						20
 					]
@@ -2079,7 +1994,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						10,
-						374.0,
+						338.0,
 						400,
 						20
 					],
@@ -2103,7 +2018,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						238.0,
-						414.0,
+						378.0,
 						140,
 						20
 					]
@@ -2122,11 +2037,11 @@
 						20
 					],
 					"varname": "thegrid_3073",
-					"text": "cruce auto de videos nuevos (16 compases)",
+					"text": "vaivén del crossfade (perilla 2 = prof.)",
 					"presentation": 1,
 					"presentation_rect": [
-						220.0,
-						468.0,
+						190.0,
+						426.0,
 						260,
 						20
 					]
@@ -2149,7 +2064,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						10,
-						546.0,
+						520.0,
 						400,
 						20
 					],
@@ -2166,18 +2081,6 @@
 					],
 					"source": [
 						"obj-1",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"destination": [
-						"obj-13",
-						1
-					],
-					"source": [
-						"obj-10",
 						0
 					]
 				}
@@ -2223,35 +2126,9 @@
 			{
 				"patchline": {
 					"destination": [
-						"obj-1",
-						0
-					],
-					"source": [
-						"obj-13",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"destination": [
-						"obj-10",
-						0
-					],
-					"order": 0,
-					"source": [
-						"obj-14",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"destination": [
 						"obj-6",
 						0
 					],
-					"order": 1,
 					"source": [
 						"obj-14",
 						0
@@ -2278,18 +2155,6 @@
 					],
 					"source": [
 						"obj-24",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"destination": [
-						"obj-11",
-						2
-					],
-					"source": [
-						"obj-27",
 						0
 					]
 				}
@@ -2333,7 +2198,7 @@
 			{
 				"patchline": {
 					"destination": [
-						"obj-13",
+						"obj-1",
 						0
 					],
 					"source": [
@@ -2741,12 +2606,36 @@
 			{
 				"patchline": {
 					"source": [
+						"obj-27",
+						0
+					],
+					"destination": [
+						"obj-3038",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3037",
+						0
+					],
+					"destination": [
+						"obj-3038",
+						1
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
 						"obj-3038",
 						0
 					],
 					"destination": [
-						"obj-13",
-						2
+						"obj-3039",
+						0
 					]
 				}
 			},
@@ -2769,31 +2658,19 @@
 						0
 					],
 					"destination": [
-						"obj-3041",
-						0
+						"obj-11",
+						2
 					]
 				}
 			},
 			{
 				"patchline": {
 					"source": [
-						"obj-3041",
+						"obj-3042",
 						0
 					],
 					"destination": [
-						"obj-3038",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3037",
-						0
-					],
-					"destination": [
-						"obj-3038",
+						"obj-3043",
 						0
 					]
 				}
@@ -2805,8 +2682,8 @@
 						0
 					],
 					"destination": [
-						"obj-3044",
-						0
+						"obj-3037",
+						2
 					]
 				}
 			},
@@ -2825,11 +2702,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3048",
+						"obj-3047",
 						0
 					],
 					"destination": [
-						"obj-3049",
+						"obj-3048",
 						0
 					]
 				}
@@ -2837,7 +2714,7 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3048",
+						"obj-3050",
 						0
 					],
 					"destination": [
@@ -2849,7 +2726,19 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3051",
+						"obj-3050",
+						0
+					],
+					"destination": [
+						"obj-3053",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3053",
 						0
 					],
 					"destination": [
@@ -2861,7 +2750,19 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3049",
+						"obj-3051",
+						0
+					],
+					"destination": [
+						"obj-3054",
+						0
+					]
+				}
+			},
+			{
+				"patchline": {
+					"source": [
+						"obj-3054",
 						0
 					],
 					"destination": [
@@ -2873,23 +2774,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3052",
-						0
-					],
-					"destination": [
-						"obj-3050",
-						0
-					]
-				}
-			},
-			{
-				"patchline": {
-					"source": [
-						"obj-3049",
+						"obj-3051",
 						1
 					],
 					"destination": [
-						"obj-3054",
+						"obj-3056",
 						0
 					]
 				}
@@ -2897,11 +2786,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3054",
+						"obj-3056",
 						0
 					],
 					"destination": [
-						"obj-3050",
+						"obj-3052",
 						0
 					]
 				}
@@ -2909,11 +2798,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3049",
+						"obj-3051",
 						2
 					],
 					"destination": [
-						"obj-3056",
+						"obj-3058",
 						0
 					]
 				}
@@ -2921,11 +2810,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3056",
+						"obj-3058",
 						0
 					],
 					"destination": [
-						"obj-3050",
+						"obj-3052",
 						0
 					]
 				}
@@ -2933,11 +2822,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3049",
+						"obj-3051",
 						3
 					],
 					"destination": [
-						"obj-3058",
+						"obj-3060",
 						0
 					]
 				}
@@ -2945,11 +2834,11 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3058",
+						"obj-3060",
 						0
 					],
 					"destination": [
-						"obj-3050",
+						"obj-3052",
 						0
 					]
 				}
@@ -2957,7 +2846,7 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3050",
+						"obj-3052",
 						0
 					],
 					"destination": [
@@ -2969,7 +2858,7 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-3050",
+						"obj-3052",
 						1
 					],
 					"destination": [
@@ -3018,41 +2907,6 @@
 			"obj-12": [
 				"toggle[7]",
 				"toggle[3]",
-				0
-			],
-			"obj-13::obj-17::obj-23": [
-				"gswitch2[4]",
-				"gswitch2",
-				0
-			],
-			"obj-13::obj-21": [
-				"range[2]",
-				"range",
-				0
-			],
-			"obj-13::obj-24": [
-				"pictctrl[31]",
-				"pictctrl[1]",
-				0
-			],
-			"obj-13::obj-26": [
-				"Crossfade[3]",
-				"Crossfade",
-				0
-			],
-			"obj-13::obj-39": [
-				"Operator mode[1]",
-				"Operator mode",
-				0
-			],
-			"obj-13::obj-51": [
-				"pictctrl[32]",
-				"pictctrl[1]",
-				0
-			],
-			"obj-13::obj-56::obj-23": [
-				"gswitch2[3]",
-				"gswitch2",
 				0
 			],
 			"obj-14": [
@@ -3287,18 +3141,6 @@
 			],
 			"parameterbanks": {},
 			"parameter_overrides": {
-				"obj-13::obj-24": {
-					"parameter_longname": "pictctrl[31]"
-				},
-				"obj-13::obj-26": {
-					"parameter_longname": "Crossfade[3]"
-				},
-				"obj-13::obj-39": {
-					"parameter_longname": "Operator mode[1]"
-				},
-				"obj-13::obj-51": {
-					"parameter_longname": "pictctrl[32]"
-				},
 				"obj-17::obj-47": {
 					"parameter_longname": "pictctrl[5]"
 				},
@@ -3553,21 +3395,28 @@
 			},
 			{
 				"name": "grid.env.maxpat",
-				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 3",
+				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 4",
 				"patcherrelativepath": ".",
 				"type": "JSON",
 				"implicit": 1
 			},
 			{
 				"name": "grid.hold.maxpat",
-				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 3",
+				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 4",
+				"patcherrelativepath": ".",
+				"type": "JSON",
+				"implicit": 1
+			},
+			{
+				"name": "grid.lfo.maxpat",
+				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 4",
 				"patcherrelativepath": ".",
 				"type": "JSON",
 				"implicit": 1
 			},
 			{
 				"name": "grid.strobe.maxpat",
-				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 3",
+				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 4",
 				"patcherrelativepath": ".",
 				"type": "JSON",
 				"implicit": 1

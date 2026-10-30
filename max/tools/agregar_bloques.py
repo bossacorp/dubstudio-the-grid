@@ -7,11 +7,15 @@ Uso:
 
 Qué hace (se puede volver a correr sobre una versión nueva del patch):
   1. Quita lo que ya no se usa: los módulos listados en `quitar` y los
-     controles (dial, número, toggle) que no llegan a ningún lado.
+     controles (dial, número, toggle) que no llegan a ningún lado, y los
+     módulos cuyo video ya no llega a la salida (ramas muertas).
   2. Arma la cadena de video: mixfadr → módulos de templates → projectr.
   3. Agrega a la derecha (vista de cables) los bloques THE GRID, ABLETON y
      TEMPLATES, con cada template conectado a su módulo.
-  4. Acomoda la vista de presentación: solo módulos y controles que se
+  4. Mete un LFO suave (bpatcher grid.lfo) que SUMA un vaivén al crossfade
+     principal: número del crossfade + LFO → (rebota en 1) → mixfadr entrada 3.
+     La perilla, los templates y las escenas siguen moviendo la base.
+  5. Acomoda la vista de presentación: solo módulos y controles que se
      manipulan, con etiquetas; el resto queda fuera.
 
 Templates:
@@ -22,7 +26,7 @@ Templates:
   - "golpe y regreso" ([grid.env ...]) → solo a entradas confirmadas: el
     crossfade del mixfadr (el número 0..1 que entra a su entrada 2) y el tono
     de HUSALIR (entrada 1).
-Las abstracciones grid.env / grid.hold / grid.strobe deben estar en la misma
+Las abstracciones grid.env / grid.hold / grid.strobe / grid.lfo deben estar en la misma
 carpeta que el patch (max/tools/generar_abstracciones.py).
 """
 import json
@@ -37,7 +41,7 @@ COLORS = {
         'quitar': ['vz.zoomr.maxpat', 'vz.randomizr.maxpat'],
         'post': ['vz.kaleidr.maxpat', 'vz.husalir.maxpat', 'vz.trans4mr.maxpat', 'vz.colorizr.maxpat'],
         'mix_b_desde_video': False,
-        'cruce_compases': 8,
+        'lfo': (8, 0.15),   # (compases por ciclo, profundidad)
         'templates': [
             ('grid.visual.1', 'grid.hold 1', ('mod', 'vz.kaleidr.maxpat', 'ultima'),
              'celda 1 · Caleidoscopio: KALEIDR entra 1 compás'),
@@ -49,12 +53,13 @@ COLORS = {
              'tarola · Flash: COLORIZR entra ¼ de compás'),
         ],
         'al_abrir': [],
-        'escenas': ([('var', 'toggle[4]'), ('var', 'toggle[5]'), ('xfade',)],
-                    [('1 0 0.', 'escena 1: solo A (fractal + niebla)'),
-                     ('0 1 1.', 'escena 2: solo B (interpol8r + delay)'),
-                     ('1 1 0.5', 'escena 3: A + B mezclados'),
-                     ('0 0 0.', 'escena 4: limpio')]),
-        'etiquetas': {'toggle[4]': 'efectos A on/off', 'toggle[5]': 'efectos B on/off',
+        # A = bob → FRACTALIZR → FOGGR · B = video con coristas, directo.
+        'escenas': ([('var', 'toggle[4]'), ('xfade',)],
+                    [('1 0.', 'escena 1: A (bob con fractal + niebla)'),
+                     ('0 1.', 'escena 2: B (coristas)'),
+                     ('1 0.5', 'escena 3: A + B mezclados'),
+                     ('0 0.', 'escena 4: bob limpio')]),
+        'etiquetas': {'toggle[4]': 'fractal + niebla on/off',
                       'toggle[3]': 'mezcla on/off', 'dial[1]': 'crossfade A↔B'},
     },
     'amarillo': {
@@ -62,7 +67,7 @@ COLORS = {
         'quitar': ['vz.randomizr.maxpat'],
         'post': [],
         'mix_b_desde_video': False,
-        'cruce_compases': 4,
+        'lfo': (4, 0.1),
         'templates': [
             ('grid.fx.1', 'grid.env 1. 0. 2', ('xfade',),
              'celda 1 · Eco dub: crossfade a B (pasa por DELAYR) y regresa en 2 compases'),
@@ -89,7 +94,7 @@ COLORS = {
         # El artista armó la cadena B: videos nuevos → PIXL8R → KALEIDR → mixfadr B.
         'post': [],
         'mix_b_desde_video': False,
-        'cruce_compases': 16,
+        'lfo': (16, 0.2),
         # Base: crossfade en 0.5 (se ven el video original y los nuevos).
         'templates': [
             ('grid.vote.1', 'grid.env 0. 0.5 16', ('xfade',),
@@ -144,7 +149,14 @@ def main():
         for k in [k for k in params if k.split('::')[0] in ids]:
             del params[k]
 
-    drop({x['box']['id'] for x in p['boxes'] if generated(x['box'])})
+    # El LFO se mete entre el número del crossfade y el mixfadr: antes de
+    # quitarlo, recuerda qué número era para devolverle su cable.
+    gen_ids = {x['box']['id'] for x in p['boxes'] if generated(x['box'])}
+    xfade_prev = [l['patchline']['source'][0] for l in p['lines']
+                  if l['patchline']['destination'][0] in gen_ids and l['patchline']['source'][0] not in gen_ids
+                  and any(x['box']['id'] == l['patchline']['destination'][0]
+                          and x['box'].get('varname') == TAG + 'xfade_in' for x in p['boxes'])]
+    drop(gen_ids)
 
     def boxes():
         return {x['box']['id']: x['box'] for x in p['boxes']}
@@ -188,17 +200,34 @@ def main():
 
     principal = [m for m in mixers if reaches_output(m['id'])]
     mix = principal[0] if principal else mixers[0]
-    inner = [m for m in mixers if m['id'] != mix['id']]   # mezcladores de videos nuevos
-    playlists = [b for b in boxes().values() if b['maxclass'] == 'jit.playlist']
-    feeds_inner = {l['source'][0] for m in inner for l in ins(m['id'])}
-    playlist = next((pl for pl in playlists if pl['id'] not in feeds_inner), playlists[0])
+
+    def mix_inlet(bid):
+        """Entrada del mixfadr principal a la que llega el video de este objeto (9 = ninguna)."""
+        cur, seen = bid, set()
+        while cur not in seen:
+            seen.add(cur)
+            nxt = [l['destination'] for l in outs(cur) if l['source'][1] == 0]
+            if any(d[0] == mix['id'] for d in nxt):
+                return min(d[1] for d in nxt if d[0] == mix['id'])
+            nxt = [d for d in nxt if boxes()[d[0]]['maxclass'] == 'bpatcher']
+            if not nxt:
+                return 9
+            cur = nxt[0][0]
+        return 9
+
+    playlists = sorted((b for b in boxes().values() if b['maxclass'] == 'jit.playlist'),
+                       key=lambda b: (mix_inlet(b['id']), b['patching_rect'][0]))
+    playlist = playlists[0]   # el video original (entra por A)
     plays = []
-    for pl in sorted(playlists, key=lambda b: (b['id'] in feeds_inner, b['patching_rect'][0])):
+    for pl in playlists:
         for l in ins(pl['id'], 0):
             if boxes()[l['source'][0]]['maxclass'] == 'toggle' and l['source'][0] not in plays:
                 plays.append(l['source'][0])
     xfade = next((l['source'][0] for l in ins(mix['id'], 2)
                   if boxes()[l['source'][0]]['maxclass'] == 'flonum'), None)
+    if not xfade and xfade_prev and xfade_prev[0] in boxes():
+        xfade = xfade_prev[0]
+        link(xfade, 0, mix['id'], 2)
     if not xfade or not plays:
         sys.exit('No encontré el número del crossfade o el toggle de play')
     play = plays[0]
@@ -238,7 +267,6 @@ def main():
         if not dead:
             break
         drop(dead)
-    quitados = sorted({n.replace('.maxpat', '') for n in sobrantes.values()})
 
     # ---------------- 2. cadena de video ----------------
     chain = [by_name(n) for n in cfg['post']]
@@ -258,6 +286,32 @@ def main():
     if cfg['mix_b_desde_video'] and not ins(mix['id'], 1):
         link(playlist['id'], 0, mix['id'], 1)
 
+    # Ramas muertas: módulos cuyo video ya no llega a la salida.
+    def feeds_output(bid):
+        stack, seen = [bid], set()
+        while stack:
+            cur = stack.pop()
+            if cur == proj['id']:
+                return True
+            if cur in seen:
+                continue
+            seen.add(cur)
+            stack += [l['destination'][0] for l in outs(cur) if l['source'][1] == 0
+                      and boxes()[l['destination'][0]]['maxclass'] == 'bpatcher']
+        return False
+
+    keep = {mix['id'], proj['id']} | {m['id'] for m in chain} | used
+    muertos = {b['id']: b['name'] for b in boxes().values()
+               if b['maxclass'] == 'bpatcher' and b['id'] not in keep and not feeds_output(b['id'])}
+    drop(set(muertos))
+    while True:
+        dead = {b['id'] for b in boxes().values()
+                if b['maxclass'] in ('dial', 'flonum', 'toggle') and b['id'] not in used and not outs(b['id'])}
+        if not dead:
+            break
+        drop(dead)
+    quitados = sorted({n.replace('.maxpat', '') for n in list(sobrantes.values()) + list(muertos.values())})
+
     # ---------------- 3. bloques (vista de cables) ----------------
     B = boxes()
     X = max(b['patching_rect'][0] + b['patching_rect'][2] for b in B.values()) + 80
@@ -267,7 +321,7 @@ def main():
         counter[0] += 1
         bid = f'obj-{counter[0]}'
         b = {'id': bid, 'maxclass': cls, 'numinlets': ni, 'numoutlets': no,
-             'patching_rect': [X + x, y, w, h], 'varname': f'{TAG}{counter[0]}'}
+             'patching_rect': [X + x, y, w, h], 'varname': f'{TAG}{kw.pop("tag", counter[0])}'}
         if text is not None:
             b['text'] = text
         if outlettype is not None:
@@ -348,27 +402,30 @@ def main():
     rk1 = recv(0, Y + 30, 'live.knob.1', 100)
     link(rk1, 0, xfade, 0)
     comment(110, Y + 30, 400, 'perilla 1 (0..1) → crossfade A↔B')
-    # Cruce de los videos nuevos: grid.lfo (auto) + perilla 2 → crossfade del mixfadr nuevo.
-    cruce_toggles = []
-    rk2 = recv(0, Y + 62, 'live.knob.2', 100) if inner else None
-    for j, m in enumerate(inner):
-        cx = 330 + j * 200
-        fx = next((l['source'][0] for l in ins(m['id'], 2)
-                   if boxes()[l['source'][0]]['maxclass'] == 'flonum'), None)
-        if not fx:
-            fx = new('flonum', cx, Y + 150, 60, ni=1, no=2, outlettype=['', 'bang'], parameter_enable=0)
-            link(fx, 0, m['id'], 2)
-        lm = new('newobj', cx, Y + 62, 70, 'loadmess 1', no=1, outlettype=[''])
-        tg = new('toggle', cx, Y + 90, 24, ni=1, no=1, outlettype=['int'], parameter_enable=0, h=24)
-        lfo = new('newobj', cx, Y + 120, 90, f'grid.lfo {cfg["cruce_compases"]}', ni=1, no=1, outlettype=[''])
-        link(lm, 0, tg, 0)
-        link(tg, 0, lfo, 0)
-        link(lfo, 0, fx, 0)
-        link(rk2, 0, fx, 0)
-        cruce_toggles.append(tg)
-    if inner:
-        comment(0, Y + 90, 320, f'perilla 2 → cruce de los videos nuevos; "cruce auto" '
-                                f'(grid.lfo) lo mueve solo cada {cfg["cruce_compases"]} compases')
+    # LFO: número del crossfade (base) + vaivén suave → mixfadr entrada 3.
+    # Si la suma pasa de 1 rebota hacia abajo, así nunca se queda pegado.
+    bars, depth = cfg['lfo']
+    p['lines'] = [l for l in p['lines']
+                  if not (l['patchline']['source'][0] == xfade and l['patchline']['destination'] == [mix['id'], 2])]
+    lfo = new('bpatcher', 330, Y + 30, 210, None, ni=3, no=1, outlettype=[''], h=54,
+              name='grid.lfo.maxpat', args=[bars, depth], embed=0, offset=[0.0, 0.0],
+              bgmode=0, border=0, clickthrough=0, enablehscroll=0, enablevscroll=0, lockeddragscroll=0,
+              lockedsize=0, viewvisibility=1)
+    pk = new('newobj', 330, Y + 100, 70, 'pak 0. 0.', ni=2, no=1, outlettype=[''], tag='xfade_in')
+    sm = new('newobj', 330, Y + 128, 200, 'expr 1. - abs(1. - ($f1 + $f2))', ni=2, no=1, outlettype=[''])
+    cl = new('newobj', 330, Y + 156, 70, 'clip 0. 1.', ni=3, no=1, outlettype=[''])
+    link(xfade, 0, pk, 0)
+    link(lfo, 0, pk, 1)
+    link(pk, 0, sm, 0)
+    link(sm, 0, cl, 0)
+    link(cl, 0, mix['id'], 2)
+    comment(410, Y + 100, 330, 'crossfade = base + LFO (rebota en 1) → mixfadr')
+    rk2 = recv(0, Y + 62, 'live.knob.2', 100)
+    k2 = new('newobj', 110, Y + 62, 50, '* 0.5', ni=2, no=1, outlettype=['float'])
+    link(rk2, 0, k2, 0)
+    link(k2, 0, lfo, 2)
+    comment(0, Y + 88, 320, f'perilla 2 → profundidad del LFO (0..0.5) · '
+                            f'inicial: {bars} compases, {depth}')
     for i, k in enumerate((3, 4)):
         rk = recv(i * 120, Y + 120, f'live.knob.{k}', 100)
         fk = new('flonum', i * 120, Y + 148, 60, ni=1, no=2, outlettype=['', 'bang'], parameter_enable=0)
@@ -400,7 +457,7 @@ def main():
         b.pop('presentation_rect', None)
     post_ids = [m['id'] for m in chain]
     base_mods = [b for b in B.values() if b['maxclass'] == 'bpatcher' and b['id'] not in post_ids
-                 and b['id'] not in (mix['id'], proj['id'])]
+                 and b['id'] not in (mix['id'], proj['id']) and not generated(b)]
     # orden de cadena: primero lo que llega a la entrada A del mixfadr, luego B;
     # dentro de cada cadena, en el orden en que pasa el video
     def chain_key(b):
@@ -418,6 +475,7 @@ def main():
         return (9, depth)
     base_mods.sort(key=chain_key)
     toggles = [B[by_var[v]] for v in ('toggle[4]', 'toggle[5]', 'toggle[3]') if v in by_var and by_var[v] in B]
+    toggles = [t for t in toggles if t['id'] not in plays]
     dial = B.get(by_var.get('dial[1]'))
     template_label = {}
     for rname, _, tg, label in cfg['templates']:
@@ -442,20 +500,18 @@ def main():
     y += 28
     label(10, y, 400, 'VIDEOS (play)', bold=True)
     y += 22
-    for pl in sorted(playlists, key=lambda b: (b['id'] in feeds_inner, b['patching_rect'][0])):
+    for pl in playlists:
         tg = next((l['source'][0] for l in ins(pl['id'], 0) if l['source'][0] in plays), None)
         if tg and not boxes()[tg].get('presentation'):
             show(tg, 10, y + 2)
         w, h = show(pl['id'], 50, y)
-        label(60 + w, y + 4, 260, 'video original' if pl['id'] == playlist['id'] else 'video nuevo (cruce)')
+        label(60 + w, y + 4, 260, 'video original (A)' if pl['id'] == playlist['id'] else 'video nuevo (B)')
         y += max(h, 28) + 6
     y += 14
 
     label(10, y, 500, 'BASE — cadena A y cadena B (entran al MIXFADR principal)', bold=True)
     y += 22
-    inner_ids = {m['id'] for m in inner}
-    tags = {b['id']: ('cruce de videos nuevos' if b['id'] in inner_ids else template_label.get(b.get('name'), ''))
-            for b in base_mods}
+    tags = {b['id']: template_label.get(b.get('name'), '') for b in base_mods}
     if any(tags.values()):
         y += 20   # fila de etiquetas arriba de los módulos
     x = 10
@@ -478,10 +534,9 @@ def main():
     if dial:
         show(dial['id'], 10 + w + 12, y + 10)
         label(10 + w + 60, y + 18, 140, cfg['etiquetas'].get('dial[1]', ''))
-    for j, tg in enumerate(cruce_toggles):
-        show(tg, 10 + w + 12, y + 70 + j * 30)
-        label(10 + w + 42, y + 72 + j * 30, 260, f'cruce auto de videos nuevos ({cfg["cruce_compases"]} compases)')
-    y += h + 20
+    label(10 + w + 12, y + 66, 260, 'vaivén del crossfade (perilla 2 = prof.)')
+    show(lfo, 10 + w + 12, y + 86)
+    y += max(h, 140) + 20
 
     if chain:
         label(10, y, 700, 'TEMPLATES (apagados en reposo; los prende The Grid o Ableton)', bold=True)

@@ -15,7 +15,8 @@ docker compose logs -f grid-server
 
 **Mac mini**
 - Carpeta con: los 3 patches de `max/bobGrid/`, **todos los videos en la
-  misma carpeta** (bob*.mov y Donitas*.mp4, sin subcarpeta), `grid.env`,
+  misma carpeta** (greenBobVideo/yellowBobVideo/redBobVideo.mov y
+  Donitas1/3/5.mp4, sin subcarpeta), `grid.env`,
   `grid.hold`, `grid.strobe`, `grid.lfo`, `grid-router.maxpat` y
   `ableton-bridge.maxpat`.
 - Abre `grid-router` (reloj **apagado**: el tempo lo manda Ableton),
@@ -53,16 +54,32 @@ entrada indicada y confirma su nombre:
   avísame cuál era para corregir la herramienta.
 
 **Estado al abrir** (sin tocar nada, 2 s después de abrir):
-- [ ] Los 9 videos se reproducen solos (3 por patch), sin sonido.
-- [ ] En cada patch el MIXFADR de videos nuevos va y viene solo ("cruce
-  auto" prendido): verde cada 8 compases, amarillo cada 4, rojo cada 16.
+- [ ] Los 6 videos se reproducen solos (2 por patch), sin sonido.
+- [ ] Verde ya no trae INTERPOL8R ni DELAYR: el video nuevo (Donitas1) entra
+  directo a la B del MIXFADR.
+- [ ] En cada patch el panel **LFO (suave)** está prendido y el crossfade se
+  mece despacio alrededor de su valor (no brinca): verde 8 compases / prof.
+  0.15, amarillo 4 / 0.1, rojo 16 / 0.2.
 - [ ] Verde: KALEIDR, TRANS4MR y COLORIZR apagados; el tono de HUSALIR en 0.
 - [ ] Amarillo: FOGGR apagado, DELAYR prendido, crossfade en A.
 - [ ] Rojo: FRACTALIZR + FOGGR prendidos, crossfade principal en 0.5 (se ven
-  el original y los nuevos), KALEIDR y PIXL8R apagados.
+  el original y el nuevo), KALEIDR y PIXL8R apagados.
 
 **Intensidad**: como los módulos de templates están apagados en reposo, sube
 sus parámetros al extremo en su panel (que se note mucho) y guarda el patch.
+
+**El LFO a mano** (en cualquier patch, con Ableton en play o sin él: sin
+`live.barms` toma 2 s por compás):
+
+| # | Acción | Esperado | ✔ |
+|---|---|---|---|
+| L1 | Apaga el toggle del panel LFO | El vaivén se desvanece en ½ s y el crossfade se queda en el valor del dial (sin salto) | ☐ |
+| L2 | Préndelo, pon prof. 0.4 y compases 2 | Vaivén más amplio y rápido; el cambio de compases entra al terminar la rampa en curso, sin brinco | ☐ |
+| L3 | Dial del crossfade en 1 (todo B) | El LFO sigue meciendo, ahora hacia A (rebota en 1, no se queda pegado) | ☐ |
+| L4 | Prof. en 0 | Crossfade quieto, igual que antes del LFO | ☐ |
+
+Anota la profundidad y los compases que te gusten por color: se dejan como
+valores iniciales en `agregar_bloques.py` (`'lfo': (compases, prof)`).
 
 **Prueba a mano sin red**: crea un mensaje `; grid.visual.1 1` en cualquier
 patch y dale clic. KALEIDR del verde debe entrar 1 compás y la consola debe
@@ -78,10 +95,10 @@ imprimir `GRID-VERDE celda1 1`. Igual con `grid.fx.1`, `grid.vote.1` y
 | V3 | Celular | Toca verde 1 varias veces seguidas | El caleidoscopio se mantiene mientras toquen (cada toque reinicia el compás) | ☐ |
 | V4 | Ableton | Toca la tarola | COLORIZR entra ¼ de compás (destello de color) | ☐ |
 | V5 | Ableton | Mueve la perilla 1 | Crossfade A↔B del verde | ☐ |
-| V5b | Ableton | Apaga "cruce auto" y mueve la perilla 2 | Cruce entre Donitas1 y Donitas2 (cadena B) | ☐ |
-| V6 | Ableton | Lanza escenas 1→4 | solo A · solo B · A+B · limpio | ☐ |
+| V5b | Ableton | Mueve la perilla 2 de 0 a 1 | La profundidad del LFO va de 0 a 0.5 (se ve en su panel): de quieto a vaivén amplio | ☐ |
+| V6 | Ableton | Lanza escenas 1→4 | A (bob con fractal + niebla) · B (coristas) · A+B · bob limpio | ☐ |
 | V7 | Ableton | Cambia el BPM a 90 y luego a 140; toca verde 1 | El caleidoscopio dura **un compás** a cada tempo | ☐ |
-| V8 | Operador | Bloquea la verde | Los 3 videos del verde en pausa, columna apagada en celulares y pantalla; los toques no hacen nada | ☐ |
+| V8 | Operador | Bloquea la verde | Los 2 videos del verde en pausa, columna apagada en celulares y pantalla; los toques no hacen nada | ☐ |
 | V9 | Operador | Desbloquea | El video sigue; los toques vuelven a funcionar | ☐ |
 
 ## 3. Amarillo (fx: cae en el compás, con enfriamiento)
@@ -94,27 +111,27 @@ imprimir `GRID-VERDE celda1 1`. Igual con `grid.fx.1`, `grid.vote.1` y
 | A4 | 2 celulares | Uno toca 2, el otro toca 3 dos veces en el mismo compás | Sale solo la 3 (la más tocada) | ☐ |
 | A5 | Ableton | Toca la tarola | Pulso del crossfade a B (eco) de ¼ de compás | ☐ |
 | A6 | Ableton | Perilla 1 y escenas 1→4 | crossfade · niebla · eco · niebla + eco · limpio | ☐ |
-| A6b | Ableton | Apaga "cruce auto" y mueve la perilla 2 | Cruce entre Donitas3 y Donitas4 (lo que pasa por el eco) | ☐ |
+| A6b | Ableton | Perilla 2 a la mitad y toca amarilla 3 (sirena) | La sirena se sigue viendo nítida: el LFO solo mece, no tapa los templates | ☐ |
 | A7 | Operador | Bloquea la amarilla con una celda pendiente | La pendiente se descarta; video amarillo en pausa | ☐ |
 
 ## 4. Rojo (voto: el ganador manda 16 compases)
 
 | # | Frente | Acción | Esperado | ✔ |
 |---|---|---|---|---|
-| R1 | Probador | `… ONLY=vote STEP_MS=35000 …` (a 120 BPM, 16 compases ≈ 32 s) | ganó 1 Raíces: salta a A (bob con fractal + niebla) y vuelve a la mezcla en 16 compases · ganó 2 Steppers: pixelado en los videos nuevos, prende/apaga cada compás · ganó 3 Cósmico: caleidoscopio en los videos nuevos, a pantalla completa, que regresa a la mezcla | ☐ |
+| R1 | Probador | `… ONLY=vote STEP_MS=35000 …` (a 120 BPM, 16 compases ≈ 32 s) | ganó 1 Raíces: salta a A (bob con fractal + niebla) y vuelve a la mezcla en 16 compases · ganó 2 Steppers: pixelado en el video nuevo, prende/apaga cada compás · ganó 3 Cósmico: caleidoscopio en el video nuevo, a pantalla completa, que regresa a la mezcla | ☐ |
 | R2 | Celulares | Voten (2 por la 3, 1 por la 1) y esperen el cierre (compás 17, 33…) | Sale **solo la 3**; `/pantalla` muestra "GANÓ 3" al mismo tiempo que el visual | ☐ |
 | R3 | Celulares | Empate 1 a 1 | Gana una de las dos al azar; se ve su template | ☐ |
 | R4 | Operador | Mira el conteo y luego **anula el voto** | Las barras quedan en 0; al cerrar la ventana no sale ganador | ☐ |
 | R5 | Ableton | Toca la tarola | Pulso del crossfade a A (fractal) de ¼ de compás | ☐ |
-| R6 | Ableton | Escenas 1→4 | original con fractal + niebla · videos nuevos · mezcla · mezcla sin fractal | ☐ |
-| R6b | Ableton | Apaga "cruce auto" y mueve la perilla 2 | Cruce entre Donitas5 y Donitas5a | ☐ |
+| R6 | Ableton | Escenas 1→4 | original con fractal + niebla · video nuevo · mezcla · mezcla sin fractal | ☐ |
+| R6b | Ableton | Perilla 2 en 0 y luego en 1 | Sin vaivén / vaivén amplio alrededor de la mezcla 0.5 | ☐ |
 | R7 | Operador | Cambia "compases que se muestra el ganador" a 4 | Cambia solo el letrero de `/pantalla`; el visual sigue durando 16 (se ajusta en el patch: `grid.env … 16`) | ☐ |
 
 ## 5. Todo junto (ensayo del 17 nov)
 
 | # | Acción | Esperado | ✔ |
 |---|---|---|---|
-| T1 | Una canción completa con Ableton en play, 3 celulares tocando todo y tarolas | Nada se traba; la consola no muestra `GRID-DESCONOCIDO` ni `LIVE-DESCONOCIDO` | ☐ |
+| T1 | Una canción completa con Ableton en play, 3 celulares tocando todo y tarolas, los 3 patches proyectando | Nada se traba ni se alenta (revisa el uso de CPU de Max en el Monitor de Actividad); la consola no muestra `GRID-DESCONOCIDO` ni `LIVE-DESCONOCIDO` | ☐ |
 | T2 | Detén Ableton y vuelve a darle play desde el inicio | El operador avisa "sin compás"; al volver se reinician ventanas y enfriamientos | ☐ |
 | T3 | Apaga y prende la Wi-Fi de un celular | Dice "reconectando…" y vuelve solo | ☐ |
 | T4 | Cambia el estilo de celdas desde el operador | Celulares y pantalla cambian en vivo | ☐ |
@@ -123,6 +140,7 @@ imprimir `GRID-VERDE celda1 1`. Igual con `grid.fx.1`, `grid.vote.1` y
 
 - Las filas que fallaron (por número: V3, A4…).
 - En la sección 1, qué decía cada entrada si no coincidía.
+- Valores del LFO que te gustaron por color (compases y profundidad).
 - Qué template se notó poco: se ajusta subiendo la intensidad en el panel del
   módulo o cambiando los compases en el objeto (`grid.hold 2`,
   `grid.env 1. 0. 4`…).

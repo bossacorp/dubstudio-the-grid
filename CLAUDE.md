@@ -77,23 +77,28 @@ max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
                  el compás (/show/bar). Los patches de color usan [r grid.…]
   bobGrid/       Patches de color (verde/amarillo/rojo, Vizzie) + TODOS sus videos
                  en la misma carpeta (bob*.mov y Donitas*.mp4; los clips guardan
-                 solo el nombre del archivo, volumen 0). Cada patch: video
-                 original + 2 videos nuevos cruzados en un mixfadr propio.
-                 Abren en presentación (solo módulos y controles). A la
-                 derecha, en la vista de cables: THE GRID (bloqueo → pausa
-                 todos los videos, play al abrir), TEMPLATES y ABLETON
-                 (perilla 1 → crossfade principal, perilla 2 → cruce de videos
-                 nuevos + "cruce auto" con grid.lfo, 3-4 libres, escenas 1-4)
+                 solo el nombre del archivo, volumen 0). Cada patch: 2 videos
+                 (original = A, uno nuevo con coristas = B) en un solo
+                 mixfadr (se quitaron los mixfadr de cruce: pesaban mucho al
+                 proyectar). Abren en presentación (solo módulos y
+                 controles). A la derecha, en la vista de cables: THE GRID
+                 (bloqueo → pausa los videos, play al abrir), TEMPLATES y
+                 ABLETON (perilla 1 → crossfade, perilla 2 → profundidad del
+                 LFO, 3-4 libres, escenas 1-4). El crossfade que llega al
+                 mixfadr = número base + LFO (rebota en 1, nunca brinca)
     grid.env.maxpat     [grid.env pico base compases]: golpe y regreso
     grid.hold.maxpat    [grid.hold compases]: 1 al disparar, 0 a los N compases
     grid.strobe.maxpat  [grid.strobe por-compás compases]: estrobo 1/0
-    grid.lfo.maxpat     [grid.lfo compases]: va y viene 0↔1 sin parar (1 = corre)
+    grid.lfo.maxpat     bpatcher con panel (on/off, compases, prof.), args
+                        `compases prof`: vaivén senoidal 0..prof para SUMAR a
+                        una base (no la reemplaza); al apagar se desvanece
   ableton-bridge.maxpat  Mac mini: udpreceive 9200 + MIDI directo → send live.*
   ableton/GridOSC.amxd   Dispositivo Max MIDI Effect para Live (IPs editables
                  en su cara); GridOSC.maxpat es su fuente
   tools/generar_gridosc.py  Genera GridOSC.maxpat y GridOSC.amxd
   tools/agregar_bloques.py  Integra una versión nueva de un patch de color:
-                 quita lo que no se usa, arma la cadena, cablea templates y
+                 quita lo que no se usa (también ramas cuyo video ya no llega
+                 a la salida), arma la cadena, mete el LFO, cablea templates y
                  acomoda la presentación (config por color dentro del script)
   tools/generar_abstracciones.py  Genera grid.env / grid.hold / grid.strobe / grid.lfo
 docs/plan-pruebas-colores.md  Plan de pruebas por color (celular, Ableton, operador)
@@ -150,19 +155,21 @@ Dos tipos, al tempo de Ableton (`live.barms`):
 - **Golpe y regreso** (`grid.env`) → solo entradas confirmadas: el número 0..1
   del crossfade (mixfadr entrada 3) y el tono de HUSALIR (entrada 2).
 Por color:
-- Verde: A = bob → fractalizr → foggr; B = cruce Donitas1/2 → interpol8r →
-  delayr; salida: mixfadr → kaleidr → husalir → trans4mr → colorizr →
-  projectr. Celda 1 KALEIDR 1 compás · 2 tono HUSALIR vuelta en 2 · 3
-  TRANS4MR 1 compás · tarola COLORIZR ¼. Cruce auto cada 8 compases.
-- Amarilla: A = bob → foggr; B = cruce Donitas3/4 → delayr. 1 eco (crossfade
-  a B, regresa en 2) · 2 FOGGR 2 compases · 3 sirena (crossfade A/B en
-  corcheas, 1 compás) · tarola pulso a B ¼. DELAYR prendido al abrir. Cruce
-  auto cada 4 compases.
+- Verde (simplificado): A = bob → fractalizr → foggr; B = Donitas1 directo;
+  salida: mixfadr → kaleidr → husalir → trans4mr → colorizr → projectr.
+  Celda 1 KALEIDR 1 compás · 2 tono HUSALIR vuelta en 2 · 3 TRANS4MR 1
+  compás · tarola COLORIZR ¼. LFO 8 compases, prof. 0.15.
+- Amarilla: A = bob → foggr; B = Donitas3 → delayr. 1 eco (crossfade a B,
+  regresa en 2) · 2 FOGGR 2 compases · 3 sirena (crossfade A/B en corcheas,
+  1 compás) · tarola pulso a B ¼. DELAYR prendido al abrir. LFO 4 compases,
+  prof. 0.1.
 - Roja (ganador, 16 compases; base crossfade 0.5 = se ven A y B): A = bob →
-  fractalizr → foggr; B = cruce Donitas5/5a → pixl8r → kaleidr (cadena del
-  artista). 1 Raíces (crossfade a A y vuelve a 0.5) · 2 Steppers (PIXL8R
-  cada compás) · 3 Cósmico (KALEIDR + crossfade a B) · tarola pulso a A ¼.
-  Cruce auto cada 16 compases.
+  fractalizr → foggr; B = Donitas5 → pixl8r → kaleidr (cadena del artista).
+  1 Raíces (crossfade a A y vuelve a 0.5) · 2 Steppers (PIXL8R cada compás) ·
+  3 Cósmico (KALEIDR + crossfade a B) · tarola pulso a A ¼. LFO 16 compases,
+  prof. 0.2.
+- Lección aprendida: un LFO que escribe directo el crossfade del mixfadr pelea
+  con perilla/templates y brinca. Por eso el LFO solo suma un vaivén suave.
 - Supuestos por confirmar en Max (pasar el mouse por la entrada): última
   entrada = on/off en KALEIDR, TRANS4MR, COLORIZR, PIXL8R; entrada 2 = tono en
   HUSALIR. Si alguno no coincide, se mueve ese cable o se ajusta la config de
