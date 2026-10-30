@@ -171,3 +171,12 @@ test('roja: tally cuenta el voto vigente de cada celular', () => {
   c.clear('vote');
   assert.deepEqual(c.tally(), { 1: 0, 2: 0, 3: 0 });
 });
+
+test('onBar indica la celda ganadora solo cuando cierra un voto con votos', () => {
+  const c = createColumns();
+  assert.equal(c.onBar(1).winner, null);
+  c.touch('vote', 2, 'a');
+  for (let n = 2; n <= 16; n++) assert.equal(c.onBar(n).winner, null);
+  assert.equal(c.onBar(17).winner, 2);
+  assert.equal(c.onBar(33).winner, null); // ventana sin votos
+});

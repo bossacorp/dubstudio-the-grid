@@ -60,3 +60,37 @@ test('listenOsc recibe /show/bar como lo manda Max', async () => {
   max.send('/show/bar', 17);
   assert.deepEqual(await received, ['/show/bar', [17]]);
 });
+
+test('probador de contrato: recorre las 9 celdas y los 3 bloqueos', async () => {
+  const { contractSequence } = await import('../src/contractTester.js');
+  const all = contractSequence().map(([address, arg]) => `${address} ${arg}`);
+  assert.deepEqual(all, [
+    '/grid/visual/1 1', '/grid/visual/2 1', '/grid/visual/3 1',
+    '/grid/fx/1 1', '/grid/fx/2 1', '/grid/fx/3 1',
+    '/grid/vote/1 1', '/grid/vote/2 1', '/grid/vote/3 1',
+    '/grid/lock/visual 1', '/grid/lock/visual 0',
+    '/grid/lock/fx 1', '/grid/lock/fx 0',
+    '/grid/lock/vote 1', '/grid/lock/vote 0',
+  ]);
+  assert.equal(contractSequence({ only: 'fx' }).length, 3);
+  assert.equal(contractSequence({ only: 'lock' }).length, 6);
+  assert.equal(contractSequence({ only: 'nope' }).length, 0);
+});
+
+test('probador en modo live: lo que manda Ableton (GridOSC)', async () => {
+  const { contractSequence } = await import('../src/contractTester.js');
+  const steps = contractSequence({ only: 'live' });
+  const addresses = new Set(steps.map(([address]) => address));
+  assert.deepEqual([...addresses].sort(), ['/live/barms', '/live/cc', '/live/hit', '/live/knob/1', '/live/scene']);
+  // no se mezcla con el contrato de The Grid
+  assert.equal(contractSequence().some(([address]) => address.startsWith('/live/')), false);
+});
+
+test('probador: un mensaje con varios argumentos llega completo por UDP', async () => {
+  const max = await fakeMax(19200);
+  const got = nextMessage(max);
+  const client = new Client('127.0.0.1', 19200);
+  closers.push(() => client.close());
+  client.send('/live/hit', ...[].concat([38, 110]));
+  assert.deepEqual(await got, ['/live/hit', 38, 110]);
+});

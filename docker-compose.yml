@@ -38,3 +38,17 @@ services:
       - grid-server
     profiles:
       - clock
+
+  # Probador de contrato: manda a Max cada mensaje del contrato, uno por uno.
+  #   CONTRACT_TARGET=<ip-mac-mini>:9000 docker compose run --build --rm contract-tester
+  contract-tester:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["node", "server/src/contractTester.js"]
+    environment:
+      - CONTRACT_TARGET
+      - ONLY
+      - STEP_MS
+    profiles:
+      - contract

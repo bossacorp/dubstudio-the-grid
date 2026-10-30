@@ -9,7 +9,8 @@
     "dev": "node --watch src/index.js",
     "monitor": "node src/oscMonitor.js",
     "test": "node --test test/*.test.js",
-    "clock": "node src/barClock.js"
+    "clock": "node src/barClock.js",
+    "contract": "node src/contractTester.js"
   },
   "dependencies": {
     "dotenv": "^16.4.5",

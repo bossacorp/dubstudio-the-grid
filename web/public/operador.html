@@ -86,6 +86,49 @@
   .card.locked button.lock { background: var(--vote); border-color: var(--vote); color: #fff; }
   button.secondary { background: transparent; color: var(--text); border-color: var(--line); font-weight: 500; }
   button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .inline { display: flex; gap: 8px; align-items: center; }
+  .inline input {
+    font: inherit;
+    width: 5em;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #0c0c0c;
+    color: var(--text);
+  }
+  .inline button { flex: 1; }
+  .card a { color: var(--text); font-size: 0.85rem; }
+  .card select {
+    font: inherit;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #0c0c0c;
+    color: var(--text);
+  }
+
+  /* Pantalla en vivo + QR */
+  .live {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .live > div {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .live .wide { grid-column: span 2; }
+  @media (max-width: 620px) { .live .wide { grid-column: auto; } }
+  #preview { width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: 8px; background: #000; }
+  #opQr { background: #fff; border-radius: 10px; padding: 12px; width: min(100%, 260px); align-self: center; }
+  #opQr svg { width: 100%; height: auto; display: block; }
+  #opQrUrl { text-align: center; font-size: 0.95rem; word-break: break-all; }
 
   .tally { display: flex; flex-direction: column; gap: 6px; }
   .bar { display: grid; grid-template-columns: 1.5em 1fr 2.5em; align-items: center; gap: 8px; font-size: 0.9rem; }
@@ -175,6 +218,33 @@
       <button class="secondary" id="cancelVote">Anular voto en curso</button>
       <button class="lock" data-column="vote">Bloquear</button>
     </article>
+
+    <article class="card" id="card-screen" style="--c: #eee">
+      <div class="label">Pantalla · OBS</div>
+      <div class="row"><span class="k">Pantallas conectadas</span><span id="screens">–</span></div>
+      <div class="row"><span class="k">Ganador en pantalla</span><span id="winner-now">–</span></div>
+      <div class="row"><span class="k">Estilo de las celdas</span></div>
+      <select id="theme"></select>
+      <button class="secondary" id="toggleQr">Ocultar QR</button>
+      <div class="row"><span class="k">Compases que se muestra el ganador</span></div>
+      <form class="inline" id="winnerForm">
+        <input id="winnerBars" type="number" min="1" max="64" step="1" required />
+        <button class="secondary" type="submit">Guardar</button>
+      </form>
+      <a href="/pantalla?preview" target="_blank" rel="noopener">Abrir la pantalla en otra pestaña</a>
+    </article>
+  </section>
+
+  <section class="live">
+    <div class="wide">
+      <div class="label">Pantalla en vivo (lo que ve OBS, con fondo)</div>
+      <iframe id="preview" title="Vista previa de la pantalla"></iframe>
+    </div>
+    <div>
+      <div class="label">QR para el público</div>
+      <div id="opQr"></div>
+      <div id="opQrUrl"></div>
+    </div>
   </section>
 
   <section class="log">
@@ -191,6 +261,8 @@
     </form>
   </div>
 
+<script src="vendor/qrcode.js"></script>
+<script src="art.js"></script>
 <script>
   const COLUMNS = ['visual', 'fx', 'vote'];
   const KEY_STORAGE = 'grid-operator-key';
@@ -272,7 +344,9 @@
     const el = $('conn');
     if (authed) { el.textContent = 'conectado'; el.className = 'pill ok'; }
     else { el.textContent = 'desconectado'; el.className = 'pill bad'; }
-    for (const btn of document.querySelectorAll('button.lock, #cancelVote')) btn.disabled = !authed;
+    for (const btn of document.querySelectorAll('button.lock, #cancelVote, #card-screen button, #theme')) btn.disabled = !authed;
+    // La vista previa se carga una vez que entraste como operador.
+    if (authed && !$('preview').src) $('preview').src = '/pantalla?preview&monitor';
   }
 
   function renderBar() {
@@ -291,6 +365,15 @@
     renderBar();
     $('phones').textContent = state.phones;
     $('operators').textContent = state.operators;
+
+    $('screens').textContent = state.screens;
+    const w = state.display.winner;
+    $('winner-now').textContent = w ? `${w.cell} (quedan ${w.barsLeft} comp.)` : '–';
+    $('toggleQr').textContent = state.display.qr ? 'Ocultar QR' : 'Mostrar QR';
+    if (document.activeElement !== $('theme')) $('theme').value = state.display.theme;
+    renderQr(state.display.publicUrl || location.origin);
+    // No pisa lo que el operador está escribiendo.
+    if (document.activeElement !== $('winnerBars')) $('winnerBars').value = state.display.winnerBars;
 
     for (const column of COLUMNS) {
       const locked = Boolean(state.locks[column]);
@@ -334,6 +417,39 @@
       ws.send(JSON.stringify({ type: 'lock', column, locked: !state.locks[column] }));
     });
   }
+
+  for (const theme of GridArt.THEMES) {
+    const option = document.createElement('option');
+    option.value = theme;
+    option.textContent = GridArt.LABELS[theme];
+    $('theme').appendChild(option);
+  }
+  $('theme').addEventListener('change', () => {
+    ws.send(JSON.stringify({ type: 'display', theme: $('theme').value }));
+    $('theme').blur();
+  });
+
+  let qrFor = null;
+  function renderQr(url) {
+    if (url === qrFor) return;
+    qrFor = url;
+    const qr = qrcode(0, 'M');
+    qr.addData(url);
+    qr.make();
+    $('opQr').innerHTML = qr.createSvgTag({ cellSize: 8, margin: 0, scalable: true });
+    $('opQrUrl').textContent = url.replace(/^https?:\/\//, '');
+  }
+
+  $('toggleQr').addEventListener('click', () => {
+    ws.send(JSON.stringify({ type: 'display', qr: !state.display.qr }));
+  });
+
+  $('winnerForm').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const winnerBars = Number($('winnerBars').value);
+    ws.send(JSON.stringify({ type: 'display', winnerBars }));
+    $('winnerBars').blur();
+  });
 
   $('cancelVote').addEventListener('click', () => {
     if (confirm('¿Anular el voto en curso? Se borran todos los votos de esta ventana.')) {

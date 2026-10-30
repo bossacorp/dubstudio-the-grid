@@ -50,10 +50,13 @@ export function createColumns({
     return { send: [], log: [], changed: false };
   }
 
+  // Devuelve { send, log, winner }: winner es la celda ganadora del voto si
+  // en este compás cerró la ventana con votos, o null.
   function onBar(n) {
     const send = [];
     const log = [];
-    if (!Number.isInteger(n) || n < 1 || n === bar) return { send, log };
+    let winnerCell = null;
+    if (!Number.isInteger(n) || n < 1 || n === bar) return { send, log, winner: null };
 
     if (n < bar) {
       // Max reinició el transport: empiezan de cero ventanas y enfriamientos.
@@ -63,6 +66,7 @@ export function createColumns({
     } else if (bar > 0 && windowOf(n) > windowOf(bar)) {
       const winner = closeVote();
       if (winner) {
+        winnerCell = winner.cell;
         send.push([OSC.vote(winner.cell), 1]);
         log.push(`compás ${n}: voto cerrado, ganó ${winner.cell} (${winner.count} de ${winner.total} votos)`);
       } else {
@@ -86,7 +90,7 @@ export function createColumns({
       log.push(`compás ${n}: fx ${cell} disparado (${count} toques)`);
     }
 
-    return { send, log };
+    return { send, log, winner: winnerCell };
   }
 
   function closeVote() {

@@ -3,7 +3,13 @@ import { OSC } from './oscContract.js';
 import { sendOsc, listenOsc } from './osc.js';
 import { createGridServer } from './app.js';
 
-const grid = createGridServer({ operatorKey: config.operatorKey, send: sendOsc });
+const grid = createGridServer({
+  operatorKey: config.operatorKey,
+  send: sendOsc,
+  publicUrl: config.publicUrl,
+  winnerBars: config.winnerBars,
+  theme: config.theme,
+});
 
 listenOsc(config.oscInPort, (address, args) => {
   if (address === OSC.bar) grid.onBar(Number(args[0]));
@@ -14,5 +20,5 @@ if (config.operatorKey === 'changeme') {
 }
 
 grid.server.listen(config.port, () => {
-  console.log(`Grid Server escuchando en :${config.port} (operador en /operador)`);
+  console.log(`Grid Server escuchando en :${config.port} (operador en /operador, OBS en /pantalla)`);
 });

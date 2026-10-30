@@ -27,17 +27,39 @@
     aspect-ratio: 1;
   }
   button.cell {
+    --c: #888;
+    position: relative;
+    overflow: hidden;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
+    padding: 0;
     font-size: 1.5rem;
     font-weight: bold;
     color: #111;
+    background: var(--c);
     cursor: pointer;
     touch-action: manipulation;
+    transition: transform 0.12s, filter 0.12s;
   }
-  .col-visual { background: #1db954; }
-  .col-fx { background: #ffd200; }
-  .col-vote { background: #e11d1d; }
+  button.cell.col-visual { --c: #1db954; }
+  button.cell.col-fx { --c: #ffd200; }
+  button.cell.col-vote { --c: #e11d1d; }
+  button.cell .num { position: relative; z-index: 1; }
+
+  /* Con arte: fondo oscuro, borde del color y el número en una esquina. */
+  body.art button.cell { background: #000; box-shadow: inset 0 0 0 3px var(--c); }
+  body.art button.cell .ga { inset: 3px; border-radius: 7px; }
+  body.art button.cell .num {
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    font-size: 0.85rem;
+    color: #fff;
+    text-shadow: 0 1px 4px #000;
+  }
+
+  /* Al tocar: pequeño rebote para que se sienta la respuesta. */
+  button.cell.tap { transform: scale(0.9); filter: brightness(1.5); }
   button.cell:disabled { opacity: 0.35; cursor: not-allowed; }
   /* Amarilla pendiente: espera al siguiente compás */
   button.cell.pending { animation: pulse 0.5s ease-in-out infinite alternate; }
@@ -53,21 +75,37 @@
   <p id="vote"></p>
   <div id="status">conectando…</div>
 
+<script src="art.js"></script>
 <script>
   const COLUMNS = ['visual', 'fx', 'vote'];
+  // ?tema=psicodelico fuerza un estilo en este celular (para probar estilos).
+  const forcedTheme = new URLSearchParams(location.search).get('tema');
   let state = {
     locks: { visual: false, fx: false, vote: false },
     bar: 0,
     fx: { pending: [], cooling: {} },
     vote: { round: null, barsLeft: null },
+    display: { theme: 'clasico' },
   };
   let connected = false;
+  let ws = null;
+  let shownTheme = null;
   // Tu voto en la ronda actual: { round, cell }.
   let myVote = null;
 
-  const deviceId = localStorage.getItem('grid-device-id')
-    || (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()));
-  localStorage.setItem('grid-device-id', deviceId);
+  function storedDeviceId() {
+    try {
+      let id = localStorage.getItem('grid-device-id');
+      if (!id) {
+        id = crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2);
+        localStorage.setItem('grid-device-id', id);
+      }
+      return id;
+    } catch {
+      return String(Math.random()).slice(2);
+    }
+  }
+  const deviceId = storedDeviceId();
 
   const gridEl = document.getElementById('grid');
   const statusEl = document.getElementById('status');
@@ -78,28 +116,53 @@
     for (const column of COLUMNS) {
       const btn = document.createElement('button');
       btn.className = `cell col-${column}`;
-      btn.textContent = row;
-      btn.addEventListener('click', () => sendTouch(column, row));
+      btn.setAttribute('aria-label', `${column} ${row}`);
+      const art = document.createElement('span');
+      art.className = 'ga';
+      const num = document.createElement('span');
+      num.className = 'num';
+      num.textContent = row;
+      btn.append(art, num);
+      btn.addEventListener('click', () => sendTouch(column, row, btn));
       gridEl.appendChild(btn);
-      buttons.push({ el: btn, column, cell: row });
+      buttons.push({ el: btn, art, column, cell: row });
     }
   }
 
-  const proto = location.protocol === 'https:' ? 'wss' : 'ws';
-  const ws = new WebSocket(`${proto}://${location.host}/ws`);
-
-  ws.addEventListener('open', () => { connected = true; render(); });
-  ws.addEventListener('close', () => { connected = false; render(); });
-  ws.addEventListener('message', (event) => {
-    const msg = JSON.parse(event.data);
-    if (msg.type === 'state') {
-      state = msg.state;
-      if (myVote && myVote.round !== state.vote.round) myVote = null;
-      render();
+  function renderTheme() {
+    const theme = forcedTheme || state.display?.theme || 'clasico';
+    if (theme === shownTheme) return;
+    shownTheme = theme;
+    const hasArt = theme !== 'clasico' && window.GridArt?.THEMES.includes(theme);
+    document.body.classList.toggle('art', Boolean(hasArt));
+    for (const { art, column, cell } of buttons) {
+      art.innerHTML = hasArt ? GridArt.svg(theme, column, cell) : '';
     }
-  });
+  }
+
+  // Reconecta solo si se cae la Wi-Fi o se reinicia el servidor.
+  function connect() {
+    const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+    const socket = new WebSocket(`${proto}://${location.host}/ws`);
+    ws = socket;
+    socket.addEventListener('open', () => { connected = true; render(); });
+    socket.addEventListener('close', () => {
+      connected = false;
+      render();
+      setTimeout(connect, 2000);
+    });
+    socket.addEventListener('message', (event) => {
+      const msg = JSON.parse(event.data);
+      if (msg.type === 'state') {
+        state = msg.state;
+        if (myVote && myVote.round !== state.vote.round) myVote = null;
+        render();
+      }
+    });
+  }
 
   function render() {
+    renderTheme();
     for (const { el, column, cell } of buttons) {
       const cooling = column === 'fx' && state.fx.cooling[cell];
       el.disabled = Boolean(state.locks[column] || cooling);
@@ -107,7 +170,7 @@
       el.classList.toggle('voted', column === 'vote' && myVote?.cell === cell);
     }
 
-    if (!connected) statusEl.textContent = 'desconectado';
+    if (!connected) statusEl.textContent = 'reconectando…';
     else if (!state.bar) statusEl.textContent = 'conectado · esperando compás';
     else statusEl.textContent = `conectado · compás ${state.bar}`;
 
@@ -119,10 +182,12 @@
     }
   }
 
-  function sendTouch(column, cell) {
-    if (ws.readyState !== WebSocket.OPEN || state.locks[column]) return;
+  function sendTouch(column, cell, el) {
+    if (!ws || ws.readyState !== WebSocket.OPEN || state.locks[column]) return;
     if (column === 'fx' && state.fx.cooling[cell]) return;
     ws.send(JSON.stringify({ type: 'touch', column, cell, deviceId }));
+    el.classList.add('tap');
+    setTimeout(() => el.classList.remove('tap'), 140);
     if (column === 'vote') {
       myVote = { round: state.vote.round, cell };
       render();
@@ -130,6 +195,7 @@
   }
 
   render();
+  connect();
 </script>
 </body>
 </html>
