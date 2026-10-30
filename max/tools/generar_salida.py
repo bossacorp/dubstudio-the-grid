@@ -13,8 +13,12 @@ Ahora cada patch manda su imagen con [s thegrid.salida.<color>] y aquí:
 Si el paquete Syphon no está instalado, su caja sale punteada y todo lo demás
 funciona igual (OBS captura la ventana).
 
-Los módulos de Vizzie y los jit.playlist de los 3 patches se dibujan en el
-único contexto que existe (jit.world thegrid): abre salida.maxpat PRIMERO.
+Los 3 patches de color se cargan AQUÍ ADENTRO como abstracciones
+([green-bob-rebel-music] …): Max solo conecta los módulos de Vizzie y los
+jit.playlist con una ventana de su mismo patch (o de uno que los contenga).
+Abiertos como archivos aparte no encontraban esta ventana y daban 0 fps.
+Se abre SOLO salida.maxpat (más grid-router y ableton-bridge); doble clic en
+la caja de un color abre su ventana de controles.
 
 Uso: python3 max/tools/generar_salida.py
 """
@@ -23,6 +27,7 @@ import math
 from generar_abstracciones import Patch
 
 COLORES = ('verde', 'amarillo', 'rojo')
+PATCHES = ('green-bob-rebel-music', 'yellow-bob-rebel-music', 'red-bob-rebel-music')
 W, H = 1920, 1080
 # Cámara por omisión de Jitter: en z=2, lente de 45°. A z=0 se ve de
 # -alto..alto en y, y de -ancho..ancho en x (proporción 16:9).
@@ -32,13 +37,18 @@ ANCHO = ALTO * W / H
 
 def main():
     p = Patch()
-    p.com(20, 15, 640, 'THE GRID · SALIDA — una sola ventana para los 3 colores (ábrela ANTES que los patches de color)')
-    p.com(20, 35, 640, 'Cada patch de color manda su imagen con [s thegrid.salida.<color>]. Ventana: Esc / doble clic = pantalla completa.')
-
+    # El jit.world va primero: es la ventana en la que se dibujan los colores.
     p.obj(20, 420, 560, f'jit.world thegrid @size {W} {H} @fps 30 @sync 0 @enable 1 '
                         '@erase_color 0 0 0 1 @fsmenubar 0', ni=1, no=3)
     node = p.obj(20, 260, 560, f'jit.gl.node thegrid @name escena @capture 1 @adapt 0 @dim {W} {H} '
                                '@erase_color 0 0 0 1', ni=1, no=2)
+    p.com(20, 15, 640, 'THE GRID · SALIDA — una sola ventana para los 3 colores. Abre SOLO este patch '
+                       '(más grid-router y ableton-bridge), NO los de color por separado.')
+    p.com(20, 35, 640, 'Cada patch de color manda su imagen con [s thegrid.salida.<color>]. Ventana: Esc / doble clic = pantalla completa.')
+    p.com(720, 100, 300, 'Los 3 colores (doble clic = abrir sus controles):')
+    for i, nombre in enumerate(PATCHES):
+        p.obj(720, 125 + i * 30, 200, nombre, ni=0, no=0, ot=[])
+        p.box('comment', [930, 125 + i * 30, 80, 20], COLORES[i], 1, 0)
     p.com(20, 70, 640, 'Lado a lado: verde | amarillo | rojo. Para mover una franja edita @position / @scale de su videoplane.')
     franja = ANCHO * 2 / 3
     for i, color in enumerate(COLORES):

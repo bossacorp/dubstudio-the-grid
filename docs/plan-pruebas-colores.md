@@ -22,10 +22,13 @@ docker compose logs -f grid-server
   `ableton-bridge.maxpat`.
 - Una sola vez: paquete **Syphon** instalado en Max (Package Manager) y App
   Nap apagado para Max (ver "Salida única" en la sección 1).
-- Abre **primero `salida.maxpat`** (la única ventana de video: los 3 colores
-  lado a lado, 30 fps). Después `grid-router` (reloj **apagado**: el tempo lo
-  manda Ableton), `ableton-bridge` y los 3 patches de color. Abren en vista
-  de presentación; Cmd+Opción+E muestra los cables.
+- Abre **solo `salida.maxpat`** (la única ventana de video: los 3 colores
+  lado a lado, 30 fps): ya carga adentro los 3 patches de color. **No abras
+  los patches de color por separado** (se duplicarían y, abiertos aparte, no
+  encuentran la ventana: 0 fps). Doble clic en la caja de un color abre sus
+  controles (vista de presentación; Cmd+Opción+E muestra los cables).
+  Abre también `grid-router` (reloj **apagado**: el tempo lo manda Ableton) y
+  `ableton-bridge`.
 - Max Console abierta (Cmd+M).
 - OBS: fuente **Syphon Client** → servidor "The Grid" (la salida de Max) y,
   encima, Browser Source `http://<ip-linux-mint>:8080/pantalla` (1920×1080).
@@ -104,14 +107,18 @@ Preparación (una sola vez, en la Mac mini):
 
 | # | Prueba | Esperado | ✔ |
 |---|---|---|---|
-| S1 | Abre `salida.maxpat` y luego los 3 colores | Una ventana 1920×1080 con verde \| amarillo \| rojo; la caja `jit.gl.syphonserver` NO sale punteada | ☐ |
+| S1 | Abre solo `salida.maxpat` | Una ventana 1920×1080 con verde \| amarillo \| rojo; los fps de cada color (doble clic en su caja) y de la salida marcan > 0; la caja `jit.gl.syphonserver` NO sale punteada | ☐ |
 | S2 | En OBS: + → Syphon Client → servidor "The Grid" (Max) | Se ve la salida en OBS; quita las 3 capturas de ventana viejas | ☐ |
 | S3 | Tapa la ventana de salida con OBS | Los fps de la salida no bajan (OBS la toma por Syphon) | ☐ |
 
-Si un color sale negro en la salida: cierra todo y abre `salida.maxpat`
-**antes** que los patches de color (los módulos de Vizzie se dibujan en la
-única ventana que exista). Si aun así sale negro, en el inspector de sus
-`jit.playlist` pon **Output Texture** en off y avísame cuál fue.
+Primer intento (abriendo los colores como archivos aparte): la salida a 30
+fps pero vacía y los 3 colores en 0 fps. Max solo conecta los módulos de
+Vizzie con una ventana de su mismo patch (o de uno que los contenga); por eso
+ahora la salida carga los colores adentro.
+
+Si un color sigue en 0 fps o negro: revisa que no esté abierto también por
+separado; si aun así, en el inspector de sus `jit.playlist` pon **Output
+Texture** en off y avísame cuál fue y qué dice la Max Console.
 
 Mide con todo abierto (salida, 3 colores, OBS), **sin tocar Max con el mouse**
 y con las ventanas de los patches minimizadas:

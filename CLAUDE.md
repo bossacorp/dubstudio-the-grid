@@ -99,7 +99,11 @@ max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
     grid.lfo.maxpat     bpatcher con panel (on/off, compases, prof.), args
                         `compases prof`: vaivén senoidal 0..prof para SUMAR a
                         una base (no la reemplaza); al apagar se desvanece
-    salida.maxpat       ÚNICA ventana de video (se abre primero): jit.world
+    salida.maxpat       ÚNICA ventana de video y lo ÚNICO que se abre (más
+                        router y puente): carga adentro los 3 patches de color
+                        como abstracciones (Max solo conecta Vizzie con una
+                        ventana de su mismo patch o de uno que lo contenga;
+                        abiertos aparte daban 0 fps). jit.world
                         thegrid a 30 fps (@sync 0), los 3 colores lado a lado
                         en un jit.gl.node 1920×1080 → ventana + Syphon "The
                         Grid" para OBS. Tres PROJECTR se frenaban entre sí
