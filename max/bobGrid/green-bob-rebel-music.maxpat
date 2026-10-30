@@ -637,41 +637,24 @@
 			},
 			{
 				"box": {
-					"annotation": "## VIZZIE video projector interface ##",
-					"bgmode": 1,
-					"border": 0,
-					"clickthrough": 0,
-					"enablehscroll": 0,
-					"enablevscroll": 0,
 					"id": "obj-19",
-					"lockeddragscroll": 0,
-					"lockedsize": 0,
-					"maxclass": "bpatcher",
-					"name": "vz.projectr.maxpat",
-					"numinlets": 4,
-					"numoutlets": 1,
-					"offset": [
-						0.0,
-						0.0
-					],
-					"outlettype": [
-						""
-					],
 					"patching_rect": [
 						122.00000363588333,
 						852.6666920781136,
-						168.0,
-						108.0
+						170,
+						22
 					],
-					"prototypename": "pixl",
-					"varname": "greenProjectr",
-					"viewvisibility": 1,
+					"maxclass": "newobj",
+					"text": "s thegrid.salida.verde",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"varname": "salida",
 					"presentation": 1,
 					"presentation_rect": [
 						10,
 						714.0,
-						168.0,
-						108.0
+						170,
+						22
 					]
 				}
 			},
@@ -1217,7 +1200,7 @@
 					"mode": 0,
 					"presentation": 1,
 					"presentation_rect": [
-						190.0,
+						192,
 						714.0,
 						80,
 						36
@@ -1237,7 +1220,7 @@
 						20
 					],
 					"varname": "thegrid_3031",
-					"text": "fps que llegan al PROJECTR (meta: 30 o más)"
+					"text": "fps que llegan a la salida (meta: 30)"
 				}
 			},
 			{
@@ -2136,14 +2119,37 @@
 					"patching_rect": [
 						951.0,
 						1980,
-						120,
+						420,
 						20
 					],
 					"varname": "thegrid_3075",
+					"text": "la imagen va a salida.maxpat (una sola ventana para los 3 colores)",
+					"presentation": 1,
+					"presentation_rect": [
+						10,
+						782.0,
+						420,
+						20
+					]
+				}
+			},
+			{
+				"box": {
+					"id": "obj-3076",
+					"maxclass": "comment",
+					"numinlets": 1,
+					"numoutlets": 0,
+					"patching_rect": [
+						951.0,
+						2000,
+						120,
+						20
+					],
+					"varname": "thegrid_3076",
 					"text": "fps",
 					"presentation": 1,
 					"presentation_rect": [
-						190.0,
+						192,
 						754.0,
 						120,
 						20
@@ -3660,12 +3666,6 @@
 			},
 			{
 				"name": "vz.kaleidr.maxpat",
-				"bootpath": "C74:/packages/Vizzie/patchers",
-				"type": "JSON",
-				"implicit": 1
-			},
-			{
-				"name": "vz.projectr.maxpat",
 				"bootpath": "C74:/packages/Vizzie/patchers",
 				"type": "JSON",
 				"implicit": 1

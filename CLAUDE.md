@@ -21,7 +21,8 @@ MacBook: Ableton 12 Suite + dispositivo M4L GridOSC ─────────�
 Roles de las máquinas:
 - **Linux Mint** — corre el Grid Server en Docker. Es la única con Docker.
 - **Mac mini** — OBS (broadcasting) + Max 8.6.5 (visuales con Vizzie,
-  controladores MIDI). No se le instala nada más (ni Docker ni OSCulator).
+  controladores MIDI). No se le instala nada más (ni Docker ni OSCulator);
+  única excepción acordada: el paquete Syphon de Max (salida → OBS).
   Recibe los toques (grid-router) y lo de Ableton (ableton-bridge).
 - **MacBook** — Ableton 12.4.7 Suite (Max for Live 9). **Ableton manda el
   tempo**: el dispositivo GridOSC manda `/show/bar` al servidor; el reloj del
@@ -81,8 +82,9 @@ max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
                  la tarjeta de video; los bob son una sola foto → 2 s a 5 fps)
                  con output_texture 1 en los jit.playlist; los originales
                  (*BobVideo.mov, Donitas*.mp4) se quedan para regresar. Los
-                 clips guardan solo el nombre del archivo, volumen 0. Junto al
-                 PROJECTR, un jit.fpsgui mide los fps que le llegan. Cada patch: 2 videos
+                 clips guardan solo el nombre del archivo, volumen 0. Sin
+                 PROJECTR: cada patch manda su imagen con
+                 [s thegrid.salida.<color>] (un jit.fpsgui mide sus fps). Cada patch: 2 videos
                  (original = A, uno nuevo con coristas = B) en un solo
                  xfadr (se quitaron todos los mixfadr: cambiar de modo
                  constantemente alentaba la proyección con 6 videos). Abren en presentación (solo módulos y
@@ -97,6 +99,11 @@ max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
     grid.lfo.maxpat     bpatcher con panel (on/off, compases, prof.), args
                         `compases prof`: vaivén senoidal 0..prof para SUMAR a
                         una base (no la reemplaza); al apagar se desvanece
+    salida.maxpat       ÚNICA ventana de video (se abre primero): jit.world
+                        thegrid a 30 fps (@sync 0), los 3 colores lado a lado
+                        en un jit.gl.node 1920×1080 → ventana + Syphon "The
+                        Grid" para OBS. Tres PROJECTR se frenaban entre sí
+                        (3 = 12 fps, 1 = 30-35, 1 sin OBS = 60)
   ableton-bridge.maxpat  Mac mini: udpreceive 9200 + MIDI directo → send live.*
   ableton/GridOSC.amxd   Dispositivo Max MIDI Effect para Live (IPs editables
                  en su cara); GridOSC.maxpat es su fuente
@@ -106,6 +113,7 @@ max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
                  a la salida), arma la cadena, mete el LFO, cablea templates y
                  acomoda la presentación (config por color dentro del script)
   tools/generar_abstracciones.py  Genera grid.env / grid.hold / grid.strobe / grid.lfo
+  tools/generar_salida.py  Genera salida.maxpat
   tools/convertir_videos.sh  Convierte los videos de bobGrid a HAP (ffmpeg; se
                  corre fuera de la Mac mini y los .mov se suben al repo)
 docs/plan-pruebas-colores.md  Plan de pruebas por color (celular, Ableton, operador)
@@ -163,7 +171,7 @@ Dos tipos, al tempo de Ableton (`live.barms`):
   del crossfade (xfadr entrada 3) y el tono de HUSALIR (entrada 2).
 Por color:
 - Verde (simplificado): A = bob → fractalizr → foggr; B = Donitas1 directo;
-  salida: xfadr → kaleidr → husalir → trans4mr → colorizr → projectr.
+  salida: xfadr → kaleidr → husalir → trans4mr → colorizr → salida.
   Celda 1 KALEIDR 1 compás · 2 tono HUSALIR vuelta en 2 · 3 TRANS4MR 1
   compás · tarola COLORIZR ¼. LFO 8 compases, prof. 0.15.
 - Amarilla: A = bob → foggr; B = Donitas3 → delayr. 1 eco (crossfade a B,

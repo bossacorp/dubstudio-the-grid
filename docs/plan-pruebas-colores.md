@@ -17,15 +17,19 @@ docker compose logs -f grid-server
 - Carpeta con: los 3 patches de `max/bobGrid/`, **todos los videos en la
   misma carpeta, sin subcarpeta**: los HAP que usan los patches
   (greenBob/yellowBob/redBob-hap.mov y Donitas1/3/5-hap.mov) y, para
-  regresar si hace falta, los originales (…BobVideo.mov, Donitas*.mp4); `grid.env`,
-  `grid.hold`, `grid.strobe`, `grid.lfo`, `grid-router.maxpat` y
+  regresar si hace falta, los originales (…BobVideo.mov, Donitas*.mp4); `salida.maxpat`,
+  `grid.env`, `grid.hold`, `grid.strobe`, `grid.lfo`, `grid-router.maxpat` y
   `ableton-bridge.maxpat`.
-- Abre `grid-router` (reloj **apagado**: el tempo lo manda Ableton),
-  `ableton-bridge` y los 3 patches de color. Abren en vista de presentación;
-  Cmd+Opción+E muestra los cables.
+- Una sola vez: paquete **Syphon** instalado en Max (Package Manager) y App
+  Nap apagado para Max (ver "Salida única" en la sección 1).
+- Abre **primero `salida.maxpat`** (la única ventana de video: los 3 colores
+  lado a lado, 30 fps). Después `grid-router` (reloj **apagado**: el tempo lo
+  manda Ableton), `ableton-bridge` y los 3 patches de color. Abren en vista
+  de presentación; Cmd+Opción+E muestra los cables.
 - Max Console abierta (Cmd+M).
-- OBS: Browser Source `http://<ip-linux-mint>:8080/pantalla` (1920×1080),
-  encima de las 3 ventanas de PROJECTR.
+- OBS: fuente **Syphon Client** → servidor "The Grid" (la salida de Max) y,
+  encima, Browser Source `http://<ip-linux-mint>:8080/pantalla` (1920×1080).
+  Quita las 3 capturas de ventana de PROJECTR que había antes.
 
 **MacBook (Ableton)**
 - GridOSC en la pista de batería (modo **golpes**, **Compás** encendido) y
@@ -59,14 +63,17 @@ entrada indicada y confirma su nombre:
 - [ ] Los 6 videos se reproducen solos (2 por patch), sin sonido. Son los
   **HAP** (`…-hap.mov`): si alguno sale negro o la consola dice que no
   encuentra el archivo, revisa que los `-hap.mov` estén en la carpeta.
-- [ ] Junto a cada PROJECTR hay un **medidor de fps** (los cuadros que le
-  llegan) y marca un número estable.
+- [ ] Ningún patch de color abre ventana propia: ya no traen PROJECTR, su
+  imagen sale por `s thegrid.salida.<color>` a `salida.maxpat`, donde se ven
+  verde | amarillo | rojo lado a lado.
+- [ ] Cada patch tiene un **medidor de fps** (los cuadros que manda a la
+  salida) y `salida.maxpat` el suyo; marcan un número estable.
 - [ ] Ningún patch trae MIXFADR: la mezcla principal es el **XFADR** (video
   original en su entrada 1 = A, video nuevo en la 2 = B). Ya no existe el
   toggle "mezcla on/off" (iba al MIXFADR y el XFADR no lo usa).
 - [ ] Verde: el video nuevo (Donitas1) entra directo a la B del XFADR; la
-  salida del XFADR va a KALEIDR → HUSALIR → TRANS4MR → COLORIZR → PROJECTR.
-- [ ] Amarillo y rojo: la salida del XFADR va directo al PROJECTR.
+  salida del XFADR va a KALEIDR → HUSALIR → TRANS4MR → COLORIZR → salida.
+- [ ] Amarillo y rojo: la salida del XFADR va directo a la salida.
 - [ ] En cada patch el panel **LFO (suave)** está prendido y el crossfade se
   mece despacio alrededor de su valor (no brinca): verde 8 compases / prof.
   0.15, amarillo 4 / 0.1, rojo 16 / 0.2.
@@ -75,34 +82,49 @@ entrada indicada y confirma su nombre:
 - [ ] Rojo: FRACTALIZR + FOGGR prendidos, crossfade principal en 0.5 (se ven
   el original y el nuevo), KALEIDR y PIXL8R apagados.
 
-**Rendimiento.** Cambios de esta versión: videos en HAP (los descomprime la
-tarjeta de video), sin audio, los bob como imagen fija (5 fps), video directo a
-la tarjeta de video (`output_texture 1` en los `jit.playlist`) y medidor de
-fps. Mide con los 3 patches abiertos, los 6 videos corriendo y **sin tocar
-Max con el mouse** (minimiza las ventanas de los patches, deja solo las de
-PROJECTR). Referencia de la versión anterior: Max ≈ 118 % con los 3
-abiertos, 60–70 % con uno, hasta 98 % moviendo el mouse; OBS ≈ 93 %.
+**Salida única (esta versión).** Los 3 PROJECTR se frenaban entre sí y OBS
+les quitaba mucho; diagnóstico con la versión anterior:
 
-| # | Medición | Antes | Ahora | ✔ |
+| Prueba | Resultado |
+|---|---|
+| 3 patches + OBS, al arrancar / a las 2 h | 12 fps / 6–8 fps; Max ≤ 75 % CPU, GPU < 10 %, memoria 899 MB; OBS 140–170 % |
+| D1: un solo patch abierto | 30–35 fps |
+| D2: su ventana al frente, sin nada encima | 38–41 fps |
+| D3: un solo patch y OBS cerrado | 59–60 fps |
+
+Ahora hay una sola ventana (`salida.maxpat`: `jit.world thegrid` a 30 fps
+fijos, sin esperar el refresco de pantalla) que dibuja los 3 colores lado a
+lado, y OBS la toma por Syphon en vez de capturar 3 ventanas.
+
+Preparación (una sola vez, en la Mac mini):
+- [ ] Paquete Syphon instalado: en Max, File → Show Package Manager → busca
+  "Syphon" → Install; reinicia Max.
+- [ ] App Nap apagado para Max (en Terminal, con Max cerrado):
+  `defaults write com.cycling74.Max NSAppSleepDisabled -bool YES`
+
+| # | Prueba | Esperado | ✔ |
+|---|---|---|---|
+| S1 | Abre `salida.maxpat` y luego los 3 colores | Una ventana 1920×1080 con verde \| amarillo \| rojo; la caja `jit.gl.syphonserver` NO sale punteada | ☐ |
+| S2 | En OBS: + → Syphon Client → servidor "The Grid" (Max) | Se ve la salida en OBS; quita las 3 capturas de ventana viejas | ☐ |
+| S3 | Tapa la ventana de salida con OBS | Los fps de la salida no bajan (OBS la toma por Syphon) | ☐ |
+
+Si un color sale negro en la salida: cierra todo y abre `salida.maxpat`
+**antes** que los patches de color (los módulos de Vizzie se dibujan en la
+única ventana que exista). Si aun así sale negro, en el inspector de sus
+`jit.playlist` pon **Output Texture** en off y avísame cuál fue.
+
+Mide con todo abierto (salida, 3 colores, OBS), **sin tocar Max con el mouse**
+y con las ventanas de los patches minimizadas:
+
+| # | Medición | Antes (HAP, 3 PROJECTR) | Ahora | ✔ |
 |---|---|---|---|---|
-| P1 | CPU de Max, 3 patches abiertos (Monitor de Actividad) | ≈ 118 % | | ☐ |
-| P2 | CPU de Max, un solo patch | 60–70 % | | ☐ |
-| P3 | CPU de Max moviendo cosas con el mouse | hasta 98 % (uno) | | ☐ |
-| P4 | CPU de OBS al mismo tiempo | ≈ 93 % | | ☐ |
-| P5 | fps de cada medidor (verde / amarillo / rojo) | – | / / | ☐ |
-| P6 | Mover el dial del crossfade de 0 a 1 y disparar templates | – | Fluido, sin que se pierdan efectos | ☐ |
-
-Si algo sale mal con `output_texture 1` (video negro, congelado o
-parpadeando): en el inspector del `jit.playlist` pon **Output Texture** en
-off, prueba de nuevo y avísame (se regresa en `agregar_bloques.py`,
-`OUTPUT_TEXTURE = 0`).
-
-**PROJECTR a 30 fps (por revisar).** Vizzie dibuja a 60 por defecto y los
-videos son de 30. No encontré documentado cómo se ajusta en el PROJECTR, así
-que se revisa en Max: abre la ayuda del módulo (clic derecho sobre PROJECTR →
-Open vz.projectr Help) y busca si tiene `fps` / `sync`. Si lo tiene, ponlo en
-30 y anota en P1–P5 si bajó el CPU; dime qué ajustaste para dejarlo fijo en
-los patches.
+| P1 | fps de la salida, al arrancar | 12 | | ☐ |
+| P2 | fps de la salida, a las 2 h | 6–8 | | ☐ |
+| P3 | fps de cada patch (verde / amarillo / rojo) | 12 | / / | ☐ |
+| P4 | CPU de Max (Monitor de Actividad) | ≤ 75 % | | ☐ |
+| P5 | CPU de OBS | 140–170 % | | ☐ |
+| P6 | Memoria de Max, al arrancar / a las 2 h | – / 899 MB | / | ☐ |
+| P7 | Mover el crossfade de 0 a 1 y disparar templates | – | Fluido, sin que se pierdan efectos | ☐ |
 
 **Intensidad**: como los módulos de templates están apagados en reposo, sube
 sus parámetros al extremo en su panel (que se note mucho) y guarda el patch.
@@ -180,7 +202,9 @@ imprimir `GRID-VERDE celda1 1`. Igual con `grid.fx.1`, `grid.vote.1` y
 - Las filas que fallaron (por número: V3, A4…).
 - Si la entrada 3 del XFADR no es el crossfade, cuál es (se cambia
   `XFADE_IN` en `agregar_bloques.py`).
-- La tabla P1–P6 llena, y si encontraste el ajuste de fps del PROJECTR.
+- S1–S3 y la tabla P1–P7 llena.
+- Si las franjas de la salida se ven estiradas o mal acomodadas (se ajustan
+  en `generar_salida.py`).
 - En la sección 1, qué decía cada entrada si no coincidía.
 - Valores del LFO que te gustaron por color (compases y profundidad).
 - Qué template se notó poco: se ajusta subiendo la intensidad en el panel del

@@ -24,7 +24,11 @@ Qué hace (se puede volver a correr sobre una versión nueva del patch):
   6. Rendimiento: los clips usan las versiones HAP de los videos
      (max/tools/convertir_videos.sh), los jit.playlist mandan textura directo
      a la tarjeta de video (output_texture 1) y un medidor de fps
-     (jit.fpsgui) mide lo que llega al projectr.
+     (jit.fpsgui) mide lo que llega a la salida.
+  7. Salida única: el PROJECTR se cambia por [s thegrid.salida.<color>]. Una
+     sola ventana (salida.maxpat, max/tools/generar_salida.py) junta los 3
+     colores: tres PROJECTR se frenaban entre sí (1 solo = 30-35 fps, los
+     3 juntos = 12).
 
 Templates:
   - "entra y sale" ([grid.hold N] o [grid.strobe ...]) → entrada on/off del
@@ -51,6 +55,7 @@ VIDEOS_HAP = {'Donitas1.mp4': 'Donitas1-hap.mov', 'Donitas3.mp4': 'Donitas3-hap.
               'Donitas5.mp4': 'Donitas5-hap.mov', 'greenBobVideo.mov': 'greenBob-hap.mov',
               'yellowBobVideo.mov': 'yellowBob-hap.mov', 'redBobVideo.mov': 'redBob-hap.mov'}
 OUTPUT_TEXTURE = 1   # 0 = como antes (el video pasa por el CPU)
+SALIDA_UNICA = True  # False = cada patch con su PROJECTR (solo si el patch aún lo trae)
 
 # Destinos: ('mod', nombre, 'ultima' | n) · ('xfade',) · ('var', varname)
 COLORS = {
@@ -192,25 +197,42 @@ def main():
     def link(a, ao, b, bi):
         p['lines'].append({'patchline': {'source': [a, ao], 'destination': [b, bi]}})
 
-    # ---------------- 1. quitar lo que no se usa ----------------
+    # Salida: el PROJECTR se vuelve [s thegrid.salida.<color>] (mismo id, así
+    # se quedan sus cables de video); en una corrida posterior ya es el send.
     quitar = list(cfg['quitar'])
+    proj = by_name('vz.projectr.maxpat')
+    if proj and SALIDA_UNICA:
+        p['lines'] = [l for l in p['lines'] if l['patchline']['source'][0] != proj['id']
+                      and not (l['patchline']['destination'][0] == proj['id'] and l['patchline']['destination'][1] > 0)]
+        x, y = proj['patching_rect'][:2]
+        for k in [k for k in proj if k not in ('id', 'patching_rect')]:
+            del proj[k]
+        proj.update({'maxclass': 'newobj', 'text': f's thegrid.salida.{color}', 'numinlets': 1, 'numoutlets': 0,
+                     'patching_rect': [x, y, 170, 22], 'varname': 'salida'})
+    proj = proj or next((b for b in boxes().values() if b.get('varname') == 'salida'), None)
+    if SALIDA_UNICA:
+        quitar.append('vz.projectr.maxpat')
+
+    def video(bid):
+        """¿Este objeto procesa video? (módulos Vizzie y la salida)"""
+        return boxes()[bid]['maxclass'] == 'bpatcher' or bid == proj['id']
+
+    # ---------------- 1. quitar lo que no se usa ----------------
     mezcla = next((n for n in MEZCLAS if by_name(n)), None)
     quitar += [n for n in MEZCLAS if n != mezcla]   # con XFADR, fuera el MIXFADR
     sobrantes = {b['id']: b['name'] for b in boxes().values() if b.get('name') in quitar}
     drop(set(sobrantes))
 
-    proj = by_name('vz.projectr.maxpat')
     mixers = [b for b in boxes().values() if b.get('name') == mezcla]
     if not mixers or not proj:
-        sys.exit('No encontré vz.xfadr / vz.mixfadr o vz.projectr en el patch')
+        sys.exit('No encontré vz.xfadr / vz.mixfadr o la salida (vz.projectr) en el patch')
 
     def reaches_output(bid):
-        """¿La salida de video de este módulo llega al projectr sin pasar por otra mezcla?"""
+        """¿La salida de video de este módulo llega a la salida sin pasar por otra mezcla?"""
         cur, seen = bid, set()
         while cur not in seen:
             seen.add(cur)
-            nxt = [l['destination'][0] for l in outs(cur) if l['source'][1] == 0
-                   and boxes()[l['destination'][0]]['maxclass'] == 'bpatcher']
+            nxt = [l['destination'][0] for l in outs(cur) if l['source'][1] == 0 and video(l['destination'][0])]
             if proj['id'] in nxt:
                 return True
             if not nxt or any(boxes()[n].get('name') == mezcla for n in nxt):
@@ -321,8 +343,7 @@ def main():
             if cur in seen:
                 continue
             seen.add(cur)
-            stack += [l['destination'][0] for l in outs(cur) if l['source'][1] == 0
-                      and boxes()[l['destination'][0]]['maxclass'] == 'bpatcher']
+            stack += [l['destination'][0] for l in outs(cur) if l['source'][1] == 0 and video(l['destination'][0])]
         return False
 
     keep = {mix['id'], proj['id']} | {m['id'] for m in chain} | used
@@ -421,12 +442,12 @@ def main():
             where = f'{tg[1]}'
         comment(260, y + 26, 560, f'{label}  →  {where}')
 
-    # Medidor de fps: cuenta los cuadros que llegan al projectr.
+    # Medidor de fps: cuenta los cuadros que llegan a la salida.
     salida = next((l['source'] for l in ins(proj['id'], 0)), None)
     if salida:
         fps = new('jit.fpsgui', 600, 70, 80, None, ni=1, no=2, outlettype=['', ''], h=36, mode=0)
         link(salida[0], salida[1], fps, 0)
-        comment(600, 40, 300, 'fps que llegan al PROJECTR (meta: 30 o más)')
+        comment(600, 40, 300, 'fps que llegan a la salida (meta: 30)')
 
     # ABLETON: perillas y escenas.
     Y = Y + 70 + len(cfg['templates']) * 55
@@ -584,6 +605,8 @@ def main():
 
     label(10, y, 400, 'SALIDA', bold=True)
     w, _ = show(proj['id'], 10, y + 22)
+    if proj.get('maxclass') == 'newobj':
+        label(10, y + 90, 420, 'la imagen va a salida.maxpat (una sola ventana para los 3 colores)')
     if salida:
         show(fps, 10 + w + 12, y + 22)
         label(10 + w + 12, y + 62, 120, 'fps')
