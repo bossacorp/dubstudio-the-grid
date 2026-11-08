@@ -84,7 +84,11 @@ max/             grid-router.maxpat: único udpreceive 9000, reparte el contrato
                  (*BobVideo.mov, Donitas*.mp4) se quedan para regresar. Los
                  clips guardan solo el nombre del archivo, volumen 0. Sin
                  PROJECTR: cada patch manda su imagen con
-                 [s thegrid.salida.<color>] (un jit.fpsgui mide sus fps). Cada patch: 2 videos
+                 [s thegrid.salida.<color>] (un jit.fpsgui mide sus fps).
+                 Cámara (experimento): la fuente A pasa por [switch 2 1]
+                 entre el video de bob y un GRABR (cámara local); toggle
+                 "usar cámara" o [s thegrid.camara.<color>] 1/0. Solo usa la
+                 cámara si llega imagen; sin cuadros 1 s regresa sola a bob. Cada patch: 2 videos
                  (original = A, uno nuevo con coristas = B) en un solo
                  xfadr (se quitaron todos los mixfadr: cambiar de modo
                  constantemente alentaba la proyección con 6 videos). Abren en presentación (solo módulos y

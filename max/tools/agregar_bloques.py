@@ -29,6 +29,10 @@ Qué hace (se puede volver a correr sobre una versión nueva del patch):
      sola ventana (salida.maxpat, max/tools/generar_salida.py) junta los 3
      colores: tres PROJECTR se frenaban entre sí (1 solo = 30-35 fps, los
      3 juntos = 12).
+  8. Cámara: la fuente A (video de bob) pasa por un selector [switch 2 1]
+     con una cámara local (Vizzie GRABR). Toggle "usar cámara" (o
+     [s thegrid.camara.<color>] 1/0); si la cámara no manda imagen en 1 s,
+     regresa sola a bob y vuelve a la cámara cuando reaparece. B no cambia.
 
 Templates:
   - "entra y sale" ([grid.hold N] o [grid.strobe ...]) → entrada on/off del
@@ -55,6 +59,7 @@ VIDEOS_HAP = {'Donitas1.mp4': 'Donitas1-hap.mov', 'Donitas3.mp4': 'Donitas3-hap.
               'Donitas5.mp4': 'Donitas5-hap.mov', 'greenBobVideo.mov': 'greenBob-hap.mov',
               'yellowBobVideo.mov': 'yellowBob-hap.mov', 'redBobVideo.mov': 'redBob-hap.mov'}
 OUTPUT_TEXTURE = 1   # 0 = como antes (el video pasa por el CPU)
+CAMARA_MS = 1000     # sin imagen de la cámara este tiempo → regresa a bob
 SALIDA_UNICA = True  # False = cada patch con su PROJECTR (solo si el patch aún lo trae)
 
 # Destinos: ('mod', nombre, 'ultima' | n) · ('xfade',) · ('var', varname)
@@ -178,7 +183,16 @@ def main():
                   if l['patchline']['destination'][0] in gen_ids and l['patchline']['source'][0] not in gen_ids
                   and any(x['box']['id'] == l['patchline']['destination'][0]
                           and x['box'].get('varname') == TAG + 'xfade_in' for x in p['boxes'])]
+    # Igual con el selector de la fuente A: el video de bob vuelve a su destino.
+    fuente = next((x['box']['id'] for x in p['boxes'] if x['box'].get('varname') == TAG + 'fuente'), None)
+    fuente_src = [l['patchline']['source'] for l in p['lines']
+                  if l['patchline']['destination'] == [fuente, 1] and l['patchline']['source'][0] not in gen_ids]
+    fuente_dst = [l['patchline']['destination'] for l in p['lines']
+                  if l['patchline']['source'] == [fuente, 0] and l['patchline']['destination'][0] not in gen_ids]
     drop(gen_ids)
+    for s_ in fuente_src:
+        for d_ in fuente_dst:
+            p['lines'].append({'patchline': {'source': s_, 'destination': d_}})
 
     def boxes():
         return {x['box']['id']: x['box'] for x in p['boxes']}
@@ -260,6 +274,19 @@ def main():
     playlists = sorted((b for b in boxes().values() if b['maxclass'] == 'jit.playlist'),
                        key=lambda b: (mix_inlet(b['id']), b['patching_rect'][0]))
     playlist = playlists[0]   # el video original (entra por A)
+
+    # Cámara (Vizzie GRABR) para alternar con el video de bob. No es un bloque
+    # generado: se queda entre corridas con el dispositivo que elijas.
+    grabr = by_name('vz.grabr.maxpat')
+    if not grabr:
+        num = next(n for n in range(1901, 2000) if f'obj-{n}' not in boxes())
+        x, y = playlist['patching_rect'][:2]
+        grabr = {'id': f'obj-{num}', 'maxclass': 'bpatcher', 'name': 'vz.grabr.maxpat', 'numinlets': 1,
+                 'numoutlets': 1, 'outlettype': ['jit_gl_texture'], 'patching_rect': [x - 200, y + 40, 168, 130],
+                 'varname': 'grabr_camara', 'annotation': '## Cámara local (fuente A alterna) ##', 'bgmode': 0,
+                 'border': 0, 'clickthrough': 0, 'enablehscroll': 0, 'enablevscroll': 0, 'lockeddragscroll': 0,
+                 'lockedsize': 0, 'offset': [0.0, 0.0], 'viewvisibility': 1}
+        p['boxes'].append({'box': grabr})
     plays = []
     for pl in playlists:
         for l in ins(pl['id'], 0):
@@ -346,7 +373,7 @@ def main():
             stack += [l['destination'][0] for l in outs(cur) if l['source'][1] == 0 and video(l['destination'][0])]
         return False
 
-    keep = {mix['id'], proj['id']} | {m['id'] for m in chain} | used
+    keep = {mix['id'], proj['id'], grabr['id']} | {m['id'] for m in chain} | used
     muertos = {b['id']: b['name'] for b in boxes().values()
                if b['maxclass'] == 'bpatcher' and b['id'] not in keep and not feeds_output(b['id'])}
     drop(set(muertos))
@@ -442,6 +469,45 @@ def main():
             where = f'{tg[1]}'
         comment(260, y + 26, 560, f'{label}  →  {where}')
 
+    # CÁMARA: fuente A = video de bob (switch 1) o cámara (switch 2). Pasa a la
+    # cámara solo si está pedida Y llega imagen; si deja de llegar, vuelve a bob.
+    Yc = 1000   # debajo de TEMPLATES y ABLETON en la vista de cables
+    comment(0, Yc, 640, f'CÁMARA · {up} — fuente A: video de bob o cámara (GRABR). '
+                        f'Sin imagen {CAMARA_MS} ms → regresa sola a bob')
+    destinos = [l['destination'] for l in outs(playlist['id']) if l['source'][1] == 0]
+    p['lines'] = [l for l in p['lines'] if not (l['patchline']['source'] == [playlist['id'], 0])]
+    sw = new('newobj', 0, Yc + 150, 70, 'switch 2 1', ni=3, no=1, outlettype=[''], tag='fuente')
+    link(playlist['id'], 0, sw, 1)
+    link(grabr['id'], 0, sw, 2)
+    for d in destinos:
+        link(sw, 0, d[0], d[1])
+    usar = new('toggle', 0, Yc + 30, 24, ni=1, no=1, outlettype=['int'], h=24, parameter_enable=0, tag='usar_camara')
+    rc = recv(40, Yc + 30, f'thegrid.camara.{color}', 170)
+    link(rc, 0, usar, 0)
+    comment(220, Yc + 30, 420, f'usar cámara (1) o bob (0) · también [s thegrid.camara.{color}] 1/0')
+    tb = new('newobj', 0, Yc + 64, 50, 't b b', no=2, outlettype=['bang', 'bang'])
+    link(grabr['id'], 0, tb, 0)
+    dl = new('newobj', 60, Yc + 92, 80, f'delay {CAMARA_MS}', ni=2, no=1, outlettype=['bang'])
+    link(tb, 1, dl, 0)
+    si = new('message', 0, Yc + 92, 30, '1', ni=2, no=1, outlettype=[''])
+    no_ = new('message', 60, Yc + 120, 30, '0', ni=2, no=1, outlettype=[''])
+    link(tb, 0, si, 0)
+    link(dl, 0, no_, 0)
+    ch = new('newobj', 150, Yc + 92, 50, 'change', ni=1, no=3, outlettype=['', 'int', 'int'])
+    link(si, 0, ch, 0)
+    link(no_, 0, ch, 0)
+    viva = new('toggle', 210, Yc + 92, 24, ni=1, no=1, outlettype=['int'], h=24, parameter_enable=0, tag='camara_viva')
+    link(ch, 0, viva, 0)
+    comment(240, Yc + 92, 300, '¿llega imagen de la cámara?')
+    pk = new('newobj', 300, Yc + 120, 60, 'pak 0 0', ni=2, no=1, outlettype=[''])
+    link(usar, 0, pk, 0)
+    link(ch, 0, pk, 1)
+    ex = new('newobj', 300, Yc + 150, 120, 'expr ($i1 && $i2) + 1', ni=2, no=1, outlettype=[''])
+    link(pk, 0, ex, 0)
+    link(ex, 0, sw, 0)
+    comment(90, Yc + 150, 200, '1 = bob · 2 = cámara')
+    printed(ex, 'fuente', 470, Yc + 150)
+
     # Medidor de fps: cuenta los cuadros que llegan a la salida.
     salida = next((l['source'] for l in ins(proj['id'], 0)), None)
     if salida:
@@ -510,7 +576,7 @@ def main():
         b.pop('presentation_rect', None)
     post_ids = [m['id'] for m in chain]
     base_mods = [b for b in B.values() if b['maxclass'] == 'bpatcher' and b['id'] not in post_ids
-                 and b['id'] not in (mix['id'], proj['id']) and not generated(b)]
+                 and b['id'] not in (mix['id'], proj['id'], grabr['id']) and not generated(b)]
     # orden de cadena: primero lo que llega a la entrada A de la mezcla, luego B;
     # dentro de cada cadena, en el orden en que pasa el video
     def chain_key(b):
@@ -560,7 +626,16 @@ def main():
         w, h = show(pl['id'], 50, y)
         label(60 + w, y + 4, 260, 'video original (A)' if pl['id'] == playlist['id'] else 'video nuevo (B)')
         y += max(h, 28) + 6
-    y += 14
+    y += 8
+    label(10, y, 600, 'CÁMARA — alterna con el video original (A); si no llega imagen, regresa sola a bob', bold=True)
+    y += 22
+    show(usar, 10, y)
+    label(40, y + 2, 200, 'usar cámara en vez de bob')
+    show(viva, 10, y + 32)
+    label(40, y + 34, 200, 'llega imagen de la cámara')
+    w, h = show(grabr['id'], 250, y)
+    label(260 + w, y + 4, 300, 'GRABR: elige aquí la cámara')
+    y += max(h, 60) + 20
 
     label(10, y, 500, f'BASE — cadena A y cadena B (entran al {LABEL[mezcla]})', bold=True)
     y += 22
