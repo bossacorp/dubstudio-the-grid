@@ -30,7 +30,8 @@ Qué hace (se puede volver a correr sobre una versión nueva del patch):
      colores: tres PROJECTR se frenaban entre sí (1 solo = 30-35 fps, los
      3 juntos = 12).
   8. Cámara: la fuente A (video de bob) pasa por un selector [switch 2 1]
-     con una cámara local (Vizzie GRABR). Toggle "usar cámara" (o
+     con una cámara local (Vizzie GRABBR, vz.grabbr: en su panel se elige la
+     cámara: USB, iPhone…). Si el patch ya trae un GRABBR se usa ese. Toggle "usar cámara" (o
      [s thegrid.camara.<color>] 1/0); si la cámara no manda imagen en 1 s,
      regresa sola a bob y vuelve a la cámara cuando reaparece. B no cambia.
 
@@ -60,6 +61,7 @@ VIDEOS_HAP = {'Donitas1.mp4': 'Donitas1-hap.mov', 'Donitas3.mp4': 'Donitas3-hap.
               'yellowBobVideo.mov': 'yellowBob-hap.mov', 'redBobVideo.mov': 'redBob-hap.mov'}
 OUTPUT_TEXTURE = 1   # 0 = como antes (el video pasa por el CPU)
 CAMARA_MS = 1000     # sin imagen de la cámara este tiempo → regresa a bob
+CAMARA = 'vz.grabbr.maxpat'   # módulo de cámara de Vizzie (con doble b)
 SALIDA_UNICA = True  # False = cada patch con su PROJECTR (solo si el patch aún lo trae)
 
 # Destinos: ('mod', nombre, 'ultima' | n) · ('xfade',) · ('var', varname)
@@ -213,7 +215,7 @@ def main():
 
     # Salida: el PROJECTR se vuelve [s thegrid.salida.<color>] (mismo id, así
     # se quedan sus cables de video); en una corrida posterior ya es el send.
-    quitar = list(cfg['quitar'])
+    quitar = list(cfg['quitar']) + ['vz.grabr.maxpat']   # nombre equivocado de una versión anterior
     proj = by_name('vz.projectr.maxpat')
     if proj and SALIDA_UNICA:
         p['lines'] = [l for l in p['lines'] if l['patchline']['source'][0] != proj['id']
@@ -275,15 +277,15 @@ def main():
                        key=lambda b: (mix_inlet(b['id']), b['patching_rect'][0]))
     playlist = playlists[0]   # el video original (entra por A)
 
-    # Cámara (Vizzie GRABR) para alternar con el video de bob. No es un bloque
-    # generado: se queda entre corridas con el dispositivo que elijas.
-    grabr = by_name('vz.grabr.maxpat')
+    # Cámara (Vizzie GRABBR) para alternar con el video de bob. No es un bloque
+    # generado: se queda entre corridas con la cámara que elijas en su panel.
+    grabr = by_name(CAMARA)
     if not grabr:
         num = next(n for n in range(1901, 2000) if f'obj-{n}' not in boxes())
         x, y = playlist['patching_rect'][:2]
-        grabr = {'id': f'obj-{num}', 'maxclass': 'bpatcher', 'name': 'vz.grabr.maxpat', 'numinlets': 1,
-                 'numoutlets': 1, 'outlettype': ['jit_gl_texture'], 'patching_rect': [x - 200, y + 40, 168, 130],
-                 'varname': 'grabr_camara', 'annotation': '## Cámara local (fuente A alterna) ##', 'bgmode': 0,
+        grabr = {'id': f'obj-{num}', 'maxclass': 'bpatcher', 'name': CAMARA, 'numinlets': 2,
+                 'numoutlets': 1, 'outlettype': ['jit_gl_texture'], 'patching_rect': [x - 380, y, 346, 158],
+                 'varname': 'grabbr', 'annotation': '## Grab webcam video for VIZZIE input ##', 'bgmode': 1,
                  'border': 0, 'clickthrough': 0, 'enablehscroll': 0, 'enablevscroll': 0, 'lockeddragscroll': 0,
                  'lockedsize': 0, 'offset': [0.0, 0.0], 'viewvisibility': 1}
         p['boxes'].append({'box': grabr})
@@ -472,7 +474,7 @@ def main():
     # CÁMARA: fuente A = video de bob (switch 1) o cámara (switch 2). Pasa a la
     # cámara solo si está pedida Y llega imagen; si deja de llegar, vuelve a bob.
     Yc = 1000   # debajo de TEMPLATES y ABLETON en la vista de cables
-    comment(0, Yc, 640, f'CÁMARA · {up} — fuente A: video de bob o cámara (GRABR). '
+    comment(0, Yc, 640, f'CÁMARA · {up} — fuente A: video de bob o cámara (GRABBR). '
                         f'Sin imagen {CAMARA_MS} ms → regresa sola a bob')
     destinos = [l['destination'] for l in outs(playlist['id']) if l['source'][1] == 0]
     p['lines'] = [l for l in p['lines'] if not (l['patchline']['source'] == [playlist['id'], 0])]
@@ -634,7 +636,7 @@ def main():
     show(viva, 10, y + 32)
     label(40, y + 34, 200, 'llega imagen de la cámara')
     w, h = show(grabr['id'], 250, y)
-    label(260 + w, y + 4, 300, 'GRABR: elige aquí la cámara')
+    label(260 + w, y + 4, 300, 'GRABBR: elige aquí la cámara')
     y += max(h, 60) + 20
 
     label(10, y, 500, f'BASE — cadena A y cadena B (entran al {LABEL[mezcla]})', bold=True)

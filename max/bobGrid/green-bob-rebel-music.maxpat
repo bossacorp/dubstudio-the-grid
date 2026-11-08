@@ -48,6 +48,46 @@
 		"boxes": [
 			{
 				"box": {
+					"annotation": "## Grab webcam video for VIZZIE input ##",
+					"bgmode": 1,
+					"border": 0,
+					"clickthrough": 0,
+					"enablehscroll": 0,
+					"enablevscroll": 0,
+					"id": "obj-1",
+					"lockeddragscroll": 0,
+					"lockedsize": 0,
+					"maxclass": "bpatcher",
+					"name": "vz.grabbr.maxpat",
+					"numinlets": 2,
+					"numoutlets": 1,
+					"offset": [
+						0.0,
+						0.0
+					],
+					"outlettype": [
+						"jit_gl_texture"
+					],
+					"patching_rect": [
+						140.0,
+						100.0,
+						346.0,
+						158.0
+					],
+					"prototypename": "pixl",
+					"varname": "grabbr",
+					"viewvisibility": 1,
+					"presentation": 1,
+					"presentation_rect": [
+						250,
+						162.0,
+						346.0,
+						158.0
+					]
+				}
+			},
+			{
+				"box": {
 					"annotation": "## Crossfade between two videos ##",
 					"bgmode": 1,
 					"border": 0,
@@ -80,7 +120,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						10,
-						506.0,
+						534.0,
 						118.0,
 						130.0
 					]
@@ -210,7 +250,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						410.0,
-						708.0,
+						736.0,
 						270.0,
 						130.0
 					]
@@ -250,7 +290,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						210.0,
-						708.0,
+						736.0,
 						188.0,
 						130.0
 					]
@@ -290,7 +330,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						692.0,
-						708.0,
+						736.0,
 						138.0,
 						130.0
 					]
@@ -330,7 +370,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						10,
-						708.0,
+						736.0,
 						188.0,
 						130.0
 					]
@@ -375,7 +415,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						480.0,
-						334.0,
+						362.0,
 						24.0,
 						24.0
 					]
@@ -441,7 +481,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						140.0,
-						516.0,
+						544.0,
 						40.0,
 						40.0
 					]
@@ -532,7 +572,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						280.0,
-						334.0,
+						362.0,
 						188.0,
 						130.0
 					]
@@ -578,7 +618,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						10,
-						334.0,
+						362.0,
 						258.0,
 						130.0
 					]
@@ -638,62 +678,23 @@
 			{
 				"box": {
 					"id": "obj-19",
+					"maxclass": "newobj",
+					"numinlets": 1,
+					"numoutlets": 0,
 					"patching_rect": [
 						122.00000363588333,
 						852.6666920781136,
-						170,
-						22
+						170.0,
+						22.0
 					],
-					"maxclass": "newobj",
 					"text": "s thegrid.salida.verde",
-					"numinlets": 1,
-					"numoutlets": 0,
 					"varname": "salida",
 					"presentation": 1,
 					"presentation_rect": [
 						10,
-						880.0,
-						170,
-						22
-					]
-				}
-			},
-			{
-				"box": {
-					"id": "obj-1901",
-					"maxclass": "bpatcher",
-					"name": "vz.grabr.maxpat",
-					"numinlets": 1,
-					"numoutlets": 1,
-					"outlettype": [
-						"jit_gl_texture"
-					],
-					"patching_rect": [
-						-86.24561403508773,
-						394.40425531914894,
-						168,
-						130
-					],
-					"varname": "grabr_camara",
-					"annotation": "## Cámara local (fuente A alterna) ##",
-					"bgmode": 0,
-					"border": 0,
-					"clickthrough": 0,
-					"enablehscroll": 0,
-					"enablevscroll": 0,
-					"lockeddragscroll": 0,
-					"lockedsize": 0,
-					"offset": [
-						0.0,
-						0.0
-					],
-					"viewvisibility": 1,
-					"presentation": 1,
-					"presentation_rect": [
-						250,
-						162.0,
-						168,
-						130
+						908.0,
+						170.0,
+						22.0
 					]
 				}
 			},
@@ -1232,7 +1233,7 @@
 						20
 					],
 					"varname": "thegrid_3030",
-					"text": "CÁMARA · VERDE — fuente A: video de bob o cámara (GRABR). Sin imagen 1000 ms → regresa sola a bob"
+					"text": "CÁMARA · VERDE — fuente A: video de bob o cámara (GRABBR). Sin imagen 1000 ms → regresa sola a bob"
 				}
 			},
 			{
@@ -1548,8 +1549,8 @@
 					"mode": 0,
 					"presentation": 1,
 					"presentation_rect": [
-						192,
-						880.0,
+						192.0,
+						908.0,
 						80,
 						36
 					]
@@ -1659,7 +1660,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						140.0,
-						592.0,
+						620.0,
 						210,
 						54
 					]
@@ -2284,10 +2285,10 @@
 						20
 					],
 					"varname": "thegrid_3083",
-					"text": "GRABR: elige aquí la cámara",
+					"text": "GRABBR: elige aquí la cámara",
 					"presentation": 1,
 					"presentation_rect": [
-						428,
+						606.0,
 						166.0,
 						300,
 						20
@@ -2311,7 +2312,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						10,
-						312.0,
+						340.0,
 						500,
 						20
 					],
@@ -2335,7 +2336,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						510.0,
-						336.0,
+						364.0,
 						170,
 						20
 					]
@@ -2358,7 +2359,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						10,
-						484.0,
+						512.0,
 						400,
 						20
 					],
@@ -2382,7 +2383,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						188.0,
-						524.0,
+						552.0,
 						140,
 						20
 					]
@@ -2405,7 +2406,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						140.0,
-						572.0,
+						600.0,
 						260,
 						20
 					]
@@ -2428,7 +2429,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						10,
-						666.0,
+						694.0,
 						700,
 						20
 					],
@@ -2452,7 +2453,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						10,
-						688.0,
+						716.0,
 						188.0,
 						20
 					]
@@ -2475,7 +2476,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						210.0,
-						688.0,
+						716.0,
 						188.0,
 						20
 					]
@@ -2498,7 +2499,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						410.0,
-						688.0,
+						716.0,
 						270.0,
 						20
 					]
@@ -2521,7 +2522,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						692.0,
-						688.0,
+						716.0,
 						138.0,
 						20
 					]
@@ -2544,7 +2545,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						10,
-						858.0,
+						886.0,
 						400,
 						20
 					],
@@ -2568,7 +2569,7 @@
 					"presentation": 1,
 					"presentation_rect": [
 						10,
-						948.0,
+						976.0,
 						420,
 						20
 					]
@@ -2590,8 +2591,8 @@
 					"text": "fps",
 					"presentation": 1,
 					"presentation_rect": [
-						192,
-						920.0,
+						192.0,
+						948.0,
 						120,
 						20
 					]
@@ -3084,7 +3085,7 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-1901",
+						"obj-1",
 						0
 					],
 					"destination": [
@@ -3120,7 +3121,7 @@
 			{
 				"patchline": {
 					"source": [
-						"obj-1901",
+						"obj-1",
 						0
 					],
 					"destination": [
@@ -3618,44 +3619,34 @@
 				"Interp mode",
 				0
 			],
-			"obj-19::obj-12": [
-				"Fullscreen",
-				"Fullscreen",
-				0
-			],
-			"obj-19::obj-16": [
-				"Toggle display",
-				"Toggle display",
-				0
-			],
-			"obj-19::obj-1::obj-23": [
-				"gswitch2[2]",
-				"gswitch2",
-				0
-			],
-			"obj-19::obj-2": [
+			"obj-1::obj-38": [
 				"pictctrl[2]",
 				"pictctrl[1]",
 				0
 			],
-			"obj-19::obj-3": [
-				"toggle",
-				"toggle",
-				0
-			],
-			"obj-19::obj-41": [
-				"pictctrl[7]",
-				"pictctrl[1]",
-				0
-			],
-			"obj-19::obj-50": [
+			"obj-1::obj-39": [
 				"pictctrl[1]",
 				"pictctrl[1]",
 				0
 			],
-			"obj-19::obj-6": [
-				"live.toggle[1]",
-				"live.toggle",
+			"obj-1::obj-64::obj-18": [
+				"vdevnum",
+				"vdevnum",
+				0
+			],
+			"obj-1::obj-64::obj-29": [
+				"formatnum",
+				"formatnum",
+				10
+			],
+			"obj-1::obj-64::obj-40": [
+				"Mirror state",
+				"Mirror state",
+				0
+			],
+			"obj-1::obj-64::obj-5": [
+				"Available devices",
+				"Available devices",
 				0
 			],
 			"obj-20": [
@@ -4222,22 +4213,28 @@
 				"implicit": 1
 			},
 			{
+				"name": "grabbr_controls.maxpat",
+				"bootpath": "C74:/packages/Vizzie/patchers/utils",
+				"type": "JSON",
+				"implicit": 1
+			},
+			{
 				"name": "grid.env.maxpat",
-				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 6",
+				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max10",
 				"patcherrelativepath": ".",
 				"type": "JSON",
 				"implicit": 1
 			},
 			{
 				"name": "grid.hold.maxpat",
-				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 6",
+				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max10",
 				"patcherrelativepath": ".",
 				"type": "JSON",
 				"implicit": 1
 			},
 			{
 				"name": "grid.lfo.maxpat",
-				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max 6",
+				"bootpath": "~/Documents/max-visuals/grid-max/thegrid-max10",
 				"patcherrelativepath": ".",
 				"type": "JSON",
 				"implicit": 1
@@ -4292,6 +4289,12 @@
 				"implicit": 1
 			},
 			{
+				"name": "vz.grabbr.maxpat",
+				"bootpath": "C74:/packages/Vizzie/patchers",
+				"type": "JSON",
+				"implicit": 1
+			},
+			{
 				"name": "vz.husalir.maxpat",
 				"bootpath": "C74:/packages/Vizzie/patchers",
 				"type": "JSON",
@@ -4316,13 +4319,7 @@
 				"implicit": 1
 			},
 			{
-				"name": "vzgl-context.maxpat",
-				"bootpath": "C74:/packages/Vizzie/patchers/utils",
-				"type": "JSON",
-				"implicit": 1
-			},
-			{
-				"name": "vzgl-disable.maxpat",
+				"name": "vzgl-blackframe.maxpat",
 				"bootpath": "C74:/packages/Vizzie/patchers/utils",
 				"type": "JSON",
 				"implicit": 1
@@ -4340,7 +4337,7 @@
 				"implicit": 1
 			},
 			{
-				"name": "vzgl-routegl.maxpat",
+				"name": "vzgl-pwindow.maxpat",
 				"bootpath": "C74:/packages/Vizzie/patchers/utils",
 				"type": "JSON",
 				"implicit": 1

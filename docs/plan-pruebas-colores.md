@@ -207,17 +207,22 @@ imprimir `GRID-VERDE celda1 1`. Igual con `grid.fx.1`, `grid.vote.1` y
 ## 6. Cámaras en vivo (experimento)
 
 Cada color puede cambiar su **fuente A** (el video de bob) por una cámara
-conectada a la Mac mini (Vizzie **GRABR**). B (coristas) no cambia. En el
+conectada a la Mac mini (Vizzie **GRABBR**). B (coristas) no cambia. En el
 panel de cada color, sección **CÁMARA**:
 - **usar cámara en vez de bob**: toggle (también `; thegrid.camara.verde 1`,
   `amarillo`, `rojo`; 0 = regresa a bob).
-- **llega imagen de la cámara**: se prende solo mientras GRABR manda cuadros.
+- **llega imagen de la cámara**: se prende solo mientras GRABBR manda cuadros.
 - La cámara sale solo si está pedida **y** llega imagen; si deja de llegar
   1 s, regresa sola a bob, y vuelve a la cámara cuando reaparece. La consola
   imprime `GRID-<COLOR> fuente 1` (bob) o `fuente 2` (cámara).
 
+Primer intento: el módulo se había puesto como `vz.grabr` (no existe; el de
+Vizzie es **GRABBR**, `vz.grabbr`) y salía una caja vacía sin selector de
+cámara. Ahora se usa el GRABBR que agregaste en cada patch: en su panel
+(sección CÁMARA de la presentación) eliges la cámara de cada color.
+
 Antes de empezar:
-- Pasa el mouse por las entradas de GRABR y anota qué es cada una (on/off,
+- Pasa el mouse por las entradas de GRABBR y anota qué es cada una (on/off,
   dispositivo…). Solo se usa su salida; si tiene on/off se puede cablear
   para que la cámara solo capture cuando se usa.
 - Cámaras: Logitech por USB; iPhone como **Cámara de Continuidad** (macOS 13
@@ -226,14 +231,14 @@ Antes de empezar:
 | # | Acción | Esperado | ✔ |
 |---|---|---|---|
 | C1 | Sin cámaras: prende "usar cámara" en el verde | Sigue bob, "llega imagen" apagado, consola `fuente 1`; nada se congela | ☐ |
-| C2 | En el GRABR del verde elige la Logitech y préndelo | "llega imagen" se prende y la franja verde muestra la cámara con fractal + niebla; consola `fuente 2` | ☐ |
-| C3 | Desconecta la cámara (USB) | En ~1 s regresa a bob sin congelarse; al reconectar (y volver a elegirla en GRABR si hace falta) regresa a la cámara | ☐ |
+| C2 | En el GRABBR del verde elige la Logitech y préndelo | "llega imagen" se prende y la franja verde muestra la cámara con fractal + niebla; consola `fuente 2` | ☐ |
+| C3 | Desconecta la cámara (USB) | En ~1 s regresa a bob sin congelarse; al reconectar (y volver a elegirla en GRABBR si hace falta) regresa a la cámara | ☐ |
 | C4 | Apaga "usar cámara" con la cámara funcionando | Regresa a bob al instante | ☐ |
 | C5 | Templates del verde (celdas 1–3, tarola) con la cámara | Se aplican igual sobre la cámara | ☐ |
 | C6 | Una cámara distinta en cada color (Logitech, iPhone, cámara de la Mac…) | Las 3 franjas con su cámara | ☐ |
 | C7 | La MISMA cámara elegida en dos colores | Anota si las dos la ven o una sale negra (macOS puede no compartirla) | ☐ |
 | C8 | fps de la salida y CPU de Max con 0, 1, 2 y 3 cámaras | Anota: 0 = __ · 1 = __ · 2 = __ · 3 = __ fps / % CPU | ☐ |
-| C9 | Con "usar cámara" apagado pero la cámara elegida en GRABR | Anota si el CPU sube igual (GRABR captura aunque no se vea) | ☐ |
+| C9 | Con "usar cámara" apagado pero la cámara elegida en GRABBR | Anota si el CPU sube igual (GRABBR captura aunque no se vea) | ☐ |
 
 Ojo con la forma: las cámaras son horizontales (16:9) y cada franja de la
 salida es vertical; la imagen se verá apretada de lado. Anota cómo se ve para
@@ -245,7 +250,7 @@ decidir si se recorta (centro de la imagen) o se gira la cámara.
 - Si la entrada 3 del XFADR no es el crossfade, cuál es (se cambia
   `XFADE_IN` en `agregar_bloques.py`).
 - S1–S3 y la tabla P1–P7 llena.
-- Cámaras: C1–C9, qué es cada entrada de GRABR y cómo se ve la forma.
+- Cámaras: C1–C9, qué es cada entrada de GRABBR y cómo se ve la forma.
 - Si las franjas de la salida se ven estiradas o mal acomodadas (se ajustan
   en `generar_salida.py`).
 - En la sección 1, qué decía cada entrada si no coincidía.
